@@ -51,7 +51,11 @@
       $result.append($("<pre>").text(result.stderr));
       $run.prop("disabled", false);
     }, function(error) {
+      $result.empty();
       $run.prop("disabled", false);
+      $result.append($("<span>").text("Error"));
+      $result.append("<hr>");
+      $result.append($("<pre>").text(error));
     });
   }
 
