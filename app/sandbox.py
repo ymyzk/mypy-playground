@@ -6,6 +6,7 @@ import time
 import docker
 
 
+DOCKER_IMAGE = "ymyzk/mypy-playground:sandbox"
 SOURCE_DIR = "/tmp"
 SOURCE_FILE_NAME = "<annon.py>"
 
@@ -25,10 +26,8 @@ def create_archive(source):
 
 
 def run_typecheck(source):
-    # TODO: timeout, elapsed, limit
-    c = client.containers.create(
-        "ymyzk/mypy-playground:sandbox",
-        f"mypy --cache-dir /dev/null {SOURCE_FILE_NAME}")
+    cmd = f"mypy --cache-dir /dev/null {SOURCE_FILE_NAME}"
+    c = client.containers.create(DOCKER_IMAGE, cmd)
     c.put_archive(SOURCE_DIR, create_archive(source))
     c.start()
     exit_code = c.wait()
