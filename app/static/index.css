@@ -1,0 +1,32 @@
+html {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+header {
+  flex: 0 0 auto;
+}
+
+main {
+  height: 100%;
+  display: flex;
+  flex: 1;
+  flex-flow: column;
+}
+
+#editor {
+  flex: 1 60%;
+  font-size: 14px;
+}
+
+#result {
+  padding: 8px;
+  flex: 1 40%;
+  overflow: auto;
+  background: #eee;
+}
