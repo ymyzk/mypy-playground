@@ -30,10 +30,12 @@
 
   function run() {
     var editor = ace.edit("editor");
+    var $run = $("#run");
     var $result = $("#result");
     var data = {
       source: editor.getValue(),
     };
+    $run.prop("disabled", true);
     $result.text("Running...");
 
     send(data, function(result) {
@@ -47,6 +49,9 @@
       $result.append($("<pre>").text(result.stdout));
       $result.append("<br>");
       $result.append($("<pre>").text(result.stderr));
+      $run.prop("disabled", false);
+    }, function(error) {
+      $run.prop("disabled", false);
     });
   }
 

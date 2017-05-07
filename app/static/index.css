@@ -12,6 +12,10 @@ header {
   flex: 0 0 auto;
 }
 
+header nav {
+  background-color: #2d618c;
+}
+
 main {
   height: 100%;
   display: flex;
@@ -29,4 +33,16 @@ main {
   flex: 1 40%;
   overflow: auto;
   background: #eee;
+}
+
+.btn-nav-color {
+  background-color: #ffd343;
+  border-color: #ffd343;
+}
+
+.btn-nav-color:hover {
+  /* darken 10% */
+  background-color: #e5b93e;
+  /* darken 12% */
+  border-color: #e0b53d;
 }
