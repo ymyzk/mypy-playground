@@ -4,5 +4,6 @@ RUN pip install mypy \
         && rm -rf /root/.cache
 
 USER nobody
+WORKDIR /tmp
 
 CMD mypy
