@@ -27,7 +27,14 @@ def create_archive(source):
 
 def run_typecheck(source):
     cmd = f"mypy --cache-dir /dev/null {SOURCE_FILE_NAME}"
-    c = client.containers.create(DOCKER_IMAGE, cmd)
+    c = client.containers.create(
+            DOCKER_IMAGE,
+            command=cmd,
+            cap_drop="ALL",
+            mem_limit="128m",
+            network_mode="none",
+            pids_limit=32,
+            security_opt=["no-new-privileges"])
     c.put_archive(SOURCE_DIR, create_archive(source))
     c.start()
     exit_code = c.wait()
