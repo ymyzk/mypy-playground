@@ -1,0 +1,8 @@
+language: python
+python:
+  - 3.6
+install:
+  - pip install -U pip setuptools wheel
+  - pip install -U -r app/requirements.txt -r app/requirements.test.txt
+script:
+  - ./app/scripts/runtests.sh
