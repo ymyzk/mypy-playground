@@ -13,6 +13,10 @@ SOURCE_FILE_NAME = "<annon.py>"
 client = docker.from_env()
 
 
+def pull_image():
+    client.images.pull(DOCKER_IMAGE)
+
+
 def create_archive(source):
     stream = BytesIO()
     with tarfile.TarFile(fileobj=stream, mode="w") as tar:
