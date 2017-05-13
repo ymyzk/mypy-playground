@@ -1,6 +1,28 @@
 (function () {
   "use strict";
 
+  function parseMessages(messages) {
+    var types = {
+      error: "error",
+      note: "info"
+    }
+    var getType = function(level) {
+      var type = types[level];
+      return type ? type : "error";
+    };
+    var matcher = /^<annon\.py>:(\d+): (\w+): (.+)/;
+    return messages.split("\n").map(function(m) {
+      var match = m.match(matcher);
+      return match ? {
+        row: match[1] - 1,
+        type: getType(match[2]),
+        text: match[3]
+      } : null;
+    }).filter(function (m) {
+      return m !== null;
+    });
+  }
+
   function send(data, callback, error) {
     var request = new XMLHttpRequest();
     request.open("POST", "/typecheck.json", true);
@@ -49,6 +71,10 @@
       $result.append("<br>");
       $result.append($("<pre>").text(result.stderr));
       $run.prop("disabled", false);
+
+      editor.getSession().clearAnnotations();
+      editor.getSession().setAnnotations(parseMessages(result.stdout));
+
     }, function(error) {
       $result.empty();
       $run.prop("disabled", false);
