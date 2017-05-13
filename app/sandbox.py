@@ -1,4 +1,4 @@
-from io import BytesIO
+from io import BytesIO, StringIO
 import os
 import tarfile
 import time
@@ -25,8 +25,13 @@ def create_archive(source):
     return stream
 
 
-def run_typecheck(source):
-    cmd = f"mypy --cache-dir /dev/null {SOURCE_FILE_NAME}"
+def run_typecheck(source, *, python_version=None):
+    with StringIO() as builder:
+        builder.write("mypy --cache-dir /dev/null ")
+        if python_version:
+            builder.write(f"--python-version {python_version} ")
+        builder.write(SOURCE_FILE_NAME)
+        cmd = builder.getvalue()
     c = client.containers.create(
             DOCKER_IMAGE,
             command=cmd,

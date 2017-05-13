@@ -34,6 +34,7 @@
     var $result = $("#result");
     var data = {
       source: editor.getValue(),
+      python_version: $("#python_version").val(),
     };
     $run.prop("disabled", true);
     $result.text("Running...");

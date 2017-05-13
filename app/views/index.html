@@ -16,7 +16,13 @@
         <a class="navbar-brand" href="#">mypy Playground</a>
         <div class="collapse navbar-collapse" id="navbar">
           <form class="form-inline my-2 my-lg-0">
-            <button class="btn btn-nav-color my-2 my-sm-0" id="run">Run</button>
+            <button class="btn btn-nav-color my-2 my-sm-0 mr-sm-2" id="run">Run</button>
+            <select class="form-control" id="python_version" title="Python Version (--python--version)">
+              % for ver in python_versions:
+                % selected = " selected" if ver == "3.6" else ""
+                <option value="{{ ver }}"{{ selected }}>Python {{ ver }}</option>
+              % end
+            </select>
           </form>
         </div>
       </nav>
