@@ -32,6 +32,9 @@ def typecheck():
         options["python_version"] = python_version
 
     result = sandbox.run_typecheck(source, **options)
+    if result is None:
+        abort(500)
+
     return result
 
 
