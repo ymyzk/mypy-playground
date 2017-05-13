@@ -44,6 +44,6 @@ def server_static(filename):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True, reloader=True)
 else:
     application = app
