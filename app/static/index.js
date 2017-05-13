@@ -7,15 +7,13 @@
     request.setRequestHeader("Content-Type", "application/json");
     request.onreadystatechange = function() {
       if (request.readyState == 4) {
-        var json;
-        try {
-          json = JSON.parse(request.response);
-        } catch (e) {
-          error("JSON.parse(): " + e);
-          return;
-        }
         if (request.status == 200) {
-          callback(json);
+          try {
+            callback(JSON.parse(request.response));
+          } catch (e) {
+            error("JSON.parse(): " + e);
+            return;
+          }
         } else {
           error("unexpected status: " + request.status)
         }
