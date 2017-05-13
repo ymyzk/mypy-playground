@@ -5,12 +5,15 @@ import time
 import docker
 from requests.exceptions import ConnectionError
 
+from utils import setup_logger
+
 
 DOCKER_IMAGE = "ymyzk/mypy-playground:sandbox"
 SOURCE_DIR = "/tmp"
 SOURCE_FILE_NAME = "<annon.py>"
 
 client = docker.from_env()
+logger = setup_logger(__name__)
 
 
 def pull_image(force=False):
@@ -20,6 +23,7 @@ def pull_image(force=False):
     try:
         client.images.get(DOCKER_IMAGE)
     except docker.errors.ImageNotFound:
+        logger.info("image not found: %s", DOCKER_IMAGE)
         client.images.pull(DOCKER_IMAGE)
 
 

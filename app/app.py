@@ -4,9 +4,11 @@ import bottle
 from bottle import abort, request, static_file, template
 
 import sandbox
+from utils import setup_logger
 
 
 app = bottle.default_app()
+logger = setup_logger(__name__)
 root_dir = path.dirname(__file__)
 static_dir = path.join(root_dir, "static")
 python_versions = [str(v) for v in (2.7, 3.3, 3.4, 3.5, 3.6)]
@@ -33,6 +35,7 @@ def typecheck():
 
     result = sandbox.run_typecheck(source, **options)
     if result is None:
+        logger.warn("an error occurred during running type-check")
         abort(500)
 
     return result
