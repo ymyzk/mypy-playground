@@ -13,8 +13,14 @@ SOURCE_FILE_NAME = "<annon.py>"
 client = docker.from_env()
 
 
-def pull_image():
-    client.images.pull(DOCKER_IMAGE)
+def pull_image(force=False):
+    if force:
+        client.images.pull(DOCKER_IMAGE)
+        return
+    try:
+        client.images.get(DOCKER_IMAGE)
+    except docker.errors.ImageNotFound:
+        client.images.pull(DOCKER_IMAGE)
 
 
 def create_archive(source):
@@ -37,6 +43,7 @@ def run_typecheck(source, *, python_version=None):
         builder.write(SOURCE_FILE_NAME)
         cmd = builder.getvalue()
     try:
+        pull_image()
         c = client.containers.create(
                 DOCKER_IMAGE,
                 command=cmd,

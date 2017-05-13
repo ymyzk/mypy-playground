@@ -44,8 +44,6 @@ def server_static(filename):
 
 
 if __name__ == "__main__":
-    # TODO: async?
-    sandbox.pull_image()
     app.run()
 else:
     application = app
