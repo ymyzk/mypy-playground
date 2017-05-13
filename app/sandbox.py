@@ -1,5 +1,4 @@
 from io import BytesIO, StringIO
-import os
 import tarfile
 import time
 
