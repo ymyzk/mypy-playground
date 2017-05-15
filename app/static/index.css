@@ -12,10 +12,6 @@ header {
   flex: 0 0 auto;
 }
 
-header nav {
-  background-color: #2d618c;
-}
-
 main {
   height: 100%;
   display: flex;
@@ -33,6 +29,30 @@ main {
   flex: 1 40%;
   overflow: auto;
   background: #eee;
+}
+
+#result hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-color: #ddd;
+}
+
+#result pre {
+  margin: 0;
+  border: none;
+  padding: 0;
+  background: none;
+}
+
+.navbar-custom {
+  margin-bottom: 0;
+  border: none;
+  border-radius: 0;
+  background-color: #2d618c;
+}
+
+.navbar-custom .navbar-brand {
+  color: white;
 }
 
 .btn-nav-color {

@@ -2,28 +2,36 @@
 <html lang="en" style="height: 100%;">
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>mypy Playground</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="static/index.css">
   </head>
   <body>
     <header>
-      <nav class="navbar navbar-toggleable-md navbar-inverse">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class="navbar-brand" href="#">mypy Playground</a>
-        <div class="collapse navbar-collapse" id="navbar">
-          <form class="form-inline my-2 my-lg-0">
-            <button class="btn btn-nav-color my-2 my-sm-0 mr-sm-2" id="run">Run</button>
-            <select class="form-control" id="python_version" title="Python Version (--python--version)">
-              % for ver in python_versions:
-                % selected = " selected" if ver == "3.6" else ""
-                <option value="{{ ver }}"{{ selected }}>Python {{ ver }}</option>
-              % end
-            </select>
-          </form>
+      <nav class="navbar navbar-inverse navbar-custom">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">mypy Playground</a>
+          </div>
+          <div class="collapse navbar-collapse" id="navbar-collapse">
+            <form class="navbar-form navbar-left">
+              <button class="btn btn-nav-color" id="run">Run</button>
+              <select class="form-control" id="python_version" title="Python Version (--python--version)">
+                % for ver in python_versions:
+                  % selected = " selected" if ver == "3.6" else ""
+                  <option value="{{ ver }}"{{ selected }}>Python {{ ver }}</option>
+                % end
+              </select>
+            </form>
+          </div>
         </div>
       </nav>
     </header>
@@ -43,9 +51,8 @@ fib("10")
 </div>
       <div id="result"></div>
     </main>
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js" crossorigin="anonymous"></script>
     <script src="static/index.js"></script>
   </body>
