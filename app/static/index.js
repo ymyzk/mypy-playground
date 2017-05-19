@@ -5,7 +5,7 @@
     var types = {
       error: "error",
       note: "info"
-    }
+    };
     var getType = function(level) {
       var type = types[level];
       return type ? type : "error";
@@ -41,7 +41,7 @@
         }
       }
     };
-    request.timeout = 10000;
+    request.timeout = 30 * 1000;
     request.ontimeout = function() {
       error("timed out")
     };
