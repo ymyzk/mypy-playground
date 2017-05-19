@@ -1,4 +1,5 @@
 from os import path
+from typing import Any, Dict
 
 import bottle
 from bottle import abort, request, static_file, template
@@ -13,6 +14,8 @@ root_dir = path.dirname(__file__)
 static_dir = path.join(root_dir, "static")
 python_versions = [str(v) for v in (2.7, 3.3, 3.4, 3.5, 3.6)]
 
+_json_response = Dict[str, Any]
+
 
 @app.route("/")
 def index():
@@ -23,7 +26,7 @@ def index():
 
 
 @app.route("/typecheck.json", method="POST")
-def typecheck():
+def typecheck() -> _json_response:
     source = request.json.get("source")
     if source is None or not isinstance(source, str):
         abort(400)
@@ -41,7 +44,7 @@ def typecheck():
         logger.warn("an error occurred during running type-check")
         abort(500)
 
-    return result
+    return result.to_dict()
 
 
 @app.route("/static/<filename>")

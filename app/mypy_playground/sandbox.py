@@ -17,8 +17,25 @@ client = docker.from_env()
 logger = setup_logger(__name__)
 
 
-def pull_image(force=False):
-    # type: (bool) -> None
+class Result:
+    def __init__(self,
+                 *,
+                 exit_code: int,
+                 stdout: str,
+                 stderr: str) -> None:
+        self.exit_code = exit_code
+        self.stdout = stdout
+        self.stderr = stderr
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "exit_code": self.exit_code,
+            "stdout": self.stdout,
+            "stderr": self.stderr,
+        }
+
+
+def pull_image(force: bool = False) -> None:
     if force:
         client.images.pull(DOCKER_IMAGE)
         return
@@ -29,8 +46,7 @@ def pull_image(force=False):
         client.images.pull(DOCKER_IMAGE)
 
 
-def create_archive(source):
-    # type: (str) -> BytesIO
+def create_archive(source: str) -> BytesIO:
     stream = BytesIO()
     with tarfile.TarFile(fileobj=stream, mode="w") as tar:
         data = source.encode("utf-8")
@@ -44,9 +60,8 @@ def create_archive(source):
 
 def run_typecheck(source,
                   *,
-                  python_version=None,
-                  verbose=False):
-    # type: (...) -> Optional[Dict[str, Any]]
+                  python_version: Optional[str] = None,
+                  verbose: bool = False) -> Optional[Result]:
     with StringIO() as builder:
         builder.write("mypy --cache-dir /dev/null ")
         if python_version:
@@ -71,11 +86,7 @@ def run_typecheck(source,
         stdout = c.logs(stdout=True, stderr=False).decode("utf-8")
         stderr = c.logs(stdout=False, stderr=True).decode("utf-8")
         c.remove()
-        return {
-            "exit_code": exit_code,
-            "stdout": stdout,
-            "stderr": stderr,
-        }
+        return Result(exit_code=exit_code, stdout=stdout, stderr=stderr)
     # TODO: better error handling
     except ConnectionError as e:
         return None
