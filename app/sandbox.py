@@ -1,6 +1,7 @@
 from io import BytesIO, StringIO
 import tarfile
 import time
+from typing import Any, Dict, Optional
 
 import docker
 from requests.exceptions import ConnectionError
@@ -17,6 +18,7 @@ logger = setup_logger(__name__)
 
 
 def pull_image(force=False):
+    # type: (bool) -> None
     if force:
         client.images.pull(DOCKER_IMAGE)
         return
@@ -28,18 +30,23 @@ def pull_image(force=False):
 
 
 def create_archive(source):
+    # type: (str) -> BytesIO
     stream = BytesIO()
     with tarfile.TarFile(fileobj=stream, mode="w") as tar:
         data = source.encode("utf-8")
         tarinfo = tarfile.TarInfo(name=SOURCE_FILE_NAME)
         tarinfo.size = len(data)
-        tarinfo.mtime = time.time()
+        tarinfo.mtime = int(time.time())
         tar.addfile(tarinfo, BytesIO(data))
     stream.seek(0)
     return stream
 
 
-def run_typecheck(source, *, python_version=None, verbose=False):
+def run_typecheck(source,
+                  *,
+                  python_version=None,
+                  verbose=False):
+    # type: (...) -> Optional[Dict[str, Any]]
     with StringIO() as builder:
         builder.write("mypy --cache-dir /dev/null ")
         if python_version:

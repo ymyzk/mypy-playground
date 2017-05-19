@@ -1,7 +1,7 @@
 import logging
 
 
-def setup_logger(name):
+def setup_logger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
     handler = logging.StreamHandler()
     handler.setFormatter(
