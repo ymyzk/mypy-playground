@@ -30,7 +30,7 @@
                   <option value="{{ ver }}"{{ selected }}>Python {{ ver }}</option>
                 % end
               </select>
-              <button class="btn btn-default" data-toggle="modal" data-target="#options-modal">Options</button>
+              <button type="button" class="btn btn-default" data-toggle="modal" data-target="#options-modal">Options</button>
             </form>
           </div>
         </div>
@@ -61,11 +61,13 @@ fib("10")
           </div>
           <div class="modal-body">
             <form>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" id="verbose" value="true"> Verbose <code>--verbose</code>
-                </label>
-              </div>
+              % for flag in flags:
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" class="mypy-options" name="{{ flag }}" value="true"><code>--{{ flag }}</code>
+                  </label>
+                </div>
+              % end
             </form>
           </div>
           <div class="modal-footer">

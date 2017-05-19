@@ -21,6 +21,7 @@ _json_response = Dict[str, Any]
 def index():
     context = {
         "python_versions": python_versions,
+        "flags": sandbox.ARGUMENT_FLAGS,
     }
     return template("index", **context)
 
@@ -35,9 +36,10 @@ def typecheck() -> _json_response:
     python_version = request.json.get("python_version")
     if python_version is not None and python_version in python_versions:
         options["python_version"] = python_version
-    verbose = request.json.get("verbose")
-    if verbose is not None and isinstance(verbose, bool):
-        options["verbose"] = verbose
+    for flag in sandbox.ARGUMENT_FLAGS:
+        flag_value = request.json.get(flag)
+        if flag_value is not None and flag_value is True:
+            options[flag] = flag_value
 
     result = sandbox.run_typecheck(source, **options)
     if result is None:

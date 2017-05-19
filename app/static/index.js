@@ -55,8 +55,11 @@
     var data = {
       source: editor.getValue(),
       python_version: $("#python_version").val(),
-      verbose: $("#verbose").prop("checked"),
     };
+    $("input.mypy-options[type='checkbox']").map(function () {
+      var $input = $(this);
+      data[$input.prop("name")] = $input.prop("checked");
+    });
     $run.prop("disabled", true);
     $result.text("Running...");
 

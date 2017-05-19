@@ -13,6 +13,10 @@ DOCKER_IMAGE = "ymyzk/mypy-playground:sandbox"
 SOURCE_DIR = "/tmp"
 SOURCE_FILE_NAME = "<annon.py>"
 
+ARGUMENT_FLAGS = (
+    "verbose",
+)
+
 client = docker.from_env()
 logger = setup_logger(__name__)
 
@@ -61,13 +65,15 @@ def create_archive(source: str) -> BytesIO:
 def run_typecheck(source,
                   *,
                   python_version: Optional[str] = None,
-                  verbose: bool = False) -> Optional[Result]:
+                  **kwargs
+                  ) -> Optional[Result]:
     with StringIO() as builder:
         builder.write("mypy --cache-dir /dev/null ")
         if python_version:
             builder.write(f"--python-version {python_version} ")
-        if verbose:
-            builder.write("--verbose ")
+        for key, value in kwargs.items():
+            if key in ARGUMENT_FLAGS:
+                builder.write(f"--{key} ")
         builder.write(SOURCE_FILE_NAME)
         cmd = builder.getvalue()  # type: ignore
     try:
