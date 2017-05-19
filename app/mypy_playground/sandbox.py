@@ -69,7 +69,7 @@ def run_typecheck(source,
         if verbose:
             builder.write("--verbose ")
         builder.write(SOURCE_FILE_NAME)
-        cmd = builder.getvalue()
+        cmd = builder.getvalue()  # type: ignore
     try:
         pull_image()
         c = client.containers.create(
