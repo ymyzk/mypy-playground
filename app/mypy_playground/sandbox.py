@@ -6,7 +6,7 @@ from typing import Any, Dict, Optional
 import docker
 from requests.exceptions import ConnectionError
 
-from utils import setup_logger
+from .utils import setup_logger
 
 
 DOCKER_IMAGE = "ymyzk/mypy-playground:sandbox"

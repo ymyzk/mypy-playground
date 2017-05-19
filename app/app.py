@@ -3,8 +3,8 @@ from os import path
 import bottle
 from bottle import abort, request, static_file, template
 
-import sandbox
-from utils import setup_logger
+from mypy_playground import sandbox
+from mypy_playground.utils import setup_logger
 
 
 app = bottle.default_app()
