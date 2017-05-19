@@ -32,6 +32,9 @@ def typecheck():
     python_version = request.json.get("python_version")
     if python_version is not None and python_version in python_versions:
         options["python_version"] = python_version
+    verbose = request.json.get("verbose")
+    if verbose is not None and isinstance(verbose, bool):
+        options["verbose"] = verbose
 
     result = sandbox.run_typecheck(source, **options)
     if result is None:

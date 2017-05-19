@@ -55,6 +55,7 @@
     var data = {
       source: editor.getValue(),
       python_version: $("#python_version").val(),
+      verbose: $("#verbose").prop("checked"),
     };
     $run.prop("disabled", true);
     $result.text("Running...");

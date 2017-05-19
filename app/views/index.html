@@ -13,7 +13,7 @@
       <nav class="navbar navbar-inverse navbar-custom">
         <div class="container-fluid">
           <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+            <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
               <span class="sr-only">Toggle navigation</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
@@ -30,6 +30,7 @@
                   <option value="{{ ver }}"{{ selected }}>Python {{ ver }}</option>
                 % end
               </select>
+              <button class="btn btn-default" data-toggle="modal" data-target="#options-modal">Options</button>
             </form>
           </div>
         </div>
@@ -51,6 +52,28 @@ fib("10")
 </div>
       <div id="result"></div>
     </main>
+    <div class="modal fade" id="options-modal" tabindex="-1" role="dialog" aria-labelledby="options-modal-label">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="options-modal-label">Options</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" id="verbose" value="true"> Verbose <code>--verbose</code>
+                </label>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js" crossorigin="anonymous"></script>

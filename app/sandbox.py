@@ -39,11 +39,13 @@ def create_archive(source):
     return stream
 
 
-def run_typecheck(source, *, python_version=None):
+def run_typecheck(source, *, python_version=None, verbose=False):
     with StringIO() as builder:
         builder.write("mypy --cache-dir /dev/null ")
         if python_version:
             builder.write(f"--python-version {python_version} ")
+        if verbose:
+            builder.write("--verbose ")
         builder.write(SOURCE_FILE_NAME)
         cmd = builder.getvalue()
     try:
