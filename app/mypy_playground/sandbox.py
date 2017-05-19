@@ -95,6 +95,8 @@ def run_typecheck(source,
         return Result(exit_code=exit_code, stdout=stdout, stderr=stderr)
     # TODO: better error handling
     except ConnectionError as e:
+        logger.error(f"requests connection error: {e}")
         return None
     except docker.errors.APIError as e:
+        logger.error(f"docker api error: {e}")
         return None
