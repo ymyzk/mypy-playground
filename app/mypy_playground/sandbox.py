@@ -13,9 +13,31 @@ DOCKER_IMAGE = "ymyzk/mypy-playground:sandbox"
 SOURCE_DIR = "/tmp"
 SOURCE_FILE_NAME = "<annon.py>"
 
-ARGUMENT_FLAGS = (
+ARGUMENT_FLAGS_NORMAL = (
     "verbose",
+    "ignore-missing-imports",
+    "warn-incomplete-stub",
+    "show-error-context",
+    "stats",
+    "inferstats",
+    "scripts-are-modules",
+    "show-column-numbers",
 )
+
+ARGUMENT_FLAGS_STRICT = (
+    "strict",
+    "strict-optional",
+    "check-untyped-defs",
+    "disallow-subclassing-any",
+    "disallow-untyped-calls",
+    "disallow-untyped-defs",
+    "no-warn-no-return",
+    "warn-redundant-casts",
+    "warn-return-any",
+    "warn-unused-ignores",
+)
+
+ARGUMENT_FLAGS = ARGUMENT_FLAGS_NORMAL + ARGUMENT_FLAGS_STRICT
 
 client = docker.from_env()
 logger = setup_logger(__name__)

@@ -21,7 +21,8 @@ _json_response = Dict[str, Any]
 def index():
     context = {
         "python_versions": python_versions,
-        "flags": sandbox.ARGUMENT_FLAGS,
+        "flags_normal": sandbox.ARGUMENT_FLAGS_NORMAL,
+        "flags_strict": sandbox.ARGUMENT_FLAGS_STRICT,
     }
     return template("index", **context)
 

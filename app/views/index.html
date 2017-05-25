@@ -61,13 +61,26 @@ fib("10")
           </div>
           <div class="modal-body">
             <form>
-              % for flag in flags:
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox" class="mypy-options" name="{{ flag }}" value="true"><code>--{{ flag }}</code>
-                  </label>
-                </div>
-              % end
+            <div class="row">
+              <div class="col-md-6">
+                % for flag in flags_normal:
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" class="mypy-options" name="{{ flag }}" value="true"><code>--{{ flag }}</code>
+                    </label>
+                  </div>
+                % end
+              </div>
+              <div class="col-md-6">
+                % for flag in flags_strict:
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" class="mypy-options" name="{{ flag }}" value="true"><code>--{{ flag }}</code>
+                    </label>
+                  </div>
+                % end
+              </div>
+            </div>
             </form>
           </div>
           <div class="modal-footer">
