@@ -11,7 +11,7 @@ from .utils import setup_logger
 
 DOCKER_IMAGE = "ymyzk/mypy-playground:sandbox"
 SOURCE_DIR = "/tmp"
-SOURCE_FILE_NAME = "<annon.py>"
+SOURCE_FILE_NAME = "main.py"
 
 ARGUMENT_FLAGS_NORMAL = (
     "verbose",

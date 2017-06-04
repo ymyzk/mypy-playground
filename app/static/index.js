@@ -10,7 +10,7 @@
       var type = types[level];
       return type ? type : "error";
     };
-    var matcher = /^<annon\.py>:(\d+): (\w+): (.+)/;
+    var matcher = /^main\.py:(\d+): (\w+): (.+)/;
     return messages.split("\n").map(function(m) {
       var match = m.match(matcher);
       return match ? {
