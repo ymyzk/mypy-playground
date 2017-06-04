@@ -40,19 +40,7 @@
       </nav>
     </header>
     <main>
-      <div id="editor">from typing import Iterator
-
-
-def fib(n: int) -&gt; Iterator[int]:
-    a, b = 0, 1
-    while a &lt; n:
-        yield a
-        a, b = b, a + b
-
-
-fib(10)
-fib("10")
-</div>
+      <div id="editor"></div>
       <div id="result"></div>
     </main>
     <div class="modal fade" id="options-modal" tabindex="-1" role="dialog" aria-labelledby="options-modal-label">
@@ -114,6 +102,7 @@ fib("10")
         </div>
       </div>
     </div>
+    <script id="initial-code" type="text/plain">{{! initial_code }}</script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js" crossorigin="anonymous"></script>

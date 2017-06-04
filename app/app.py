@@ -13,6 +13,19 @@ logger = setup_logger(__name__)
 root_dir = path.dirname(__file__)
 static_dir = path.join(root_dir, "static")
 python_versions = [str(v) for v in (2.7, 3.3, 3.4, 3.5, 3.6)]
+initial_code = """from typing import Iterator
+
+
+def fib(n: int) -> Iterator[int]:
+    a, b = 0, 1
+    while a < n:
+        yield a
+        a, b = b, a + b
+
+
+fib(10)
+fib("10")
+"""
 
 _json_response = Dict[str, Any]
 
@@ -20,6 +33,7 @@ _json_response = Dict[str, Any]
 @app.route("/")
 def index():
     context = {
+        "initial_code": initial_code,
         "python_versions": python_versions,
         "flags_normal": sandbox.ARGUMENT_FLAGS_NORMAL,
         "flags_strict": sandbox.ARGUMENT_FLAGS_STRICT,

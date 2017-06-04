@@ -97,6 +97,7 @@
     };
 
     var editor = ace.edit("editor");
+    editor.setValue($("#initial-code").text(), -1);
     editor.getSession().setMode("ace/mode/python");
     editor.getSession().setUseSoftTabs(true);
   });
