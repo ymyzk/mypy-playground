@@ -32,6 +32,9 @@
               </select>
               <button type="button" class="btn btn-default" data-toggle="modal" data-target="#options-modal">Options</button>
             </form>
+            <form class="navbar-form navbar-right">
+              <button type="button" class="btn btn-default" data-toggle="modal" data-target="#about-modal">About</button>
+            </form>
           </div>
         </div>
       </nav>
@@ -82,6 +85,28 @@ fib("10")
               </div>
             </div>
             </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="about-modal" tabindex="-1" role="dialog" aria-labelledby="about-modal-label">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="about-modal-label">About the mypy Playground</h4>
+          </div>
+          <div class="modal-body">
+            <p>
+              The mypy Playground is a web service that receives a Python program with type hints, runs mypy inside a sandbox, then returns the output.
+            </p>
+            <p>
+              This project is an open source project started by <a href="https://www.ymyzk.com">Yusuke Miyazaki (@ymyzk)</a>.
+              Source code is available at <a href="https://github.com/ymyzk/mypy-playground">GitHub</a>.
+            </p>
           </div>
           <div class="modal-footer">
             <button class="btn btn-primary" data-dismiss="modal">Close</button>
