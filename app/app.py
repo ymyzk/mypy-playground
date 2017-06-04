@@ -1,4 +1,4 @@
-from os import path
+from os import environ, path
 from typing import Any, Dict
 
 import bottle
@@ -37,6 +37,7 @@ def index():
         "python_versions": python_versions,
         "flags_normal": sandbox.ARGUMENT_FLAGS_NORMAL,
         "flags_strict": sandbox.ARGUMENT_FLAGS_STRICT,
+        "ga_tracking_id": app.config.get("mypy_play.ga.tracking_id"),
     }
     return template("index", **context)
 
@@ -67,6 +68,11 @@ def typecheck() -> _json_response:
 @app.route("/static/<filename>")
 def server_static(filename):
     return static_file(filename, root=static_dir)
+
+
+app.config.update({
+    "mypy_play.ga.tracking_id": environ.get("MYPY_PLAY_GA_TRACKING_ID"),
+})
 
 
 if __name__ == "__main__":
