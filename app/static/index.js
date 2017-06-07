@@ -48,6 +48,45 @@
     request.send(JSON.stringify(data));
   }
 
+  function shareGist() {
+    var editor = ace.edit("editor");
+    var data = {
+      description: "Shared via mypy Playground",
+      public: true,
+      files: {
+        "main.py": {
+          content: editor.getValue(),
+        },
+      },
+    };
+
+    var $result = $("#result");
+    $result.empty();
+    $result.text("Creating a gist...");
+
+    axios.post("https://api.github.com/gists", data)
+      .then(function(response) {
+        if (response.status !== 201) {
+          $result.empty();
+          $result.text("Failed to create a gist. Status code: " + response.status);
+          return;
+        }
+        var url = response.data.html_url;
+        $result.empty();
+        $result.append("<span>Gist URL: </span>");
+        var $link = $("<a>");
+        $link.attr("href", url);
+        $link.attr("target", "_blank");
+        $link.text(url);
+        $result.append($link);
+        $result.append("<hr>");
+      })
+      .catch(function(error) {
+        $result.empty();
+        $result.text("Failed to create a gist. " + error);
+      });
+  }
+
   function run() {
     var editor = ace.edit("editor");
     var $run = $("#run");
@@ -95,6 +134,11 @@
       e.preventDefault();
       run();
     };
+
+    $("#gist").click(function(e) {
+      e.preventDefault();
+      shareGist();
+    });
 
     var editor = ace.edit("editor");
     editor.setValue($("#initial-code").text(), -1);
