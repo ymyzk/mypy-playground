@@ -23,31 +23,6 @@
     });
   }
 
-  function send(data, callback, error) {
-    var request = new XMLHttpRequest();
-    request.open("POST", "/typecheck.json", true);
-    request.setRequestHeader("Content-Type", "application/json");
-    request.onreadystatechange = function() {
-      if (request.readyState == 4) {
-        if (request.status == 200) {
-          try {
-            callback(JSON.parse(request.response));
-          } catch (e) {
-            error("JSON.parse(): " + e);
-            return;
-          }
-        } else {
-          error("unexpected status: " + request.status)
-        }
-      }
-    };
-    request.timeout = 30 * 1000;
-    request.ontimeout = function() {
-      error("timed out")
-    };
-    request.send(JSON.stringify(data));
-  }
-
   function shareGist() {
     var editor = ace.edit("editor");
     var data = {
@@ -102,7 +77,16 @@
     $run.prop("disabled", true);
     $result.text("Running...");
 
-    send(data, function(result) {
+    axios.post("/typecheck.json", data, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      timeout: 30 * 1000,
+      validateStatus: function(status) {
+        return status === 200;
+      },
+    }).then(function(response) {
+      var result = response.data;
       $result.empty();
       if (result.exit_code === 0) {
         $result.append($("<span>").text("Success!!"));
@@ -117,8 +101,7 @@
 
       editor.getSession().clearAnnotations();
       editor.getSession().setAnnotations(parseMessages(result.stdout));
-
-    }, function(error) {
+    }).catch(function(error) {
       $result.empty();
       $run.prop("disabled", false);
       $result.append($("<span>").text("Error"));
