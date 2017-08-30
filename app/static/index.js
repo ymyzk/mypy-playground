@@ -23,6 +23,18 @@
     });
   }
 
+  function parseQueryParameters() {
+    var a = window.location.search.substr(1).split("&");
+    if (a === "") return {};
+    var b = {};
+    for (var i = 0; i < a.length; i++) {
+      var p = a[i].split("=");
+      if (p.length != 2) continue;
+      b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+    }
+    return b;
+  }
+
   function shareGist() {
     var editor = ace.edit("editor");
     var data = {
@@ -54,11 +66,46 @@
         $link.attr("target", "_blank");
         $link.text(url);
         $result.append($link);
+        url = "https://play-mypy.ymyzk.com/?gist=" + response.data.id;
+        $result.append("<br><span>Playground URL: </span>");
+        $link = $("<a>");
+        $link.attr("href", url);
+        $link.text(url);
+        $result.append($link);
         $result.append("<hr>");
       })
       .catch(function(error) {
         $result.empty();
         $result.text("Failed to create a gist. " + error);
+      });
+  }
+
+  function fetchGist(gistId) {
+    var editor = ace.edit("editor");
+    var $result = $("#result");
+    $result.empty();
+    $result.text("Fetching a gist...");
+
+    axios.get("https://api.github.com/gists/" + gistId)
+      .then(function(response) {
+        if (response.status !== 200) {
+          $result.empty();
+          $result.text("Failed to fetch a gist.");
+          return;
+        }
+        if (!("main.py" in response.data.files)) {
+          $result.empty();
+          $result.text("'main.py' not found.");
+          return;
+        }
+
+        editor.setValue(response.data.files["main.py"].content, -1);
+        $result.empty();
+        $result.text("Completed to fetch a Gist!");
+      })
+      .catch(function(error) {
+        $result.empty();
+        $result.text("Failed to fetch a gist. " + error);
       });
   }
 
@@ -127,5 +174,10 @@
     editor.setValue($("#initial-code").text(), -1);
     editor.getSession().setMode("ace/mode/python");
     editor.getSession().setUseSoftTabs(true);
+
+    var queries = parseQueryParameters();
+    if ("gist" in queries) {
+      fetchGist(queries.gist);
+    }
   });
 })();
