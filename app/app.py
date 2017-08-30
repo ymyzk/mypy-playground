@@ -76,6 +76,6 @@ app.config.update({
 
 
 if __name__ == "__main__":
-    app.run(debug=True, reloader=True)
+    app.run(host="", debug=True, reloader=True)
 else:
     application = app

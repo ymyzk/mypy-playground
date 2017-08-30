@@ -1,0 +1,12 @@
+version: "3"
+services:
+  app:
+    build: app
+    ports:
+      - 127.0.0.1:8080:8080
+    environment:
+      DOCKER_HOST: docker:2375
+
+  docker:
+    image: docker:stable-dind
+    privileged: true
