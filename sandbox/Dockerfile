@@ -1,9 +1,10 @@
 FROM python:3.6-slim
 
-RUN pip install mypy \
+WORKDIR /tmp
+COPY requirements.txt /tmp/
+
+RUN pip install -r requirements.txt \
         && rm -rf /root/.cache
 
 USER nobody
-WORKDIR /tmp
-
-CMD mypy
+CMD ["mypy"]
