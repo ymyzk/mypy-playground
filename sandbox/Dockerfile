@@ -1,4 +1,4 @@
-FROM python:3.6-slim
+FROM python:3.6
 
 WORKDIR /tmp
 COPY requirements.txt /tmp/
