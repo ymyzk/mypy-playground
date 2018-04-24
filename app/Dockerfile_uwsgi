@@ -14,4 +14,4 @@ RUN pip install -r requirements.txt -r requirements.uwsgi.txt \
 COPY . /app
 
 EXPOSE 8080
-CMD ["uwsgi", "--http", ":8080", "--wsgi-file", "app.py"]
+CMD ["uwsgi", "--http", ":8080", "--module", "mypy_playground.app"]

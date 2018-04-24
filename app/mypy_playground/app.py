@@ -4,13 +4,13 @@ from typing import Any, Dict
 import bottle
 from bottle import abort, request, static_file, template
 
-from mypy_playground import sandbox
-from mypy_playground.utils import setup_logger
+from . import sandbox
+from .utils import setup_logger
 
 
 app = bottle.default_app()
 logger = setup_logger(__name__)
-root_dir = path.dirname(__file__)
+root_dir = path.dirname(path.dirname(__file__))
 static_dir = path.join(root_dir, "static")
 python_versions = [str(v) for v in (2.7, 3.3, 3.4, 3.5, 3.6)]
 initial_code = """from typing import Iterator
@@ -74,8 +74,4 @@ app.config.update({
     "mypy_play.ga.tracking_id": environ.get("MYPY_PLAY_GA_TRACKING_ID"),
 })
 
-
-if __name__ == "__main__":
-    app.run(host="", debug=True, reloader=True)
-else:
-    application = app
+application = app
