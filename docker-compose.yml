@@ -6,7 +6,11 @@ services:
       - 127.0.0.1:8080:8080
     environment:
       DOCKER_HOST: docker:2375
+    volumes:
+      - ./app:/app
 
   docker:
-    image: docker:stable-dind
+    image: docker:18.03-dind
     privileged: true
+    volumes:
+      - ./sandbox:/sandbox
