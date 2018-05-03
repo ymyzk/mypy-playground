@@ -38,27 +38,21 @@
   function shareGist() {
     var editor = ace.edit("editor");
     var data = {
-      description: "Shared via mypy Playground",
-      public: true,
-      files: {
-        "main.py": {
-          content: editor.getValue(),
-        },
-      },
+      source: editor.getValue(),
     };
 
     var $result = $("#result");
     $result.empty();
     $result.text("Creating a gist...");
 
-    axios.post("https://api.github.com/gists", data)
+    axios.post("/gist", data)
       .then(function(response) {
         if (response.status !== 201) {
           $result.empty();
           $result.text("Failed to create a gist. Status code: " + response.status);
           return;
         }
-        var url = response.data.html_url;
+        var url = response.data.url;
         $result.empty();
         $result.append("<span>Gist URL: </span>");
         var $link = $("<a>");
