@@ -26,11 +26,11 @@ ARGUMENT_FLAGS_NORMAL = (
 
 ARGUMENT_FLAGS_STRICT = (
     "strict",
-    "strict-optional",
     "check-untyped-defs",
     "disallow-subclassing-any",
     "disallow-untyped-calls",
     "disallow-untyped-defs",
+    "no-strict-optional",
     "no-warn-no-return",
     "warn-redundant-casts",
     "warn-return-any",
