@@ -2,9 +2,9 @@ from os import environ, path
 from typing import Any, Dict
 
 import bottle
-from bottle import abort, request, static_file, template
+from bottle import abort, request, response, static_file, template
 
-from . import sandbox
+from . import gist, sandbox
 from .utils import setup_logger
 
 
@@ -63,6 +63,22 @@ def typecheck() -> _json_response:
         abort(500)
 
     return result.to_dict()  # type: ignore
+
+
+@app.route("/gist", method="POST")
+def create_gist():
+    source = request.json.get("source")
+    if source is None or not isinstance(source, str):
+        abort(400)
+
+    result = gist.create_gist(source)
+
+    if result is None:
+        abort(500)
+
+    response.status = 201
+
+    return result
 
 
 @app.route("/static/<filename>")
