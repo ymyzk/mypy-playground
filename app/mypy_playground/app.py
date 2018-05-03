@@ -62,7 +62,7 @@ def typecheck() -> _json_response:
         logger.warn("an error occurred during running type-check")
         abort(500)
 
-    return result.to_dict()
+    return result.to_dict()  # type: ignore
 
 
 @app.route("/static/<filename>")
