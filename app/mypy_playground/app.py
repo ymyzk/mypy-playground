@@ -1,3 +1,4 @@
+import logging
 from os import environ, path
 
 import tornado.escape
@@ -9,6 +10,7 @@ from . import gist, sandbox
 from .utils import setup_logger
 
 
+logging.getLogger("tornado.access").setLevel(logging.INFO)
 logger = setup_logger(__name__)
 root_dir = path.dirname(path.dirname(__file__))
 static_dir = path.join(root_dir, "static")
