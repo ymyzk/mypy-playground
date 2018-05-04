@@ -32,7 +32,7 @@ fib("10")
 
 
 class IndexHandler(tornado.web.RequestHandler):
-    def get(self):
+    async def get(self):
         context = {
             "initial_code": initial_code,
             "python_versions": python_versions,
