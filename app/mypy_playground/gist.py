@@ -1,11 +1,10 @@
-from os import environ
 from typing import Dict, Optional
 
 import requests
+from tornado.options import options
 
 
 API_ENDPOINT = "https://api.github.com/gists"
-TOKEN = environ.get("MYPY_PLAY_GITHUB_TOKEN")
 
 
 def create_gist(source: str) -> Optional[Dict[str, str]]:
@@ -20,7 +19,7 @@ def create_gist(source: str) -> Optional[Dict[str, str]]:
     }
 
     headers = {
-        "Authorization": f"token {TOKEN}"
+        "Authorization": f"token {options.github_token}"
     }
 
     res = requests.post(API_ENDPOINT, json=data, headers=headers)
