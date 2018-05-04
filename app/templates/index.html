@@ -19,10 +19,10 @@
             <button type="button" class="btn btn-light my-2 my-sm-0 mr-sm-2" id="run">Run</button>
             <button type="button" class="btn btn-light my-2 my-sm-0 mr-sm-2" id="gist">Gist</button>
             <select class="form-control mr-sm-2" id="python_version" title="Python Version (--python--version)">
-              % for ver in python_versions:
-                % selected = " selected" if ver == "3.6" else ""
+              {% for ver in python_versions %}
+                {% set selected = " selected" if ver == "3.6" else "" %}
                 <option value="{{ ver }}"{{ selected }}>Python {{ ver }}</option>
-              % end
+              {% end %}
             </select>
             <button type="button" class="btn btn-light my-2 my-sm-0" data-toggle="modal" data-target="#options-modal">Options</button>
           </form>
@@ -47,22 +47,22 @@
             <form>
               <div class="form-row">
                 <div class="col-md-6">
-                  % for flag in flags_normal:
+                  {% for flag in flags_normal %}
                     <div class="checkbox">
                       <label>
                         <input type="checkbox" class="mypy-options" name="{{ flag }}" value="true"> <code>--{{ flag }}</code>
                       </label>
                     </div>
-                  % end
+                  {% end %}
                 </div>
                 <div class="col-md-6">
-                  % for flag in flags_strict:
+                  {% for flag in flags_strict %}
                     <div class="checkbox">
                       <label>
                         <input type="checkbox" class="mypy-options" name="{{ flag }}" value="true"> <code>--{{ flag }}</code>
                       </label>
                     </div>
-                  % end
+                  {% end %}
                 </div>
               </div>
             </form>
@@ -97,13 +97,13 @@
         </div>
       </div>
     </div>
-    <script id="initial-code" type="text/plain">{{! initial_code }}</script>
+    <script id="initial-code" type="text/plain">{% raw initial_code %}</script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.3.3/ace.js" crossorigin="anonymous"></script>
     <script src="static/index.js"></script>
-    % if ga_tracking_id:
+    {% if ga_tracking_id %}
       <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -113,6 +113,6 @@
         ga('create', '{{ ga_tracking_id }}', 'auto');
         ga('send', 'pageview');
       </script>
-    % end
+    {% end %}
   </body>
 </html>

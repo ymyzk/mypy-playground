@@ -1,17 +1,20 @@
+import logging
 from os import environ, path
-from typing import Any, Dict
 
-import bottle
-from bottle import abort, request, response, static_file, template
+import tornado.escape
+import tornado.ioloop
+from tornado.options import define, options
+import tornado.web
 
 from . import gist, sandbox
 from .utils import setup_logger
 
 
-app = bottle.default_app()
+logging.getLogger("tornado.access").setLevel(logging.INFO)
 logger = setup_logger(__name__)
 root_dir = path.dirname(path.dirname(__file__))
 static_dir = path.join(root_dir, "static")
+templates_dir = path.join(root_dir, "templates")
 python_versions = [str(v) for v in (2.7, 3.3, 3.4, 3.5, 3.6)]
 initial_code = """from typing import Iterator
 
@@ -27,67 +30,90 @@ fib(10)
 fib("10")
 """
 
-_json_response = Dict[str, Any]
+
+class IndexHandler(tornado.web.RequestHandler):
+    async def get(self):
+        context = {
+            "initial_code": initial_code,
+            "python_versions": python_versions,
+            "flags_normal": sandbox.ARGUMENT_FLAGS_NORMAL,
+            "flags_strict": sandbox.ARGUMENT_FLAGS_STRICT,
+            "ga_tracking_id": options.ga_tracking_id,
+        }
+        self.render("index.html", **context)
 
 
-@app.route("/")
-def index():
-    context = {
-        "initial_code": initial_code,
-        "python_versions": python_versions,
-        "flags_normal": sandbox.ARGUMENT_FLAGS_NORMAL,
-        "flags_strict": sandbox.ARGUMENT_FLAGS_STRICT,
-        "ga_tracking_id": app.config.get("mypy_play.ga.tracking_id"),
-    }
-    return template("index", **context)
+class TypecheckHandler(tornado.web.RequestHandler):
+    def post(self):
+        json = tornado.escape.json_decode(self.request.body)
+
+        source = json.get("source")
+        if source is None or not isinstance(source, str):
+            # TODO: JSON
+            self.send_error(400)
+            return
+
+        options = {}
+        python_version = json.get("python_version")
+        if python_version is not None and python_version in python_versions:
+            options["python_version"] = python_version
+        for flag in sandbox.ARGUMENT_FLAGS:
+            flag_value = json.get(flag)
+            if flag_value is not None and flag_value is True:
+                options[flag] = flag_value
+
+        result = sandbox.run_typecheck(source, **options)
+        if result is None:
+            logger.warn("an error occurred during running type-check")
+            self.send_error(500)
+            return
+
+        self.write(result.to_dict())
 
 
-@app.route("/typecheck.json", method="POST")
-def typecheck() -> _json_response:
-    source = request.json.get("source")
-    if source is None or not isinstance(source, str):
-        abort(400)
+class GistHandler(tornado.web.RequestHandler):
+    def post(self):
+        json = tornado.escape.json_decode(self.request.body)
 
-    options = {}
-    python_version = request.json.get("python_version")
-    if python_version is not None and python_version in python_versions:
-        options["python_version"] = python_version
-    for flag in sandbox.ARGUMENT_FLAGS:
-        flag_value = request.json.get(flag)
-        if flag_value is not None and flag_value is True:
-            options[flag] = flag_value
+        source = json.get("source")
+        if source is None or not isinstance(source, str):
+            self.send_error(400)
+            return
 
-    result = sandbox.run_typecheck(source, **options)
-    if result is None:
-        logger.warn("an error occurred during running type-check")
-        abort(500)
+        result = gist.create_gist(source)
 
-    return result.to_dict()  # type: ignore
+        if result is None:
+            self.send_error(500)
+            return
+
+        self.set_status(201)
+        self.write(result)
 
 
-@app.route("/gist", method="POST")
-def create_gist():
-    source = request.json.get("source")
-    if source is None or not isinstance(source, str):
-        abort(400)
-
-    result = gist.create_gist(source)
-
-    if result is None:
-        abort(500)
-
-    response.status = 201
-
-    return result
+def make_app(**kwargs):
+    routes = [
+        (r"/typecheck.json", TypecheckHandler),
+        (r"/gist", GistHandler),
+        (r"/", IndexHandler),
+    ]
+    return tornado.web.Application(
+        routes,
+        static_path=static_dir,
+        template_path=templates_dir,
+        **kwargs)
 
 
-@app.route("/static/<filename>")
-def server_static(filename):
-    return static_file(filename, root=static_dir)
+define("ga_tracking_id", default=None, help="Google Analytics tracking ID")
+define("github_token", default=None,
+       help="GitHub API token for creating gists")
+define("port", default=8080, help="Port number")
+define("debug", default=False, help="Debug mode")
 
-
-app.config.update({
-    "mypy_play.ga.tracking_id": environ.get("MYPY_PLAY_GA_TRACKING_ID"),
-})
-
-application = app
+options.ga_tracking_id = environ.get("MYPY_PLAY_GA_TRACKING_ID")
+options.github_token = environ.get("MYPY_PLAY_GITHUB_TOKEN")
+port = environ.get("MYPY_PLAY_PORT")
+if port is not None:
+    options.port = int(port)
+debug = environ.get("MYPY_PLAY_DEBUG", "")
+if debug != "0" and debug.lower() != "false":
+    options.debug = True
