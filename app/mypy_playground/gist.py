@@ -1,13 +1,14 @@
+import json
 from typing import Dict, Optional
 
-import requests
+from tornado.httpclient import AsyncHTTPClient
 from tornado.options import options
 
 
 API_ENDPOINT = "https://api.github.com/gists"
 
 
-def create_gist(source: str) -> Optional[Dict[str, str]]:
+async def create_gist(source: str) -> Optional[Dict[str, str]]:
     data = {
       "description": "Shared via mypy Playground",
       "public": True,
@@ -17,18 +18,24 @@ def create_gist(source: str) -> Optional[Dict[str, str]]:
         }
       }
     }
-
     headers = {
-        "Authorization": f"token {options.github_token}"
+        "Authorization": f"token {options.github_token}",
+        "Content-Type": "application/json",
+        "User-Agent": "mypy-playground"  # TODO: Better UA w/ version?
     }
 
-    res = requests.post(API_ENDPOINT, json=data, headers=headers)
+    client = AsyncHTTPClient()
+    res = await client.fetch(API_ENDPOINT,
+                             method="POST",
+                             headers=headers,
+                             body=json.dumps(data),
+                             raise_error=False)
 
-    if res.status_code != 201:
+    if res.code != 201:
         # TODO: better error handling
         return None
 
-    res_data = res.json()
+    res_data = json.loads(res.body)
     result = {
         "id": res_data["id"],
         "url": res_data["html_url"],

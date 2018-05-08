@@ -72,7 +72,7 @@ class TypecheckHandler(tornado.web.RequestHandler):
 
 
 class GistHandler(tornado.web.RequestHandler):
-    def post(self):
+    async def post(self):
         json = tornado.escape.json_decode(self.request.body)
 
         source = json.get("source")
@@ -80,7 +80,7 @@ class GistHandler(tornado.web.RequestHandler):
             self.send_error(400)
             return
 
-        result = gist.create_gist(source)
+        result = await gist.create_gist(source)
 
         if result is None:
             self.send_error(500)
