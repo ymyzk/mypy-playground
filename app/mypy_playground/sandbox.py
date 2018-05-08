@@ -61,17 +61,6 @@ class Result:
         }
 
 
-def pull_image(force: bool = False) -> None:
-    if force:
-        client.images.pull(DOCKER_IMAGE)
-        return
-    try:
-        client.images.get(DOCKER_IMAGE)
-    except docker.errors.ImageNotFound:
-        logger.info("image not found: %s", DOCKER_IMAGE)
-        client.images.pull(DOCKER_IMAGE)
-
-
 def create_archive(source: str) -> BytesIO:
     stream = BytesIO()
     with tarfile.TarFile(fileobj=stream, mode="w") as tar:
@@ -99,7 +88,6 @@ def run_typecheck(source,
         builder.write(SOURCE_FILE_NAME)
         cmd = builder.getvalue()  # type: ignore
     try:
-        pull_image()
         c = client.containers.create(
                 DOCKER_IMAGE,
                 command=cmd,
