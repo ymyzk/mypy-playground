@@ -1,10 +1,9 @@
-from io import BytesIO, StringIO
+from io import BytesIO
 import tarfile
 import time
 from typing import Any, Dict, Optional
 
-import docker
-from requests.exceptions import ConnectionError
+import aiodocker
 
 from .utils import setup_logger
 
@@ -39,7 +38,7 @@ ARGUMENT_FLAGS_STRICT = (
 
 ARGUMENT_FLAGS = ARGUMENT_FLAGS_NORMAL + ARGUMENT_FLAGS_STRICT
 
-client = docker.from_env()
+client = aiodocker.Docker()
 logger = setup_logger(__name__)
 
 
@@ -61,17 +60,6 @@ class Result:
         }
 
 
-def pull_image(force: bool = False) -> None:
-    if force:
-        client.images.pull(DOCKER_IMAGE)
-        return
-    try:
-        client.images.get(DOCKER_IMAGE)
-    except docker.errors.ImageNotFound:
-        logger.info("image not found: %s", DOCKER_IMAGE)
-        client.images.pull(DOCKER_IMAGE)
-
-
 def create_archive(source: str) -> BytesIO:
     stream = BytesIO()
     with tarfile.TarFile(fileobj=stream, mode="w") as tar:
@@ -84,41 +72,39 @@ def create_archive(source: str) -> BytesIO:
     return stream
 
 
-def run_typecheck(source,
-                  *,
-                  python_version: Optional[str] = None,
-                  **kwargs
-                  ) -> Optional[Result]:
-    with StringIO() as builder:
-        builder.write("mypy --cache-dir /dev/null ")
-        if python_version:
-            builder.write(f"--python-version {python_version} ")
-        for key, value in kwargs.items():
-            if key in ARGUMENT_FLAGS:
-                builder.write(f"--{key} ")
-        builder.write(SOURCE_FILE_NAME)
-        cmd = builder.getvalue()  # type: ignore
+async def run_typecheck(source,
+                        *,
+                        python_version: Optional[str] = None,
+                        **kwargs
+                        ) -> Optional[Result]:
+    cmd = ["mypy", "--cache-dir", "/dev/null"]
+    if python_version:
+        cmd += ["--python-version", f"{python_version}"]
+    for key, value in kwargs.items():
+        if key in ARGUMENT_FLAGS:
+            cmd.append(f"--{key}")
+    cmd.append(SOURCE_FILE_NAME)
     try:
-        pull_image()
-        c = client.containers.create(
-                DOCKER_IMAGE,
-                command=cmd,
-                cap_drop="ALL",
-                mem_limit="128m",
-                network_mode="none",
-                pids_limit=32,
-                security_opt=["no-new-privileges"])
-        c.put_archive(SOURCE_DIR, create_archive(source))
-        c.start()
-        exit_code = c.wait()
-        stdout = c.logs(stdout=True, stderr=False).decode("utf-8")
-        stderr = c.logs(stdout=False, stderr=True).decode("utf-8")
-        c.remove()
+        config = {
+            "Image": DOCKER_IMAGE,
+            "Cmd": cmd,
+            "HostConfig": {
+                "CapDrop": ["ALL"],
+                "Memory": 128 * 1024 * 1024,
+                "NetworkMode": "none",
+                "PidsLimit": 32,
+                "SecurityOpt": ["no-new-privileges"]
+            }
+        }
+        c = await client.containers.create(config=config)
+        await c.put_archive(SOURCE_DIR, create_archive(source))
+        await c.start()
+        exit_code = (await c.wait())["StatusCode"]
+        stdout = "\n".join(await c.log(stdout=True, stderr=False))
+        stderr = "\n".join(await c.log(stdout=False, stderr=True))
+        await c.delete()
         return Result(exit_code=exit_code, stdout=stdout, stderr=stderr)
-    # TODO: better error handling
-    except ConnectionError as e:
-        logger.error(f"requests connection error: {e}")
-        return None
-    except docker.errors.APIError as e:
+    except aiodocker.exceptions.DockerError as e:
         logger.error(f"docker api error: {e}")
         return None
+    # TODO: better error handling

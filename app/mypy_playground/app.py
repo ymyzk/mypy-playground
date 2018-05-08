@@ -44,7 +44,7 @@ class IndexHandler(tornado.web.RequestHandler):
 
 
 class TypecheckHandler(tornado.web.RequestHandler):
-    def post(self):
+    async def post(self):
         json = tornado.escape.json_decode(self.request.body)
 
         source = json.get("source")
@@ -62,7 +62,7 @@ class TypecheckHandler(tornado.web.RequestHandler):
             if flag_value is not None and flag_value is True:
                 options[flag] = flag_value
 
-        result = sandbox.run_typecheck(source, **options)
+        result = await sandbox.run_typecheck(source, **options)
         if result is None:
             logger.warn("an error occurred during running type-check")
             self.send_error(500)
