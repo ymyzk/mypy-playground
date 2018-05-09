@@ -77,7 +77,7 @@ async def run_typecheck(source,
                         python_version: Optional[str] = None,
                         **kwargs
                         ) -> Optional[Result]:
-    cmd = ["mypy", "--cache-dir", "/dev/null"]
+    cmd = ["mypy", "--cache-dir", "/dev/null", "--no-site-packages"]
     if python_version:
         cmd += ["--python-version", f"{python_version}"]
     for key, value in kwargs.items():
