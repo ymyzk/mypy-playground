@@ -64,7 +64,7 @@ class TypecheckHandler(tornado.web.RequestHandler):
 
         result = await sandbox.run_typecheck(source, **options)
         if result is None:
-            logger.warn("an error occurred during running type-check")
+            logger.warning("an error occurred during running type-check")
             self.send_error(500)
             return
 
