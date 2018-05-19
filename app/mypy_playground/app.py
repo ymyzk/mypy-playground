@@ -1,5 +1,6 @@
 import logging
 from os import environ, path
+from typing import Any
 
 import tornado.escape
 import tornado.ioloop
@@ -32,7 +33,7 @@ fib("10")
 
 
 class IndexHandler(tornado.web.RequestHandler):
-    async def get(self):
+    async def get(self) -> None:
         context = {
             "initial_code": initial_code,
             "python_versions": python_versions,
@@ -44,7 +45,7 @@ class IndexHandler(tornado.web.RequestHandler):
 
 
 class TypecheckHandler(tornado.web.RequestHandler):
-    async def post(self):
+    async def post(self) -> None:
         json = tornado.escape.json_decode(self.request.body)
 
         source = json.get("source")
@@ -72,7 +73,7 @@ class TypecheckHandler(tornado.web.RequestHandler):
 
 
 class GistHandler(tornado.web.RequestHandler):
-    async def post(self):
+    async def post(self) -> None:
         json = tornado.escape.json_decode(self.request.body)
 
         source = json.get("source")
@@ -90,7 +91,7 @@ class GistHandler(tornado.web.RequestHandler):
         self.write(result)
 
 
-def make_app(**kwargs):
+def make_app(**kwargs: Any) -> tornado.web.Application:
     routes = [
         (r"/typecheck.json", TypecheckHandler),
         (r"/gist", GistHandler),

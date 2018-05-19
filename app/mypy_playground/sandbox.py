@@ -72,10 +72,10 @@ def create_archive(source: str) -> BytesIO:
     return stream
 
 
-async def run_typecheck(source,
+async def run_typecheck(source: str,
                         *,
                         python_version: Optional[str] = None,
-                        **kwargs
+                        **kwargs: Any
                         ) -> Optional[Result]:
     cmd = ["mypy", "--cache-dir", "/dev/null", "--no-site-packages"]
     if python_version:
