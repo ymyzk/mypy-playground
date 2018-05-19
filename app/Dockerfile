@@ -9,4 +9,4 @@ COPY . /app
 
 ENV PYTHONUNBUFFERED 1
 EXPOSE 8080
-CMD ["python", "start_app.py"]
+CMD ["python", "-m", "mypy_playground"]
