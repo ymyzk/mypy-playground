@@ -6,7 +6,7 @@ services:
       - 127.0.0.1:8080:8080
     environment:
       DOCKER_HOST: http://docker:2375
-      MYPY_PLAY_DEBUG: "1"
+      DEBUG: "1"
     volumes:
       - ./app:/app
 
