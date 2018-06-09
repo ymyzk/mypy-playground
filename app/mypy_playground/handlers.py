@@ -1,4 +1,8 @@
+from http import HTTPStatus
+import json
 import logging
+import traceback
+from typing import Any
 
 import tornado.escape
 from tornado.options import options
@@ -35,15 +39,47 @@ class IndexHandler(tornado.web.RequestHandler):
         self.render("index.html", **context)
 
 
-class TypecheckHandler(tornado.web.RequestHandler):
+class JsonRequestHandler(tornado.web.RequestHandler):
+    def prepare(self) -> None:
+        if self.request.headers.get("Content-Type") != "application/json":
+            raise tornado.web.HTTPError(
+                HTTPStatus.UNSUPPORTED_MEDIA_TYPE,
+                log_message="Content-type must be application/json")
+
+    def write_error(self, status_code: int, **kwargs: Any) -> None:
+        error = {}
+
+        if "exc_info" in kwargs:
+            exc_info = kwargs["exc_info"]
+            if self.settings.get("serve_traceback"):
+                # in debug mode, try to send a traceback
+                lines = traceback.format_exception(*exc_info)
+                error["traceback"] = "\n".join(lines)
+
+            exc = exc_info[1]
+            if isinstance(exc, tornado.web.HTTPError) and exc.log_message:
+                error["message"] = exc.log_message
+
+        self.finish(error)
+
+    def parse_json_request_body(self) -> Any:
+        try:
+            return tornado.escape.json_decode(self.request.body)
+        except json.JSONDecodeError:
+            raise tornado.web.HTTPError(
+                HTTPStatus.BAD_REQUEST,
+                log_message="failed to parse JSON body")
+
+
+class TypecheckHandler(JsonRequestHandler):
     async def post(self) -> None:
-        json = tornado.escape.json_decode(self.request.body)
+        json = self.parse_json_request_body()
 
         source = json.get("source")
         if source is None or not isinstance(source, str):
-            # TODO: JSON
-            self.send_error(400)
-            return
+            raise tornado.web.HTTPError(
+                HTTPStatus.BAD_REQUEST,
+                log_message="'source' is required")
 
         args = {}
         python_version = json.get("python_version")
@@ -60,27 +96,31 @@ class TypecheckHandler(tornado.web.RequestHandler):
         )
         result = await docker_sandbox.run_typecheck(source, **args)
         if result is None:
-            logger.warning("an error occurred during running type-check")
-            self.send_error(500)
-            return
+            logger.error("an error occurred during running type-check")
+            raise tornado.web.HTTPError(
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+                log_message="an error occurred during running mypy")
 
         self.write(result.to_dict())
 
 
-class GistHandler(tornado.web.RequestHandler):
+class GistHandler(JsonRequestHandler):
     async def post(self) -> None:
-        json = tornado.escape.json_decode(self.request.body)
+        json = self.parse_json_request_body()
 
         source = json.get("source")
         if source is None or not isinstance(source, str):
-            self.send_error(400)
-            return
+            raise tornado.web.HTTPError(
+                HTTPStatus.BAD_REQUEST,
+                log_message="'source' is required")
 
         result = await gist.create_gist(source)
 
         if result is None:
-            self.send_error(500)
-            return
+            logger.error("an error occurred during creating a gist")
+            raise tornado.web.HTTPError(
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+                log_message="an error occurred during running mypy")
 
         self.set_status(201)
         self.write(result)
