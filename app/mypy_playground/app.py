@@ -8,11 +8,9 @@ from tornado.options import options
 import tornado.web
 
 from . import gist, sandbox
-from .utils import setup_logger
 
 
-logging.getLogger("tornado.access").setLevel(logging.INFO)
-logger = setup_logger(__name__)
+logger = logging.getLogger(__name__)
 root_dir = path.dirname(path.dirname(__file__))
 static_dir = path.join(root_dir, "static")
 templates_dir = path.join(root_dir, "templates")

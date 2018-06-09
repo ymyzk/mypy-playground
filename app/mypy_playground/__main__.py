@@ -1,3 +1,4 @@
+import logging
 from os import environ
 
 import tornado.ioloop
@@ -25,6 +26,8 @@ def load_config() -> None:
 
 
 load_config()
+logger = logging.getLogger(__name__)
 app = make_app()
+logger.info("starting")
 app.listen(options.port)
 tornado.ioloop.IOLoop.current().start()

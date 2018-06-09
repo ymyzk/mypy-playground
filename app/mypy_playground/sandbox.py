@@ -1,11 +1,10 @@
 from io import BytesIO
+import logging
 import tarfile
 import time
 from typing import Any, Dict, Optional
 
 import aiodocker
-
-from .utils import setup_logger
 
 
 DOCKER_IMAGE = "ymyzk/mypy-playground:sandbox"
@@ -39,7 +38,7 @@ ARGUMENT_FLAGS_STRICT = (
 ARGUMENT_FLAGS = ARGUMENT_FLAGS_NORMAL + ARGUMENT_FLAGS_STRICT
 
 client = aiodocker.Docker()
-logger = setup_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class Result:
