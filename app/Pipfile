@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 aiodocker = ">=0.13.0,<1.0"
 tornado = ">=5.0.0,<6.0.0"
+dataclasses = "*"
 
 [dev-packages]
 "flake8" = ">=3.0,<4.0"

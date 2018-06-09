@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from io import BytesIO
 import logging
 import tarfile
@@ -42,15 +43,11 @@ client = aiodocker.Docker()
 logger = logging.getLogger(__name__)
 
 
+@dataclass
 class Result:
-    def __init__(self,
-                 *,
-                 exit_code: int,
-                 stdout: str,
-                 stderr: str) -> None:
-        self.exit_code = exit_code
-        self.stdout = stdout
-        self.stderr = stderr
+    exit_code: int
+    stdout: str
+    stderr: str
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -103,7 +100,10 @@ async def run_typecheck(source: str,
         stdout = "\n".join(await c.log(stdout=True, stderr=False))
         stderr = "\n".join(await c.log(stdout=False, stderr=True))
         await c.delete()
-        return Result(exit_code=exit_code, stdout=stdout, stderr=stderr)
+        return Result(  # type: ignore
+            exit_code=exit_code,
+            stdout=stdout,
+            stderr=stderr)
     except aiodocker.exceptions.DockerError as e:
         logger.error(f"docker api error: {e}")
         return None
