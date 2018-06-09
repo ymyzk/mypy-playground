@@ -1,10 +1,10 @@
 import logging
-from os import environ, path
+from os import path
 from typing import Any
 
 import tornado.escape
 import tornado.ioloop
-from tornado.options import define, options
+from tornado.options import options
 import tornado.web
 
 from . import gist, sandbox
@@ -101,20 +101,5 @@ def make_app(**kwargs: Any) -> tornado.web.Application:
         routes,
         static_path=static_dir,
         template_path=templates_dir,
+        debug=options.debug,
         **kwargs)
-
-
-define("ga_tracking_id", default=None, help="Google Analytics tracking ID")
-define("github_token", default=None,
-       help="GitHub API token for creating gists")
-define("port", default=8080, help="Port number")
-define("debug", default=False, help="Debug mode")
-
-options.ga_tracking_id = environ.get("MYPY_PLAY_GA_TRACKING_ID")
-options.github_token = environ.get("MYPY_PLAY_GITHUB_TOKEN")
-port = environ.get("MYPY_PLAY_PORT")
-if port is not None:
-    options.port = int(port)
-debug = environ.get("MYPY_PLAY_DEBUG", "")
-if debug != "0" and debug.lower() != "false":
-    options.debug = True
