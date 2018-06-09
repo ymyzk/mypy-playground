@@ -24,13 +24,22 @@ ARGUMENT_FLAGS_NORMAL = (
 ARGUMENT_FLAGS_STRICT = (
     "strict",
     "check-untyped-defs",
+    "disallow-any-decorated",
+    "disallow-any-expr",
+    "disallow-any-explicit",
+    "disallow-any-generics",
+    "disallow-any-unimported",
+    "disallow-incomplete-defs",
     "disallow-subclassing-any",
     "disallow-untyped-calls",
+    "disallow-untyped-decorators",
     "disallow-untyped-defs",
     "no-strict-optional",
     "no-warn-no-return",
+    "warn-incomplete-stub",
     "warn-redundant-casts",
     "warn-return-any",
+    "warn-unused-configs",
     "warn-unused-ignores",
 )
 
