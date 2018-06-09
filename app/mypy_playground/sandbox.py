@@ -2,16 +2,13 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from io import BytesIO
 import logging
+from pathlib import Path
 import tarfile
 import time
 from typing import Any, Dict, Optional
 
 import aiodocker
 
-
-DOCKER_IMAGE = "ymyzk/mypy-playground:sandbox"
-SOURCE_DIR = "/tmp"
-SOURCE_FILE_NAME = "main.py"
 
 ARGUMENT_FLAGS_NORMAL = (
     "verbose",
@@ -69,16 +66,21 @@ class AbstractSandbox(ABC):
 
 class DockerSandbox(AbstractSandbox):
     client: aiodocker.Docker
+    docker_image: str
+    source_file_path: Path
 
-    def __init__(self) -> None:
+    def __init__(self,
+                 docker_image: str = "ymyzk/mypy-playground:sandbox"
+                 ) -> None:
         self.client = aiodocker.Docker()
+        self.docker_image = docker_image
+        self.source_file_path = Path("/tmp/main.py")
 
-    @staticmethod
-    def create_archive(source: str) -> BytesIO:
+    def create_archive(self, source: str) -> BytesIO:
         stream = BytesIO()
         with tarfile.TarFile(fileobj=stream, mode="w") as tar:
             data = source.encode("utf-8")
-            tarinfo = tarfile.TarInfo(name=SOURCE_FILE_NAME)
+            tarinfo = tarfile.TarInfo(name=self.source_file_path.name)
             tarinfo.size = len(data)
             tarinfo.mtime = int(time.time())
             tar.addfile(tarinfo, BytesIO(data))
@@ -97,10 +99,10 @@ class DockerSandbox(AbstractSandbox):
         for key, value in kwargs.items():
             if key in ARGUMENT_FLAGS:
                 cmd.append(f"--{key}")
-        cmd.append(SOURCE_FILE_NAME)
+        cmd.append(self.source_file_path.name)
         try:
             config = {
-                "Image": DOCKER_IMAGE,
+                "Image": self.docker_image,
                 "Cmd": cmd,
                 "HostConfig": {
                     "CapDrop": ["ALL"],
@@ -111,7 +113,8 @@ class DockerSandbox(AbstractSandbox):
                 }
             }
             c = await self.client.containers.create(config=config)
-            await c.put_archive(SOURCE_DIR, self.create_archive(source))
+            await c.put_archive(str(self.source_file_path.parent),
+                                self.create_archive(source))
             await c.start()
             exit_code = (await c.wait())["StatusCode"]
             stdout = "\n".join(await c.log(stdout=True, stderr=False))
