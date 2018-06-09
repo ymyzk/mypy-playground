@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from io import BytesIO
 import logging
@@ -56,7 +57,17 @@ class Result:
         }
 
 
-class DockerSandbox:
+class AbstractSandbox(ABC):
+    @abstractmethod
+    async def run_typecheck(self,
+                            source: str,
+                            *,
+                            python_version: Optional[str] = None,
+                            **kwargs: Any) -> Optional[Result]:
+        pass
+
+
+class DockerSandbox(AbstractSandbox):
     client: aiodocker.Docker
 
     def __init__(self) -> None:
