@@ -1,5 +1,5 @@
 import logging
-from os import path
+from pathlib import Path
 from typing import Any
 
 import tornado.escape
@@ -11,9 +11,9 @@ from . import gist, sandbox
 
 
 logger = logging.getLogger(__name__)
-root_dir = path.dirname(path.dirname(__file__))
-static_dir = path.join(root_dir, "static")
-templates_dir = path.join(root_dir, "templates")
+root_dir = Path(__file__).parents[1]
+static_dir = root_dir / "static"
+templates_dir = root_dir / "templates"
 initial_code = """from typing import Iterator
 
 
