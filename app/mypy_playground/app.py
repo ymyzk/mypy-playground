@@ -61,7 +61,8 @@ class TypecheckHandler(tornado.web.RequestHandler):
             if flag_value is not None and flag_value is True:
                 options[flag] = flag_value
 
-        result = await sandbox.run_typecheck(source, **options)
+        docker_sandbox: sandbox.AbstractSandbox = sandbox.DockerSandbox()
+        result = await docker_sandbox.run_typecheck(source, **options)
         if result is None:
             logger.warning("an error occurred during running type-check")
             self.send_error(500)
