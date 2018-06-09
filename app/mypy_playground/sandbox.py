@@ -45,12 +45,14 @@ class Result:
     exit_code: int
     stdout: str
     stderr: str
+    duration: int
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             "exit_code": self.exit_code,
             "stdout": self.stdout,
             "stderr": self.stderr,
+            "duration": self.duration,
         }
 
 
@@ -99,6 +101,8 @@ class DockerSandbox(AbstractSandbox):
                 cmd.append(f"--{key}")
         cmd.append(self.source_file_path.name)
         try:
+            start_time = time.time()
+            logger.info("creating container")
             config = {
                 "Image": self.docker_image,
                 "Cmd": cmd,
@@ -118,10 +122,13 @@ class DockerSandbox(AbstractSandbox):
             stdout = "\n".join(await c.log(stdout=True, stderr=False))
             stderr = "\n".join(await c.log(stdout=False, stderr=True))
             await c.delete()
+            duration = int(1000 * (time.time() - start_time))
+            logger.info("finished in %d ms", duration)
             return Result(  # type: ignore
                 exit_code=exit_code,
                 stdout=stdout,
-                stderr=stderr)
+                stderr=stderr,
+                duration=duration)
         except aiodocker.exceptions.DockerError as e:
             logger.error(f"docker api error: {e}")
         # TODO: better error handling

@@ -130,9 +130,9 @@
       var result = response.data;
       $result.empty();
       if (result.exit_code === 0) {
-        $result.append($("<span>").text("Success!!"));
+        $result.append($("<span>").text("Succeeded!! (" + result.duration + " ms)"));
       } else {
-        $result.append($("<span>").text("Failed (exit code: " + result.exit_code + ")"));
+        $result.append($("<span>").text("Failed (exit code: " + result.exit_code + ") (" + result.duration + " ms)"));
       }
       $result.append("<hr>");
       $result.append($("<pre>").text(result.stdout));
