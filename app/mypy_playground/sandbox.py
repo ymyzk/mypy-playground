@@ -69,9 +69,7 @@ class DockerSandbox(AbstractSandbox):
     docker_image: str
     source_file_path: Path
 
-    def __init__(self,
-                 docker_image: str = "ymyzk/mypy-playground:sandbox"
-                 ) -> None:
+    def __init__(self, docker_image: str) -> None:
         self.client = aiodocker.Docker()
         self.docker_image = docker_image
         self.source_file_path = Path("/tmp/main.py")

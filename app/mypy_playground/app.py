@@ -28,6 +28,8 @@ fib(10)
 fib("10")
 """
 
+define("docker_image", default="ymyzk/mypy-playground:sandbox",
+       help="Docker image used by DockerSandbox")
 define("ga_tracking_id", default=None, help="Google Analytics tracking ID")
 define("github_token", default=None,
        help="GitHub API token for creating gists")
@@ -57,18 +59,20 @@ class TypecheckHandler(tornado.web.RequestHandler):
             self.send_error(400)
             return
 
-        options = {}
+        args = {}
         python_version = json.get("python_version")
         if (python_version is not None
                 and python_version in sandbox.PYTHON_VERSIONS):
-            options["python_version"] = python_version
+            args["python_version"] = python_version
         for flag in sandbox.ARGUMENT_FLAGS:
             flag_value = json.get(flag)
             if flag_value is not None and flag_value is True:
-                options[flag] = flag_value
+                args[flag] = flag_value
 
-        docker_sandbox: sandbox.AbstractSandbox = sandbox.DockerSandbox()
-        result = await docker_sandbox.run_typecheck(source, **options)
+        docker_sandbox: sandbox.AbstractSandbox = sandbox.DockerSandbox(
+            docker_image=options.docker_image
+        )
+        result = await docker_sandbox.run_typecheck(source, **args)
         if result is None:
             logger.warning("an error occurred during running type-check")
             self.send_error(500)
