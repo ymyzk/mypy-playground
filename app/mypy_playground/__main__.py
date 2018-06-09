@@ -2,18 +2,13 @@ import logging
 from os import environ
 
 import tornado.ioloop
-from tornado.options import define, options, parse_command_line
+from tornado.options import options, parse_command_line
 
 from .app import make_app
 
 
 def load_config() -> None:
     parse_command_line()
-    define("ga_tracking_id", default=None, help="Google Analytics tracking ID")
-    define("github_token", default=None,
-           help="GitHub API token for creating gists")
-    define("port", default=8080, help="Port number")
-    define("debug", default=False, help="Debug mode")
 
     options.ga_tracking_id = environ.get("MYPY_PLAY_GA_TRACKING_ID")
     options.github_token = environ.get("MYPY_PLAY_GITHUB_TOKEN")

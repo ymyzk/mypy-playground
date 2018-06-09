@@ -4,7 +4,7 @@ from typing import Any
 
 import tornado.escape
 import tornado.ioloop
-from tornado.options import options
+from tornado.options import define, options
 import tornado.web
 
 from . import gist, sandbox
@@ -27,6 +27,12 @@ def fib(n: int) -> Iterator[int]:
 fib(10)
 fib("10")
 """
+
+define("ga_tracking_id", default=None, help="Google Analytics tracking ID")
+define("github_token", default=None,
+       help="GitHub API token for creating gists")
+define("port", default=8080, help="Port number")
+define("debug", default=False, help="Debug mode")
 
 
 class IndexHandler(tornado.web.RequestHandler):
