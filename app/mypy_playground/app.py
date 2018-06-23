@@ -16,6 +16,8 @@ templates_dir = root_dir / "templates"
 
 define("docker_image", default="ymyzk/mypy-playground:sandbox",
        help="Docker image used by DockerSandbox")
+define("sandbox_concurrency", default=3,
+       help="The number of running sandboxes at the same time")
 define("ga_tracking_id", default=None, help="Google Analytics tracking ID")
 define("github_token", default=None,
        help="GitHub API token for creating gists")
