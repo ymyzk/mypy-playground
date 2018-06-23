@@ -94,7 +94,11 @@ class TypecheckHandler(JsonRequestHandler):
         docker_sandbox: sandbox.AbstractSandbox = sandbox.DockerSandbox(
             docker_image=options.docker_image
         )
-        result = await docker_sandbox.run_typecheck(source, **args)
+        result = await sandbox.run_typecheck_in_sandbox(
+            docker_sandbox,
+            source,
+            **args
+        )
         if result is None:
             logger.error("an error occurred during running type-check")
             raise tornado.web.HTTPError(

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import asyncio
 from dataclasses import dataclass
 from io import BytesIO
 import logging
@@ -8,6 +9,7 @@ import time
 from typing import Any, Dict, Optional
 
 import aiodocker
+from tornado.options import options
 
 
 ARGUMENT_FLAGS_NORMAL = (
@@ -142,3 +144,26 @@ class DockerSandbox(AbstractSandbox):
             logger.error(f"docker api error: {e}")
         # TODO: better error handling
         return None
+
+
+semaphore: Optional[asyncio.Semaphore] = None
+
+
+def get_semaphore() -> asyncio.Semaphore:
+    # Lazy initialization of the semaphore to use options correctly
+    global semaphore
+    if not semaphore:
+        value = options.sandbox_concurrency
+        logger.info("created semaphore for sandbox: concurrency=%d", value)
+        semaphore = asyncio.Semaphore(value)
+    return semaphore
+
+
+async def run_typecheck_in_sandbox(sandbox: AbstractSandbox,
+                                   source: str,
+                                   **kwargs: Any
+                                   ) -> Optional[Result]:
+    logger.debug("acquiring semaphore")
+    with await get_semaphore():
+        logger.debug("acquired semaphore")
+        return await sandbox.run_typecheck(source, **kwargs)
