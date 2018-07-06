@@ -1,11 +1,11 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "29af4bc1ba7e94c14c27614c6cfb425d8c79efabac3fae0b371684bb19a73fa9"
+            "sha256": "f344a612f8b52a5c686f886a2189940f2e4eeaa35b66389cdd093d1bdefb19ff"
         },
         "pipfile-spec": 6,
         "requires": {
-            "python_version": "3.6"
+            "python_version": "3.7"
         },
         "sources": [
             {
@@ -49,6 +49,7 @@
                 "sha256:474d4bc64cee20603e225eb1ece15e248962958b45a3648a9f5cc29e827a610c",
                 "sha256:b3c0ddc416736619bd4a95ca31de8da6920c3b9a140c64dbef2b2fa7bf521287"
             ],
+            "markers": "python_version >= '3.5.3'",
             "version": "==3.0.0"
         },
         "attrs": {
@@ -102,6 +103,7 @@
                 "sha256:d870f399fcd58a1889e93008762a3b9a27cf7ea512818fc6e689f59495648355",
                 "sha256:e9404e2e19e901121c3c5c6cffd5a8ae0d1d67919c970e3b3262231175713068"
             ],
+            "markers": "python_version >= '3.4.1'",
             "version": "==4.3.1"
         },
         "tornado": {
