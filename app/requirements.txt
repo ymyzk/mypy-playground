@@ -8,5 +8,5 @@ dataclasses==0.6
 idna-ssl==1.1.0
 idna==2.7
 multidict==4.3.1; python_version >= '3.4.1'
-tornado==5.0.2
+tornado==5.1
 yarl==1.2.6
