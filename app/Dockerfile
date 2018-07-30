@@ -1,12 +1,16 @@
-FROM python:3.7-slim
+FROM python:3.7-alpine
 
-COPY requirements.txt /app/
+ENV PYTHONUNBUFFERED 1
+
+RUN pip install --no-cache-dir pipenv
+
 WORKDIR /app
-RUN pip install -r requirements.txt \
+
+COPY Pipfile Pipfile.lock /app/
+RUN pipenv install --system \
         && rm -rf /root/.cache
 
 COPY . /app
 
-ENV PYTHONUNBUFFERED 1
 EXPOSE 8080
 CMD ["python", "-m", "mypy_playground"]
