@@ -1,3 +1,0 @@
--i https://pypi.org/simple
-mypy==0.620
-typed-ast==1.1.0
