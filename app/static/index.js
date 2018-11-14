@@ -137,7 +137,6 @@
       }
       $result.append("<hr>");
       $result.append($("<pre>").text(result.stdout));
-      $result.append("<br>");
       $result.append($("<pre>").text(result.stderr));
       $run.prop("disabled", false);
 

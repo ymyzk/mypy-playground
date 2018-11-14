@@ -130,8 +130,8 @@ class DockerSandbox(AbstractSandbox):
                                 self.create_archive(source))
             await c.start()
             exit_code = (await c.wait())["StatusCode"]
-            stdout = "\n".join(await c.log(stdout=True, stderr=False))
-            stderr = "\n".join(await c.log(stdout=False, stderr=True))
+            stdout = "".join(await c.log(stdout=True, stderr=False)).strip()
+            stderr = "".join(await c.log(stdout=False, stderr=True)).strip()
             await c.delete()
             duration = int(1000 * (time.time() - start_time))
             logger.info("finished in %d ms", duration)
