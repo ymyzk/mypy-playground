@@ -25,7 +25,7 @@
 |:-----|:---------|:------------|
 | `DEBUG` | No | Enable debug mode (default: 0) |
 | `PORT` | No | Port number (default: 8080) |
-| `DOCKER_IMAGE` | No | A Docker image used by Sandbox (default: `ymyzk/mypy-playground-sandbox:latest`) |
+| `DOCKER_IMAGES` | No | Docker images used by Sandbox (default: `mypy latest|latest|ymyzk/mypy-playground-sandbox:latest`) |
 | `SANDBOX_CONCURRENCY` | No | The number of running sandboxes at the same time (default: 3) |
 | `GA_TRACKING_ID` | No | A tracking id for Google Analytics |
 | `GITHUB_TOKEN` | No | A token used to create gists |

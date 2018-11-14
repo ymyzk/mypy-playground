@@ -1,8 +1,9 @@
+from functools import lru_cache
 from http import HTTPStatus
 import json
 import logging
 import traceback
-from typing import Any
+from typing import Any, List, Optional, Tuple
 
 import tornado.escape
 from tornado.options import options
@@ -32,6 +33,7 @@ class IndexHandler(tornado.web.RequestHandler):
         context = {
             "initial_code": initial_code,
             "python_versions": sandbox.PYTHON_VERSIONS,
+            "mypy_versions": get_mypy_versions(),
             "flags_normal": sandbox.ARGUMENT_FLAGS_NORMAL,
             "flags_strict": sandbox.ARGUMENT_FLAGS_STRICT,
             "ga_tracking_id": options.ga_tracking_id,
@@ -92,8 +94,17 @@ class TypecheckHandler(JsonRequestHandler):
             if flag_value is not None and flag_value is True:
                 args[flag] = flag_value
 
+        mypy_version = json.get("mypy_version")
+        if mypy_version is None:
+            mypy_version = "latest"
+        docker_image = get_docker_image(mypy_version)
+        if docker_image is None:
+            raise tornado.web.HTTPError(
+                HTTPStatus.BAD_REQUEST,
+                log_message="invalid 'mypy_version'")
+
         docker_sandbox: sandbox.AbstractSandbox = sandbox.DockerSandbox(
-            docker_image=options.docker_image
+            docker_image=docker_image
         )
         result = await sandbox.run_typecheck_in_sandbox(
             docker_sandbox,
@@ -129,3 +140,18 @@ class GistHandler(JsonRequestHandler):
 
         self.set_status(201)
         self.write(result)
+
+
+@lru_cache(maxsize=1)
+def get_mypy_versions() -> List[Tuple[str, str, str]]:
+    return [tuple(i.split("|")) for i in options.docker_images.split(",")]
+
+
+def get_docker_image(mypy_version_id: str) -> Optional[str]:
+    @lru_cache(maxsize=1)
+    def create_map():
+        d = {}
+        for _, mvid, docker_image in get_mypy_versions():
+            d[mvid] = docker_image
+        return d
+    return create_map().get(mypy_version_id)

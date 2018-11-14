@@ -109,6 +109,7 @@
     var $result = $("#result");
     var data = {
       source: editor.getValue(),
+      mypy_version: $("#mypy_version").val(),
       python_version: $("#python_version").val(),
     };
     $("input.mypy-options[type='checkbox']").map(function () {
