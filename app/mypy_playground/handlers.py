@@ -41,7 +41,8 @@ class IndexHandler(tornado.web.RequestHandler):
 
 class JsonRequestHandler(tornado.web.RequestHandler):
     def prepare(self) -> None:
-        if self.request.headers.get("Content-Type") != "application/json":
+        content_type = self.request.headers.get("Content-Type", "")
+        if not content_type.startswith("application/json"):
             raise tornado.web.HTTPError(
                 HTTPStatus.UNSUPPORTED_MEDIA_TYPE,
                 log_message="Content-type must be application/json")
