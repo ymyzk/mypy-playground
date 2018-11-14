@@ -11,7 +11,7 @@ services:
       - ./app:/app
 
   docker:
-    image: docker:18.03-dind
+    image: docker:18.09-dind
     privileged: true
     volumes:
       - ./sandbox:/sandbox
