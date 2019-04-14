@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, List
 
 import tornado.ioloop
 from tornado.options import define, options
@@ -30,7 +30,9 @@ define("debug", default=False, help="Debug mode")
 
 
 def make_app(**kwargs: Any) -> tornado.web.Application:
-    routes = [
+    # TODO: We can give more precise type to this variable
+    #       But it doesn't work well as of mypy 0.700 / tornado 6.0.2
+    routes: List[Any] = [
         (r"/typecheck.json", handlers.TypecheckHandler),
         (r"/gist", handlers.GistHandler),
         (r"/", handlers.IndexHandler),

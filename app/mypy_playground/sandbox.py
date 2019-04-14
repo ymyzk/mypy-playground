@@ -135,7 +135,7 @@ class DockerSandbox(AbstractSandbox):
             await c.delete()
             duration = int(1000 * (time.time() - start_time))
             logger.info("finished in %d ms", duration)
-            return Result(  # type: ignore
+            return Result(
                 exit_code=exit_code,
                 stdout=stdout,
                 stderr=stderr,

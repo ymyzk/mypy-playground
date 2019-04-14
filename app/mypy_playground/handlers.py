@@ -3,7 +3,7 @@ from http import HTTPStatus
 import json
 import logging
 import traceback
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, cast
 
 import tornado.escape
 from tornado.options import options
@@ -146,7 +146,10 @@ class GistHandler(JsonRequestHandler):
 def parse_option_as_dict(name: str) -> Dict[str, str]:
     # This function assumes that dict is insertion order-preserving
     # (Python 3.7+)
-    return dict([tuple(i.split(":", 1)) for i in options[name].split(",")])
+    return dict(
+        cast(List[Tuple[str, str]],
+             [tuple(i.split(":", 1)) for i in options[name].split(",")])
+    )
 
 
 @lru_cache(maxsize=1)
