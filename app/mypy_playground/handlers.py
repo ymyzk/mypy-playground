@@ -3,7 +3,7 @@ from http import HTTPStatus
 import json
 import logging
 import traceback
-from typing import Any, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import tornado.escape
 from tornado.options import options
@@ -142,16 +142,17 @@ class GistHandler(JsonRequestHandler):
         self.write(result)
 
 
+@lru_cache()
+def parse_option_as_dict(name: str) -> Dict[str, str]:
+    # This function assumes that dict is insertion order-preserving
+    # (Python 3.7+)
+    return dict([tuple(i.split(":", 1)) for i in options[name].split(",")])
+
+
 @lru_cache(maxsize=1)
-def get_mypy_versions() -> List[Tuple[str, str, str]]:
-    return [tuple(i.split("|")) for i in options.docker_images.split(",")]
+def get_mypy_versions() -> List[Tuple[str, str]]:
+    return list(parse_option_as_dict("mypy_versions").items())
 
 
 def get_docker_image(mypy_version_id: str) -> Optional[str]:
-    @lru_cache(maxsize=1)
-    def create_map():
-        d = {}
-        for _, mvid, docker_image in get_mypy_versions():
-            d[mvid] = docker_image
-        return d
-    return create_map().get(mypy_version_id)
+    return parse_option_as_dict("docker_images").get(mypy_version_id)

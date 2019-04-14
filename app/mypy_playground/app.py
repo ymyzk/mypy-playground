@@ -15,13 +15,16 @@ static_dir = root_dir / "static"
 templates_dir = root_dir / "templates"
 
 define("docker_images",
-       default="mypy latest|latest|ymyzk/mypy-playground-sandbox:latest",
+       default="latest:ymyzk/mypy-playground-sandbox:latest",
        help="Docker image used by DockerSandbox")
 define("sandbox_concurrency", default=3,
        help="The number of running sandboxes at the same time")
 define("ga_tracking_id", default=None, help="Google Analytics tracking ID")
 define("github_token", default=None,
        help="GitHub API token for creating gists")
+define("mypy_versions",
+       default="mypy latest:latest",
+       help="List of mypy versions used by a sandbox")
 define("port", default=8080, help="Port number")
 define("debug", default=False, help="Debug mode")
 

@@ -19,7 +19,7 @@
             <button type="button" class="btn btn-light my-2 my-sm-0 mr-sm-2" id="run">Run</button>
             <button type="button" class="btn btn-light my-2 my-sm-0 mr-sm-2" id="gist">Gist</button>
             <select class="form-control mr-sm-2" id="mypy_version" title="mypy Version">
-              {% for name, id, _ in mypy_versions %}
+              {% for name, id in mypy_versions %}
                 {% set selected = " selected" if id == "latest" else "" %}
                 <option value="{{ id }}"{{ selected }}>{{ name }}</option>
               {% end %}
