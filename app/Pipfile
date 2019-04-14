@@ -16,4 +16,4 @@ mypy = ">=0.510,<1.0"
 python_version = "3.7"
 
 [scripts]
-test = "flake8 && mypy ."
+test = "sh -c \"echo 'Running flake8' && flake8 && echo 'Running mypy' && mypy .\""
