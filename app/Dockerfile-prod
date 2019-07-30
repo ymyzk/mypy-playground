@@ -26,7 +26,7 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-COPY --from=0 /static /
+COPY --from=0 /static/ /app/static/
 COPY --from=1 /app/requirements.txt /app/
 RUN cat ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
