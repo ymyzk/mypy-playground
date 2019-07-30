@@ -38,7 +38,7 @@ class IndexHandler(tornado.web.RequestHandler):
             "flags_strict": sandbox.ARGUMENT_FLAGS_STRICT,
             "ga_tracking_id": options.ga_tracking_id,
         }
-        self.render("index.html", **context)
+        self.render("index.html", context=json.dumps(context))
 
 
 class JsonRequestHandler(tornado.web.RequestHandler):
