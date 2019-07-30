@@ -10,6 +10,12 @@ services:
     volumes:
       - ./app:/app
 
+  frontend:
+    build: app/frontend
+    volumes:
+      - ./app/frontend:/app
+      - ./app/static:/static
+
   docker:
     image: docker:18.09-dind
     privileged: true

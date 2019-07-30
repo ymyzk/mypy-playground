@@ -21,6 +21,9 @@ module.exports = {
     ],
     '@neutrinojs/jest',
     (neutrino) => {
+      neutrino.config.watchOptions({
+        poll: 1000,
+      });
       if (neutrino.options.command === 'start') {
         neutrino.config.devServer.hot = false;
         neutrino.config.devServer.clear();
