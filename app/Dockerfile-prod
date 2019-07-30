@@ -1,3 +1,15 @@
+FROM node:10.16
+
+COPY ./frontend/package.json ./frontend/package-lock.json /app/
+WORKDIR /app
+
+RUN npm i && rm -rf /root/.node-gyp /root/.npm
+
+COPY ./frontend/ /app/
+
+RUN npm run build
+
+
 FROM python:3.7-alpine
 
 RUN pip install --no-cache-dir pipenv
@@ -7,13 +19,15 @@ WORKDIR /app
 COPY Pipfile Pipfile.lock /app/
 RUN pipenv lock -r > requirements.txt
 
+
 FROM python:3.7-alpine
 
 ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-COPY --from=0 /app/requirements.txt /app/
+COPY --from=0 /static /
+COPY --from=1 /app/requirements.txt /app/
 RUN cat ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
