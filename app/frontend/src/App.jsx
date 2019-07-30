@@ -55,6 +55,34 @@ function parseQueryParameters() {
 export default class App extends Component {
   constructor(props) {
     super(props);
+
+    const context = JSON.parse(document.getElementById('context').textContent);
+    const config = {
+      mypyVersion: 'latest',
+      pythonVersion: '3.7',
+      // TODO: initialize other flags
+    };
+    // eslint-disable-next-line no-restricted-syntax
+    for (const flag of context.flags_normal) {
+      config[flag] = false;
+    }
+    // eslint-disable-next-line no-restricted-syntax
+    for (const flag of context.flags_strict) {
+      config[flag] = false;
+    }
+    this.state = {
+      annotations: [],
+      aboutIsOpen: false,
+      optionsIsOpen: false,
+      config,
+      context,
+      source: context.initial_code,
+      isOpen: false,
+      result: {
+        status: 'ready',
+      },
+    };
+
     this.aboutToggle = this.aboutToggle.bind(this);
     this.toggle = this.toggle.bind(this);
     this.optionsToggle = this.optionsToggle.bind(this);
@@ -293,7 +321,7 @@ export default class App extends Component {
                           <input
                             type="checkbox"
                             className="mypy-options"
-                            name={flag}
+                            id={flag}
                             value="true"
                             onChange={e => this.updateConfig({ [flag]: e.target.checked })}
                           />
