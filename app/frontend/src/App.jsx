@@ -1,6 +1,7 @@
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Component } from 'react';
+import ReactGA from 'react-ga';
 import {
   Button,
   Collapse,
@@ -63,24 +64,12 @@ export default class App extends Component {
     this.updateConfig = this.updateConfig.bind(this);
   }
 
-  state = {
-    annotations: [],
-    aboutIsOpen: false,
-    optionsIsOpen: false,
-    config: {
-      mypyVersion: 'latest',
-      pythonVersion: '3.7',
-      // TODO: initialize other flags
-    },
-    context: JSON.parse(document.getElementById('context').textContent),
-    source: JSON.parse(document.getElementById('context').textContent).initial_code,
-    isOpen: false,
-    result: {
-      status: 'ready',
-    },
-  };
-
   componentDidMount() {
+    if (this.state.context.ga_tracking_id) {
+      ReactGA.initialize(this.state.context.ga_tracking_id);
+      ReactGA.pageview(window.location.pathname + window.location.search);
+    }
+
     const queries = parseQueryParameters();
     if ('gist' in queries) {
       this.fetchGist(queries.gist);

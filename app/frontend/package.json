@@ -18,6 +18,7 @@
     "react": "^16.8.6",
     "react-ace": "^7.0.2",
     "react-dom": "^16.8.6",
+    "react-ga": "^2.6.0",
     "react-hot-loader": "^4.12.10",
     "reactstrap": "^8.0.1"
   },
