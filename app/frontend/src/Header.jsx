@@ -1,8 +1,12 @@
 import React from 'react';
 import {
   Button,
+  Col,
   Collapse,
   Form,
+  FormGroup,
+  Input,
+  Label,
   Modal,
   ModalBody,
   ModalFooter,
@@ -60,28 +64,44 @@ class Header extends React.Component {
           <NavbarBrand href="/" className="h1 mb-0">mypy Playground</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse navbar isOpen={this.state.isOpen}>
-            <Form className="form-inline my-2 my-lg-0 mr-auto">
-              <button type="button" className="btn btn-light my-2 my-sm-0 mr-sm-2" id="run" disabled={status === 'running'} onClick={onRunClick}>Run</button>
-              <button type="button" className="btn btn-light my-2 my-sm-0 mr-sm-2" id="gist" disabled={status === 'creating_gist'} onClick={onGistClick}>Gist</button>
-              <select className="form-control mr-sm-2" id="mypy_version" title="mypy Version" defaultValue="latest" onChange={e => onConfigChange({ mypyVersion: e.target.value })}>
+            <Form inline className="my-2 my-lg-0 mr-auto">
+              <Button color="light" className="my-2 my-sm-0 mr-sm-2" id="run" disabled={status === 'running'} onClick={onRunClick}>Run</Button>
+              <Button color="light" className="my-sm-0 mr-sm-2" disabled={status === 'creating_gist'} onClick={onGistClick}>Gist</Button>
+              <Input
+                type="select"
+                className="mr-sm-2"
+                title="mypy Version"
+                defaultValue="latest"
+                onChange={e => onConfigChange({ mypyVersion: e.target.value })}
+              >
                 {
                   context.mypy_versions.map(([name, id]) => (
                     <option key={id} value={id}>{ name }</option>
                   ))
                 }
-              </select>
-              <select className="form-control mr-sm-2" id="python_version" title="Python Version (--python--version)" defaultValue="3.7" onChange={e => onConfigChange({ pythonVersion: e.target.value })}>
+              </Input>
+              <Input
+                type="select"
+                className="mr-sm-2"
+                title="Python Version (--python--version)"
+                defaultValue="3.7"
+                onChange={e => onConfigChange({ pythonVersion: e.target.value })}
+              >
                 {
                   context.python_versions.map(ver => (
                     <option key={ver} value={ver}>Python { ver }</option>
                   ))
                 }
-              </select>
-              <button type="button" className="btn btn-light my-2 my-sm-0" data-toggle="modal" data-target="#options-modal" onClick={this.optionsToggle}>Options</button>
+              </Input>
+              <Button color="light" className="my-2 my-sm-0" data-toggle="modal" data-target="#options-modal" onClick={this.optionsToggle}>
+                Options
+              </Button>
             </Form>
-            <form className="form-inline my-2 my-lg-0">
-              <button type="button" className="btn btn-light my-2 my-sm-0" data-toggle="modal" data-target="#about-modal" onClick={this.aboutToggle}>About</button>
-            </form>
+            <Form className="form-inline my-2 my-lg-0">
+              <Button color="light" className="my-2 my-sm-0" data-toggle="modal" data-target="#about-modal" onClick={this.aboutToggle}>
+                About
+              </Button>
+            </Form>
           </Collapse>
         </Navbar>
         <Modal isOpen={this.state.optionsIsOpen} toggle={this.optionsToggle}>
@@ -89,46 +109,42 @@ class Header extends React.Component {
             Options
           </ModalHeader>
           <ModalBody>
-            <form>
-              <div className="form-row">
-                <div className="col-md-6">
+            <Form>
+              <FormGroup row>
+                <Col md={6}>
                   {
                     context.flags_normal.map(flag => (
-                      <div className="checkbox" key={flag}>
-                        <label htmlFor={flag}>
-                          <input
-                            type="checkbox"
-                            className="mypy-options"
-                            id={flag}
-                            value="true"
-                            onChange={e => onConfigChange({ [flag]: e.target.checked })}
-                          />
+                      <FormGroup check key={flag}>
+                        <Input
+                          type="checkbox"
+                          id={flag}
+                          onChange={e => onConfigChange({ [flag]: e.target.checked })}
+                        />
+                        <Label check for={flag}>
                           <code>--{ flag }</code>
-                        </label>
-                      </div>
+                        </Label>
+                      </FormGroup>
                     ))
                   }
-                </div>
-                <div className="col-md-6">
+                </Col>
+                <Col md={6}>
                   {
                     context.flags_strict.map(flag => (
-                      <div className="checkbox" key={flag}>
-                        <label htmlFor={flag}>
-                          <input
-                            type="checkbox"
-                            className="mypy-options"
-                            id={flag}
-                            value="true"
-                            onChange={e => onConfigChange({ [flag]: e.target.checked })}
-                          />
+                      <FormGroup check key={flag}>
+                        <Input
+                          type="checkbox"
+                          id={flag}
+                          onChange={e => onConfigChange({ [flag]: e.target.checked })}
+                        />
+                        <Label check for={flag}>
                           <code>--{ flag }</code>
-                        </label>
-                      </div>
+                        </Label>
+                      </FormGroup>
                     ))
                   }
-                </div>
-              </div>
-            </form>
+                </Col>
+              </FormGroup>
+            </Form>
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={this.optionsToggle}>Close</Button>
