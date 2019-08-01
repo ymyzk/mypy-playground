@@ -27,20 +27,6 @@ function parseMessages(messages) {
   }).filter(m => m !== null);
 }
 
-function parseQueryParameters() {
-  const a = window.location.search.substr(1).split('&');
-  if (a === '') return {};
-  const b = {};
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < a.length; i++) {
-    const p = a[i].split('=');
-    // eslint-disable-next-line no-continue
-    if (p.length !== 2) continue;
-    b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, ' '));
-  }
-  return b;
-}
-
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -80,9 +66,9 @@ export default class App extends Component {
       ReactGA.pageview(window.location.pathname + window.location.search);
     }
 
-    const queries = parseQueryParameters();
-    if ('gist' in queries) {
-      this.fetchGist(queries.gist);
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('gist')) {
+      this.fetchGist(params.get('gist'));
     }
   }
 
