@@ -197,7 +197,6 @@ export default class App extends Component {
         />
         <Editor
           annotations={this.state.annotations}
-          initialCode={this.state.context.initial_code}
           onChange={this.onChange}
           code={this.state.source}
         />
