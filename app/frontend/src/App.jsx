@@ -1,8 +1,8 @@
-import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Component } from 'react';
 import ReactGA from 'react-ga';
 
+import { runTypecheck } from './api';
 import Editor from './Editor';
 import { fetchGist, shareGist } from './gist';
 import Header from './Header';
@@ -81,30 +81,21 @@ export default class App extends Component {
     this.setState({ config: { ...this.state.config, ...configDiff } });
   }
 
-  run() {
-    const data = {
-      ...this.state.config,
-      source: this.state.source,
-    };
+  async run() {
     this.setState({ result: { status: 'running' } });
 
-    axios.post('/typecheck.json', data, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      timeout: 30 * 1000,
-      validateStatus(status) {
-        return status === 200;
-      },
-    }).then((response) => {
-      const result = response.data;
+    try {
+      const result = await runTypecheck({
+        ...this.state.config,
+        source: this.state.source,
+      });
       this.setState({
         result: { status: 'succeeded', result },
         annotations: parseMessages(result.stdout),
       });
-    }).catch((error) => {
+    } catch (error) {
       this.setState({ result: { status: 'failed', message: error } });
-    });
+    }
   }
 
   async shareGist() {
