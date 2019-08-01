@@ -7,7 +7,16 @@ module.exports = {
     publicPath: "/static/",
   },
   use: [
-    '@neutrinojs/airbnb',
+    [
+      '@neutrinojs/airbnb',
+      {
+        eslint: {
+          rules: {
+            'react/prop-types': 'off',
+          }
+        }
+      }
+    ],
     [
       '@neutrinojs/react',
       {
