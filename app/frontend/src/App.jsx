@@ -4,6 +4,7 @@ import { Component } from 'react';
 import ReactGA from 'react-ga';
 
 import Editor from './Editor';
+import { fetchGist, shareGist } from './gist';
 import Header from './Header';
 import './App.css';
 
@@ -106,59 +107,37 @@ export default class App extends Component {
     });
   }
 
-  shareGist() {
-    const data = {
-      source: this.state.source,
-    };
-
+  async shareGist() {
     this.setState({ result: { status: 'creating_gist' } });
-
-    axios.post('/gist', data)
-      .then((response) => {
-        if (response.status !== 201) {
-          this.setState({ result: { status: 'failed', message: `Failed to create a gist. Status code: ${response.status}` } });
-          return;
-        }
-        const gistUrl = response.data.url;
-        const playgroundUrl = `https://play-mypy.ymyzk.com/?gist=${response.data.id}`;
-        this.setState({
-          result: {
-            status: 'created_gist',
-            gistUrl,
-            playgroundUrl,
-          },
-        });
-      })
-      .catch((error) => {
-        this.setState({ result: { status: 'failed', message: `Failed to create a gist. Status code: ${error}` } });
+    try {
+      const { gistUrl, playgroundUrl } = await shareGist(this.state.source);
+      this.setState({
+        result: {
+          status: 'created_gist',
+          gistUrl,
+          playgroundUrl,
+        },
       });
+    } catch (error) {
+      this.setState({ result: { status: 'failed', message: `Failed to create a gist: ${error}` } });
+    }
   }
 
-  fetchGist(gistId) {
+  async fetchGist(gistId) {
     this.setState({ result: { status: 'fetching_gist' } });
-
-    axios.get(`https://api.github.com/gists/${gistId}`)
-      .then((response) => {
-        if (response.status !== 200) {
-          this.setState({ result: { status: 'failed', message: 'Failed to fetch the gist.' } });
-          return;
-        }
-        if (!('main.py' in response.data.files)) {
-          this.setState({ result: { status: 'failed', message: '"main.py" not found.' } });
-          return;
-        }
-
-        this.setState({
-          source: response.data.files['main.py'].content,
-          result: {
-            status: 'fetched_gist',
-          },
-        });
-      })
-      .catch((error) => {
-        this.setState({ result: { status: 'failed', message: `Failed to fetch the gist: ${error}` } });
+    try {
+      const { source } = await fetchGist(gistId);
+      this.setState({
+        result: {
+          status: 'fetched_gist',
+        },
+        source,
       });
+    } catch (error) {
+      this.setState({ result: { status: 'failed', message: `Failed to fetch the gist: ${error}` } });
+    }
   }
+
   render() {
     let result;
     switch (this.state.result.status) {
