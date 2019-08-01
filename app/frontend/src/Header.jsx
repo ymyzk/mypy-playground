@@ -17,35 +17,16 @@ import {
 } from 'reactstrap';
 
 class Header extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.aboutToggle = this.aboutToggle.bind(this);
-    this.optionsToggle = this.optionsToggle.bind(this);
-    this.toggle = this.toggle.bind(this);
-  }
-
   state = {
     aboutIsOpen: false,
+    navbarIsOpen: false,
     optionsIsOpen: false,
-    isOpen: false,
   };
 
-  aboutToggle() {
+  toggle(name) {
+    const stateName = `${name}IsOpen`;
     this.setState({
-      aboutIsOpen: !this.state.aboutIsOpen,
-    });
-  }
-
-  optionsToggle() {
-    this.setState({
-      optionsIsOpen: !this.state.optionsIsOpen,
-    });
-  }
-
-  toggle() {
-    this.setState({
-      isOpen: !this.state.isOpen,
+      [stateName]: !this.state[stateName],
     });
   }
 
@@ -63,8 +44,8 @@ class Header extends React.Component {
       <header>
         <Navbar dark expand="lg">
           <NavbarBrand href="/" className="h1 mb-0">mypy Playground</NavbarBrand>
-          <NavbarToggler onClick={this.toggle} />
-          <Collapse navbar isOpen={this.state.isOpen}>
+          <NavbarToggler onClick={() => this.toggle('navbar')} />
+          <Collapse navbar isOpen={this.state.navbarIsOpen}>
             <Form inline className="my-2 my-lg-0 mr-auto">
               <Button color="light" className="my-2 my-sm-0 mr-sm-2" id="run" disabled={status === 'running'} onClick={onRunClick}>Run</Button>
               <Button color="light" className="my-sm-0 mr-sm-2" disabled={status === 'creating_gist'} onClick={onGistClick}>Gist</Button>
@@ -94,19 +75,19 @@ class Header extends React.Component {
                   ))
                 }
               </Input>
-              <Button color="light" className="my-2 my-sm-0" data-toggle="modal" data-target="#options-modal" onClick={this.optionsToggle}>
+              <Button color="light" className="my-2 my-sm-0" data-toggle="modal" data-target="#options-modal" onClick={() => this.toggle('options')}>
                 Options
               </Button>
             </Form>
             <Form className="form-inline my-2 my-lg-0">
-              <Button color="light" className="my-2 my-sm-0" data-toggle="modal" data-target="#about-modal" onClick={this.aboutToggle}>
+              <Button color="light" className="my-2 my-sm-0" data-toggle="modal" data-target="#about-modal" onClick={() => this.toggle('about')}>
                 About
               </Button>
             </Form>
           </Collapse>
         </Navbar>
-        <Modal isOpen={this.state.optionsIsOpen} toggle={this.optionsToggle}>
-          <ModalHeader toggle={this.optionsToggle}>
+        <Modal isOpen={this.state.optionsIsOpen} toggle={() => this.toggle('options')}>
+          <ModalHeader toggle={() => this.toggle('options')}>
             Options
           </ModalHeader>
           <ModalBody>
@@ -150,11 +131,11 @@ class Header extends React.Component {
             </Form>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.optionsToggle}>Close</Button>
+            <Button color="primary" onClick={() => this.toggle('options')}>Close</Button>
           </ModalFooter>
         </Modal>
-        <Modal isOpen={this.state.aboutIsOpen} toggle={this.aboutToggle}>
-          <ModalHeader toggle={this.aboutToggle}>About the mypy Playground</ModalHeader>
+        <Modal isOpen={this.state.aboutIsOpen} toggle={() => this.toggle('about')}>
+          <ModalHeader toggle={() => this.toggle('about')}>About the mypy Playground</ModalHeader>
           <ModalBody>
             <p>
               The mypy Playground is a web service that receives a Python program with type hints,
@@ -166,7 +147,7 @@ class Header extends React.Component {
             </p>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.aboutToggle}>Close</Button>
+            <Button color="primary" onClick={() => this.toggle('about')}>Close</Button>
           </ModalFooter>
         </Modal>
       </header>
