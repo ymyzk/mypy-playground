@@ -1,12 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Component } from 'react';
+import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 
-import { runTypecheck } from './api';
-import Editor from './Editor';
-import { fetchGist, shareGist } from './gist';
-import Header from './Header';
 import './App.css';
+import Editor from './Editor';
+import Header from './Header';
+import Result from './Result';
+import { runTypecheck } from './api';
+import { fetchGist, shareGist } from './gist';
 
 function parseMessages(messages) {
   const types = {
@@ -130,61 +131,6 @@ export default class App extends Component {
   }
 
   render() {
-    let result;
-    switch (this.state.result.status) {
-      case 'ready':
-        result = 'Welcome to mypy Playground!';
-        break;
-      case 'running':
-        result = 'Running...';
-        break;
-      case 'succeeded':
-        result = (
-          <div>
-            {
-              this.state.result.result.exit_code === 0 ?
-                <span>Succeeded!! ({ this.state.result.result.duration } ms)</span> :
-                <span>
-                Failed (exit code: { this.state.result.result.exit_code })
-                ({ this.state.result.result.duration } ms)
-                </span>
-            }
-            <hr />
-            <pre>{ this.state.result.result.stdout }</pre>
-            <pre>{ this.state.result.result.stderr }</pre>
-          </div>
-        );
-        break;
-      case 'failed':
-        result = `Error: ${this.state.result.message}`;
-        break;
-      case 'creating_gist':
-        result = 'Creating a gist...';
-        break;
-      case 'fetching_gist':
-        result = 'Fetching a gist...';
-        break;
-      case 'created_gist':
-      {
-        const { gistUrl, playgroundUrl } = this.state.result;
-        result = (
-          <div>
-            <span>Gist URL: </span>
-            <a href={gistUrl} target="_blank" rel="noopener noreferrer">{gistUrl}</a><br />
-            <span>Playground URL: </span>
-            <a href={playgroundUrl}>{playgroundUrl}</a><br />
-            <hr />
-          </div>
-        );
-        break;
-      }
-      case 'fetched_gist':
-        result = 'Completed to fetch a Gist!';
-        break;
-      default:
-        console.error('Unexpected case', this.state.result.status);
-    }
-
     return (
       <div className="App">
         <Header
@@ -200,9 +146,7 @@ export default class App extends Component {
           onChange={this.onChange}
           code={this.state.source}
         />
-        <div id="result">
-          {result}
-        </div>
+        <Result result={this.state.result} />
       </div>
     );
   }
