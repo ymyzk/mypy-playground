@@ -52,6 +52,7 @@ class Header extends React.Component {
   render() {
     const {
       context,
+      config,
       status,
       onGistClick,
       onRunClick,
@@ -71,7 +72,7 @@ class Header extends React.Component {
                 type="select"
                 className="mr-sm-2"
                 title="mypy Version"
-                defaultValue="latest"
+                value={config.mypyVersion}
                 onChange={e => onConfigChange({ mypyVersion: e.target.value })}
               >
                 {
@@ -84,7 +85,7 @@ class Header extends React.Component {
                 type="select"
                 className="mr-sm-2"
                 title="Python Version (--python--version)"
-                defaultValue="3.7"
+                value={config.pythonVersion}
                 onChange={e => onConfigChange({ pythonVersion: e.target.value })}
               >
                 {
@@ -118,6 +119,7 @@ class Header extends React.Component {
                         <Input
                           type="checkbox"
                           id={flag}
+                          checked={config[flag]}
                           onChange={e => onConfigChange({ [flag]: e.target.checked })}
                         />
                         <Label check for={flag}>
@@ -134,6 +136,7 @@ class Header extends React.Component {
                         <Input
                           type="checkbox"
                           id={flag}
+                          checked={config[flag]}
                           onChange={e => onConfigChange({ [flag]: e.target.checked })}
                         />
                         <Label check for={flag}>

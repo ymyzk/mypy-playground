@@ -189,6 +189,7 @@ export default class App extends Component {
       <div className="App">
         <Header
           context={this.state.context}
+          config={this.state.config}
           status={this.state.result.status}
           onGistClick={this.shareGist}
           onRunClick={this.run}

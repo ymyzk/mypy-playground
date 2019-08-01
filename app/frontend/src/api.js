@@ -11,5 +11,5 @@ export async function runTypecheck(data) {
       return status === 200;
     },
   });
-  return response.result;
+  return response.data;
 }
