@@ -39,19 +39,25 @@ export default class App extends Component {
 
     const params = new URLSearchParams(window.location.search);
     // Load configurations
+    const diff = {};
     if (params.has('mypy')) {
-      this.updateConfig({ mypyVersion: params.get('mypy') });
+      diff.mypyVersion = params.get('mypy');
     }
     if (params.has('python')) {
-      this.updateConfig({ pythonVersion: params.get('python') });
+      diff.pythonVersion = params.get('python');
     }
     if (params.has('flags')) {
-      const diff = {};
       // eslint-disable-next-line no-restricted-syntax
       for (const flag of params.get('flags').split(',')) {
         diff[flag] = true;
       }
-      this.updateConfig(diff);
+    }
+    this.updateConfig(diff);
+    // Load source
+    const source = window.localStorage.getItem('source');
+    if (source) {
+      // eslint-disable-next-line react/no-did-mount-set-state
+      this.setState({ source });
     }
     // Load gist
     if (params.has('gist')) {
@@ -78,6 +84,10 @@ export default class App extends Component {
         params.set('flags', flags.join(','));
       }
       window.history.pushState({}, '', `?${params.toString()}`);
+    }
+
+    if (prevState.source !== this.state.source) {
+      window.localStorage.setItem('source', this.state.source);
     }
   }
 
