@@ -90,7 +90,7 @@ class TypecheckHandler(JsonRequestHandler):
                 log_message="'source' is required")
 
         args = {}
-        python_version = json.get("python_version")
+        python_version = json.get("pythonVersion")
         if (python_version is not None
                 and python_version in sandbox.PYTHON_VERSIONS):
             args["python_version"] = python_version
@@ -99,7 +99,7 @@ class TypecheckHandler(JsonRequestHandler):
             if flag_value is not None and flag_value is True:
                 args[flag] = flag_value
 
-        mypy_version = json.get("mypy_version")
+        mypy_version = json.get("mypyVersion")
         if mypy_version is None:
             mypy_version = get_mypy_versions()[0][1]
         args["mypy_version"] = mypy_version
