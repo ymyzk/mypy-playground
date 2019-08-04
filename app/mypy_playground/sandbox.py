@@ -11,6 +11,8 @@ from typing import Any, Dict, Optional
 import aiodocker
 from tornado.options import options
 
+from .utils import parse_option_as_dict
+
 
 ARGUMENT_FLAGS_NORMAL = (
     "verbose",
@@ -68,9 +70,14 @@ class Result:
 
 class AbstractSandbox(ABC):
     @abstractmethod
+    def __init__(self) -> None:
+        pass
+
+    @abstractmethod
     async def run_typecheck(self,
                             source: str,
                             *,
+                            mypy_version: str,
                             python_version: Optional[str] = None,
                             **kwargs: Any) -> Optional[Result]:
         pass
@@ -78,12 +85,10 @@ class AbstractSandbox(ABC):
 
 class DockerSandbox(AbstractSandbox):
     client: aiodocker.Docker
-    docker_image: str
     source_file_path: Path
 
-    def __init__(self, docker_image: str) -> None:
+    def __init__(self) -> None:
         self.client = aiodocker.Docker()
-        self.docker_image = docker_image
         self.source_file_path = Path("/tmp/main.py")
 
     def create_archive(self, source: str) -> BytesIO:
@@ -100,9 +105,15 @@ class DockerSandbox(AbstractSandbox):
     async def run_typecheck(self,
                             source: str,
                             *,
+                            mypy_version: str,
                             python_version: Optional[str] = None,
                             **kwargs: Any
                             ) -> Optional[Result]:
+        docker_image = self.get_docker_image(mypy_version)
+        if docker_image is None:
+            logger.error(f"cannot find a docker image for mypy version: {mypy_version}")
+            return None
+
         cmd = ["mypy", "--cache-dir", "/dev/null", "--no-site-packages"]
         if python_version:
             cmd += ["--python-version", f"{python_version}"]
@@ -114,7 +125,7 @@ class DockerSandbox(AbstractSandbox):
             start_time = time.time()
             logger.info("creating container")
             config = {
-                "Image": self.docker_image,
+                "Image": docker_image,
                 "Cmd": cmd,
                 "HostConfig": {
                     "CapDrop": ["ALL"],
@@ -143,6 +154,9 @@ class DockerSandbox(AbstractSandbox):
             logger.error(f"docker api error: {e}")
         # TODO: better error handling
         return None
+
+    def get_docker_image(self, mypy_version_id: str) -> Optional[str]:
+        return parse_option_as_dict("docker_images").get(mypy_version_id)
 
 
 semaphore: Optional[asyncio.Semaphore] = None

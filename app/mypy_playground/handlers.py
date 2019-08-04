@@ -1,15 +1,15 @@
-from functools import lru_cache
 from http import HTTPStatus
 import json
 import logging
 import traceback
-from typing import Any, Dict, List, Optional, Tuple, cast
+from typing import Any, Dict, Union
 
 import tornado.escape
 from tornado.options import options
 import tornado.web
 
 from . import gist, sandbox
+from .utils import get_mypy_versions
 
 
 logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ fib("10")
 class IndexHandler(tornado.web.RequestHandler):
     async def get(self) -> None:
         mypy_versions = get_mypy_versions()
-        default = {flag: False for flag in sandbox.ARGUMENT_FLAGS}
+        default: Dict[str, Union[bool, str]] = {flag: False for flag in sandbox.ARGUMENT_FLAGS}
         default["mypyVersion"] = mypy_versions[0][1]
         default["pythonVersion"] = sandbox.PYTHON_VERSIONS[0]
         context = {
@@ -101,18 +101,11 @@ class TypecheckHandler(JsonRequestHandler):
 
         mypy_version = json.get("mypy_version")
         if mypy_version is None:
-            mypy_version = "latest"
-        docker_image = get_docker_image(mypy_version)
-        if docker_image is None:
-            raise tornado.web.HTTPError(
-                HTTPStatus.BAD_REQUEST,
-                log_message="invalid 'mypy_version'")
+            mypy_version = get_mypy_versions()[0][1]
+        args["mypy_version"] = mypy_version
 
-        docker_sandbox: sandbox.AbstractSandbox = sandbox.DockerSandbox(
-            docker_image=docker_image
-        )
         result = await sandbox.run_typecheck_in_sandbox(
-            docker_sandbox,
+            sandbox.DockerSandbox(),
             source,
             **args
         )
@@ -145,22 +138,3 @@ class GistHandler(JsonRequestHandler):
 
         self.set_status(201)
         self.write(result)
-
-
-@lru_cache()
-def parse_option_as_dict(name: str) -> Dict[str, str]:
-    # This function assumes that dict is insertion order-preserving
-    # (Python 3.7+)
-    return dict(
-        cast(List[Tuple[str, str]],
-             [tuple(i.split(":", 1)) for i in options[name].split(",")])
-    )
-
-
-@lru_cache(maxsize=1)
-def get_mypy_versions() -> List[Tuple[str, str]]:
-    return list(parse_option_as_dict("mypy_versions").items())
-
-
-def get_docker_image(mypy_version_id: str) -> Optional[str]:
-    return parse_option_as_dict("docker_images").get(mypy_version_id)
