@@ -141,7 +141,7 @@ class GistHandler(JsonRequestHandler):
             logger.error("an error occurred during creating a gist")
             raise tornado.web.HTTPError(
                 HTTPStatus.INTERNAL_SERVER_ERROR,
-                log_message="an error occurred during running mypy")
+                log_message="an error occurred during creating a gist")
 
         self.set_status(201)
         self.write(result)
