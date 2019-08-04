@@ -1,14 +1,14 @@
 import axios from 'axios';
 
 export async function shareGist(source, rootUrl) {
-  const response = await axios.post('/gist', { source }, {
+  const { data } = await axios.post('/gist', { source }, {
     validateStatus(status) {
       return status === 201;
     },
   });
   return {
-    gistUrl: response.data.url,
-    playgroundUrl: `${rootUrl}/?gist=${response.data.id}`,
+    gistId: data.id,
+    gistUrl: data.url,
   };
 }
 

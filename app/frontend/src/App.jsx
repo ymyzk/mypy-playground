@@ -38,8 +38,46 @@ export default class App extends Component {
     }
 
     const params = new URLSearchParams(window.location.search);
+    // Load configurations
+    if (params.has('mypy')) {
+      this.updateConfig({ mypyVersion: params.get('mypy') });
+    }
+    if (params.has('python')) {
+      this.updateConfig({ pythonVersion: params.get('python') });
+    }
+    if (params.has('flags')) {
+      const diff = {};
+      // eslint-disable-next-line no-restricted-syntax
+      for (const flag of params.get('flags').split(',')) {
+        diff[flag] = true;
+      }
+      this.updateConfig(diff);
+    }
+    // Load gist
     if (params.has('gist')) {
       this.fetchGist(params.get('gist'));
+    }
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    // Push history when configuration has changed
+    const params = new URLSearchParams(window.location.search);
+    if (prevState.config !== this.state.config) {
+      const flags = [];
+      Object.entries(this.state.config).forEach(([k, v]) => {
+        if (k === 'mypyVersion') {
+          params.set('mypy', v);
+        } else if (k === 'pythonVersion') {
+          params.set('python', v);
+        } else if (v) {
+          flags.push(k);
+        }
+      });
+      if (flags.length > 0) {
+        params.set('flags', flags.join(','));
+      }
+      window.history.pushState({}, '', `?${params.toString()}`);
     }
   }
 
@@ -71,12 +109,18 @@ export default class App extends Component {
   async shareGist() {
     this.setState({ result: { status: 'creating_gist' } });
     try {
-      const { gistUrl, playgroundUrl } = await shareGist(this.state.source, this.state.context.rootUrl);
+      const playgroundUrl = new URL(window.location.href);
+      const params = new URLSearchParams(playgroundUrl.search);
+      const {
+        gistId,
+        gistUrl,
+      } = await shareGist(this.state.source);
+      params.set('gist', gistId);
       this.setState({
         result: {
           status: 'created_gist',
           gistUrl,
-          playgroundUrl,
+          playgroundUrl: playgroundUrl.toString(),
         },
       });
     } catch (error) {
