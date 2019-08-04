@@ -7,7 +7,7 @@ import 'brace/theme/textmate';
 function Editor({
   annotations,
   onChange,
-  code,
+  source,
 }) {
   return (
     <AceEditor
@@ -17,7 +17,7 @@ function Editor({
       fontSize={14}
       annotations={annotations}
       onChange={onChange}
-      value={code}
+      value={source}
       width="auto"
       height="auto"
       editorProps={{

@@ -155,9 +155,9 @@ export default class App extends Component {
           onConfigChange={this.updateConfig}
         />
         <Editor
-          annotations={this.state.annotations}
           onChange={this.onChange}
-          code={this.state.source}
+          annotations={this.state.annotations}
+          source={this.state.source}
         />
         <Result result={this.state.result} />
       </div>
