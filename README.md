@@ -21,12 +21,12 @@
 - [sandbox](sandbox): A Docker image for running mypy
 
 ## Configuration
-| Name | Required | Description |
-|:-----|:---------|:------------|
-| `DEBUG` | No | Enable debug mode (default: 0) |
-| `PORT` | No | Port number (default: 8080) |
-| `DOCKER_IMAGES` | No | Docker images used by Sandbox (default: `mypy latest:latest`) |
-| `SANDBOX_CONCURRENCY` | No | The number of running sandboxes at the same time (default: 3) |
-| `GA_TRACKING_ID` | No | A tracking id for Google Analytics |
-| `GITHUB_TOKEN` | No | A token used to create gists |
-| `MYPY_VERSIONS` | No | List of mypy versions used by a sandbox (default: `latest:ymyzk/mypy-playground-sandbox:latest`) |
+| Name | Type | Required | Description |
+|:-----|:-----|:---------|:------------|
+| `DEBUG` | bool | No | Enable debug mode (default: False) |
+| `PORT` | int | No | Port number (default: 8080) |
+| `DOCKER_IMAGES` | list | No | Docker images used by sandbox (default: `mypy latest:latest`) |
+| `SANDBOX_CONCURRENCY` | int | No | The number of running sandboxes at the same time (default: 3) |
+| `GA_TRACKING_ID` | str | No | A tracking id for Google Analytics. If not specified, Google Analytics is disabled. |
+| `GITHUB_TOKEN` | str | No | A token used to create gists |
+| `MYPY_VERSIONS` | list | No | List of mypy versions used by a sandbox (default: `latest:ymyzk/mypy-playground-sandbox:latest`) |
