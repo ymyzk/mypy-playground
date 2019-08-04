@@ -5,9 +5,12 @@ services:
     ports:
       - 127.0.0.1:8080:8080
     environment:
-      DOCKER_HOST: http://docker:2375
+      DOCKER_HOST: http://docker:2376
+      DOCKER_CERT_PATH: /certs/client
+      DOCKER_TLS_VERIFY: 1
       DEBUG: "1"
     volumes:
+      - docker_certs:/certs
       - ./app:/app
 
   frontend:
@@ -17,7 +20,13 @@ services:
       - ./app/static:/static
 
   docker:
-    image: docker:18.09-dind
+    image: docker:19.03-dind
     privileged: true
+    environment:
+      DOCKER_TLS_CERT_DIR: /certs
     volumes:
+      - docker_certs:/certs
       - ./sandbox:/sandbox
+
+volumes:
+  docker_certs:
