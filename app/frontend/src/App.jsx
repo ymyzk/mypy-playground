@@ -15,21 +15,9 @@ export default class App extends Component {
     super(props);
 
     const context = JSON.parse(document.getElementById('context').textContent);
-    const config = {
-      mypyVersion: 'latest',
-      pythonVersion: '3.7',
-    };
-    // eslint-disable-next-line no-restricted-syntax
-    for (const flag of context.flags_normal) {
-      config[flag] = false;
-    }
-    // eslint-disable-next-line no-restricted-syntax
-    for (const flag of context.flags_strict) {
-      config[flag] = false;
-    }
     this.state = {
       annotations: [],
-      config,
+      config: context.defaultConfig,
       context,
       source: context.initial_code,
       result: {

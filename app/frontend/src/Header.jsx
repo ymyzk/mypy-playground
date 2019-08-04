@@ -40,6 +40,12 @@ class Header extends React.Component {
       onConfigChange,
     } = this.props;
 
+    const half = Math.ceil(context.flags.length / 2);
+    const flagsColumns = [
+      context.flags.slice(0, half),
+      context.flags.slice(half, context.flags.length),
+    ];
+
     return (
       <header>
         <Navbar dark expand="lg">
@@ -93,40 +99,27 @@ class Header extends React.Component {
           <ModalBody>
             <Form>
               <FormGroup row>
-                <Col md={6}>
-                  {
-                    context.flags_normal.map(flag => (
-                      <FormGroup check key={flag}>
-                        <Input
-                          type="checkbox"
-                          id={flag}
-                          checked={config[flag]}
-                          onChange={e => onConfigChange({ [flag]: e.target.checked })}
-                        />
-                        <Label check for={flag}>
-                          <code>--{ flag }</code>
-                        </Label>
-                      </FormGroup>
-                    ))
-                  }
-                </Col>
-                <Col md={6}>
-                  {
-                    context.flags_strict.map(flag => (
-                      <FormGroup check key={flag}>
-                        <Input
-                          type="checkbox"
-                          id={flag}
-                          checked={config[flag]}
-                          onChange={e => onConfigChange({ [flag]: e.target.checked })}
-                        />
-                        <Label check for={flag}>
-                          <code>--{ flag }</code>
-                        </Label>
-                      </FormGroup>
-                    ))
-                  }
-                </Col>
+                {
+                  flagsColumns.map(flags => (
+                    <Col md={6} key={flags[0]}>
+                      {
+                        flags.map(flag => (
+                          <FormGroup check key={flag}>
+                            <Input
+                              type="checkbox"
+                              id={flag}
+                              checked={config[flag]}
+                              onChange={e => onConfigChange({ [flag]: e.target.checked })}
+                            />
+                            <Label check for={flag}>
+                              <code>--{ flag }</code>
+                            </Label>
+                          </FormGroup>
+                        ))
+                      }
+                    </Col>
+                  ))
+                }
               </FormGroup>
             </Form>
           </ModalBody>

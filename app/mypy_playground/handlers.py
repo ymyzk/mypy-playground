@@ -30,12 +30,16 @@ fib("10")
 
 class IndexHandler(tornado.web.RequestHandler):
     async def get(self) -> None:
+        mypy_versions = get_mypy_versions()
+        default = {flag: False for flag in sandbox.ARGUMENT_FLAGS}
+        default["mypyVersion"] = mypy_versions[0][1]
+        default["pythonVersion"] = sandbox.PYTHON_VERSIONS[0]
         context = {
+            "defaultConfig": default,
             "initial_code": initial_code,
             "python_versions": sandbox.PYTHON_VERSIONS,
-            "mypy_versions": get_mypy_versions(),
-            "flags_normal": sandbox.ARGUMENT_FLAGS_NORMAL,
-            "flags_strict": sandbox.ARGUMENT_FLAGS_STRICT,
+            "mypy_versions": mypy_versions,
+            "flags": sandbox.ARGUMENT_FLAGS,
             "ga_tracking_id": options.ga_tracking_id,
         }
         self.render("index.html", context=json.dumps(context))
