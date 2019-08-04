@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export async function shareGist(source, rootUrl) {
+export async function shareGist(source) {
   const { data } = await axios.post('/gist', { source }, {
     validateStatus(status) {
       return status === 201;
