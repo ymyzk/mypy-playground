@@ -41,6 +41,7 @@ class IndexHandler(tornado.web.RequestHandler):
             "mypy_versions": mypy_versions,
             "flags": sandbox.ARGUMENT_FLAGS,
             "ga_tracking_id": options.ga_tracking_id,
+            "rootUrl": options.root_url,
         }
         self.render("index.html", context=json.dumps(context))
 

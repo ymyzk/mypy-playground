@@ -71,7 +71,7 @@ export default class App extends Component {
   async shareGist() {
     this.setState({ result: { status: 'creating_gist' } });
     try {
-      const { gistUrl, playgroundUrl } = await shareGist(this.state.source);
+      const { gistUrl, playgroundUrl } = await shareGist(this.state.source, this.state.context.rootUrl);
       this.setState({
         result: {
           status: 'created_gist',

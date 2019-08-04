@@ -14,6 +14,9 @@ root_dir = Path(__file__).parents[1]
 static_dir = root_dir / "static"
 templates_dir = root_dir / "static"
 
+define("root_url",
+       default="https://mypy-play.net",
+       help="Root URL of mypy Playground. Used for link sharing.")
 define("docker_images",
        default="latest:ymyzk/mypy-playground-sandbox:latest",
        help="Docker image used by DockerSandbox")

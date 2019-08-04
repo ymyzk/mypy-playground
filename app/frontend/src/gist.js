@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export async function shareGist(source) {
+export async function shareGist(source, rootUrl) {
   const response = await axios.post('/gist', { source }, {
     validateStatus(status) {
       return status === 201;
@@ -8,7 +8,7 @@ export async function shareGist(source) {
   });
   return {
     gistUrl: response.data.url,
-    playgroundUrl: `https://play-mypy.ymyzk.com/?gist=${response.data.id}`,
+    playgroundUrl: `${rootUrl}/?gist=${response.data.id}`,
   };
 }
 
