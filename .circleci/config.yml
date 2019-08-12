@@ -39,6 +39,9 @@ jobs:
           paths:
             - app/frontend/node_modules
       - run:
+          command: npm run build
+          working_directory: app/frontend
+      - run:
           command: npm run lint
           working_directory: app/frontend
       - run:
