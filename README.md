@@ -1,6 +1,7 @@
 # mypy-plyground
 
 [![Build Status](https://travis-ci.org/ymyzk/mypy-playground.svg?branch=master)](https://travis-ci.org/ymyzk/mypy-playground)
+[![CircleCI Status](https://circleci.com/gh/ymyzk/mypy-playground.svg?style=shield)](https://circleci.com/gh/ymyzk/mypy-playground)
 
 **The mypy playgrund** provides Web UI to run mypy in the sandbox: https://mypy-play.net
 
