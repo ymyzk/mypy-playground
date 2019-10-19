@@ -47,7 +47,7 @@ ARGUMENT_FLAGS_STRICT = (
 )
 
 ARGUMENT_FLAGS = ARGUMENT_FLAGS_NORMAL + ARGUMENT_FLAGS_STRICT
-PYTHON_VERSIONS = ["3.7", "3.6", "3.5", "3.4", "3.3", "2.7"]
+PYTHON_VERSIONS = ["3.8", "3.7", "3.6", "3.5", "3.4", "3.3", "2.7"]
 
 logger = logging.getLogger(__name__)
 
