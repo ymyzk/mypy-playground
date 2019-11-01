@@ -1,4 +1,4 @@
-FROM python:3.7-slim
+FROM python:3.8-slim
 
 RUN pip install -U pipenv
 
@@ -8,7 +8,7 @@ COPY Pipfile Pipfile.lock /tmp/
 RUN pipenv lock -r > requirements.txt
 
 
-FROM python:3.7-slim
+FROM python:3.8-slim
 
 WORKDIR /tmp
 COPY --from=0 /tmp/requirements.txt /tmp/
