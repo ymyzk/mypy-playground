@@ -126,6 +126,7 @@ export default class App extends Component {
         gistUrl,
       } = await shareGist(this.state.source);
       params.set('gist', gistId);
+      playgroundUrl.search = `?${params.toString()}`;
       this.setState({
         result: {
           status: 'created_gist',
