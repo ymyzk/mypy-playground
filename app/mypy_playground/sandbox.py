@@ -42,6 +42,7 @@ ARGUMENT_FLAGS_STRICT = (
     "warn-incomplete-stub",
     "warn-redundant-casts",
     "warn-return-any",
+    "warn-unreachable",
     "warn-unused-configs",
     "warn-unused-ignores",
 )
