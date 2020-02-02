@@ -1,6 +1,6 @@
 # mypy-playground
 
-[![CircleCI Status](https://circleci.com/gh/ymyzk/mypy-playground.svg?style=shield)](https://circleci.com/gh/ymyzk/mypy-playground)
+![CI](https://github.com/ymyzk/mypy-playground/workflows/CI/badge.svg)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ymyzk/mypy-playground/blob/master/LICENSE)
 
 **The mypy playground** provides Web UI to run mypy in the sandbox: https://mypy-play.net
