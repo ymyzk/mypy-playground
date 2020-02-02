@@ -50,6 +50,7 @@ jobs:
         npm run test
       working-directory: ./app/frontend
 
+  # TODO: multiple sandbox images (only in prod?)
   build_docker_images:
     name: Build and push Docker images
     needs:
@@ -63,8 +64,12 @@ jobs:
         run: docker build --pull -t app:dev ./app
       - name: Build app image for production
         run: docker build --pull -t app:latest -f ./app/Dockerfile-prod ./app
-      - name: Build sandbox image
+      - name: Build latest sandbox image
+        if: github.ref != 'refs/heads/master'
         run: docker build -t sandbox:latest ./sandbox/latest
+      - name: Build sandbox images
+        if: github.ref == 'refs/heads/master'
+        run: ./sandbox/build.sh $SANDBOX_IMAGE_NAME
       - name: Docker login
         if: github.ref == 'refs/heads/master'
         env:
@@ -76,8 +81,6 @@ jobs:
         run: |
           docker tag app:latest $APP_IMAGE_NAME:latest
           docker push $APP_IMAGE_NAME:latest
-      - name: Push sandbox image
+      - name: Push sandbox images
         if: github.ref == 'refs/heads/master'
-        run: |
-          docker tag sandbox:latest $SANDBOX_IMAGE_NAME:latest
-          docker push $SANDBOX_IMAGE_NAME:latest
+        run: ./sandbox/push.sh $SANDBOX_IMAGE_NAME
