@@ -1,9 +1,9 @@
-# mypy-plyground
+# mypy-playground
 
 [![CircleCI Status](https://circleci.com/gh/ymyzk/mypy-playground.svg?style=shield)](https://circleci.com/gh/ymyzk/mypy-playground)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ymyzk/mypy-playground/blob/master/LICENSE)
 
-**The mypy playgrund** provides Web UI to run mypy in the sandbox: https://mypy-play.net
+**The mypy playground** provides Web UI to run mypy in the sandbox: https://mypy-play.net
 
 [![https://gyazo.com/30cbc6dbd533834208e7ed099ce2f589](https://i.gyazo.com/30cbc6dbd533834208e7ed099ce2f589.gif)](https://gyazo.com/30cbc6dbd533834208e7ed099ce2f589)
 
