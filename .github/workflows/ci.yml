@@ -5,7 +5,8 @@ env:
   SANDBOX_IMAGE_NAME: ymyzk/mypy-playground-sandbox
   DOCKER_BUILDKIT: 1
 jobs:
-  build_app:
+  test_app:
+    name: Test app
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -27,7 +28,8 @@ jobs:
       run: pipenv run test
       working-directory: ./app
 
-  build_frontend:
+  test_frontend:
+    name: Test frontend
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -49,6 +51,7 @@ jobs:
       working-directory: ./app/frontend
 
   build_docker_images:
+    name: Build Docker images
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -61,9 +64,10 @@ jobs:
         run: docker build -t sandbox:latest ./sandbox/latest
 
   push_docker_images:
+    name: Push Docker images
     needs:
-      - build_app
-      - build_frontend
+      - test_app
+      - test_frontend
       - build_docker_images
     runs-on: ubuntu-latest
     if: github.ref == 'master'
