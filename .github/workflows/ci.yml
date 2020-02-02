@@ -51,7 +51,10 @@ jobs:
       working-directory: ./app/frontend
 
   build_docker_images:
-    name: Build Docker images
+    name: Build and push Docker images
+    needs:
+      - test_app
+      - test_frontend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -62,26 +65,19 @@ jobs:
         run: docker build --pull -t app:latest -f ./app/Dockerfile-prod ./app
       - name: Build sandbox image
         run: docker build -t sandbox:latest ./sandbox/latest
-
-  push_docker_images:
-    name: Push Docker images
-    needs:
-      - test_app
-      - test_frontend
-      - build_docker_images
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-    steps:
       - name: Docker login
-        run: docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+        if: github.ref == 'refs/heads/master'
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
       - name: Push app image
+        if: github.ref == 'refs/heads/master'
         run: |
           docker tag app:latest $APP_IMAGE_NAME:latest
           docker push $APP_IMAGE_NAME:latest
       - name: Push sandbox image
+        if: github.ref == 'refs/heads/master'
         run: |
           docker tag sandbox:latest $SANDBOX_IMAGE_NAME:latest
           docker push $SANDBOX_IMAGE_NAME:latest
