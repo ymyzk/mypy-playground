@@ -1,5 +1,9 @@
 name: CI
 on: [push]
+env:
+  APP_IMAGE_NAME: ymyzk/mypy-playground
+  SANDBOX_IMAGE_NAME: ymyzk/mypy-playground-sandbox
+  DOCKER_BUILDKIT: 1
 jobs:
   build_app:
     runs-on: ubuntu-latest
@@ -44,10 +48,36 @@ jobs:
         npm run test
       working-directory: ./app/frontend
 
-  build:
+  build_docker_images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker version
+      - name: Build app image for development
+        run: docker build --pull -t app:dev ./app
+      - name: Build app image for production
+        run: docker build --pull -t app:latest -f ./app/Dockerfile-prod ./app
+      - name: Build sandbox image
+        run: docker build -t sandbox:latest ./sandbox/latest
+
+  push_docker_images:
     needs:
       - build_app
       - build_frontend
+      - build_docker_images
     runs-on: ubuntu-latest
+    if: github.ref == 'master'
     steps:
-    - uses: actions/checkout@v2
+      - name: Docker login
+        run: docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push app image
+        run: |
+          docker tag app:latest $APP_IMAGE_NAME:latest
+          docker push $APP_IMAGE_NAME:latest
+      - name: Push sandbox image
+        run: |
+          docker tag sandbox:latest $SANDBOX_IMAGE_NAME:latest
+          docker push $SANDBOX_IMAGE_NAME:latest
