@@ -70,7 +70,7 @@ jobs:
       - test_frontend
       - build_docker_images
     runs-on: ubuntu-latest
-    if: github.ref == 'master'
+    if: github.ref == 'refs/heads/master'
     steps:
       - name: Docker login
         run: docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
