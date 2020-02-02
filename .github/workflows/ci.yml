@@ -1,0 +1,87 @@
+name: CI
+on: [push]
+env:
+  APP_IMAGE_NAME: ymyzk/mypy-playground
+  SANDBOX_IMAGE_NAME: ymyzk/mypy-playground-sandbox
+  DOCKER_BUILDKIT: 1
+jobs:
+  test_app:
+    name: Test app
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Upgrade packaging tools and install pipenv
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+        python -m pip install --upgrade pipenv
+    - name: Install dependencies
+      run: pipenv install --dev
+      working-directory: ./app
+    - name: Run tests
+      run: pipenv run test
+      working-directory: ./app
+
+  test_frontend:
+    name: Test frontend
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install dependencies
+      run: npm ci
+      working-directory: ./app/frontend
+    - name: Build, lint, and test frontend
+      run: |
+        npm run build
+        npm run lint
+        npm run test
+      working-directory: ./app/frontend
+
+  build_docker_images:
+    name: Build Docker images
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker version
+      - name: Build app image for development
+        run: docker build --pull -t app:dev ./app
+      - name: Build app image for production
+        run: docker build --pull -t app:latest -f ./app/Dockerfile-prod ./app
+      - name: Build sandbox image
+        run: docker build -t sandbox:latest ./sandbox/latest
+
+  push_docker_images:
+    name: Push Docker images
+    needs:
+      - test_app
+      - test_frontend
+      - build_docker_images
+    runs-on: ubuntu-latest
+    if: github.ref == 'master'
+    steps:
+      - name: Docker login
+        run: docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push app image
+        run: |
+          docker tag app:latest $APP_IMAGE_NAME:latest
+          docker push $APP_IMAGE_NAME:latest
+      - name: Push sandbox image
+        run: |
+          docker tag sandbox:latest $SANDBOX_IMAGE_NAME:latest
+          docker push $SANDBOX_IMAGE_NAME:latest
