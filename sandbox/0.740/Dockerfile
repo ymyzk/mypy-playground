@@ -1,17 +1,7 @@
 FROM python:3.8-slim
 
-RUN pip install -U pipenv
-
 WORKDIR /tmp
-COPY Pipfile Pipfile.lock /tmp/
-
-RUN pipenv lock -r > requirements.txt
-
-
-FROM python:3.8-slim
-
-WORKDIR /tmp
-COPY --from=0 /tmp/requirements.txt /tmp/
+COPY ./requirements.txt /tmp/
 
 RUN pip install -r requirements.txt \
         && rm -rf /tmp/requirements.txt \
