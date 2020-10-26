@@ -4,7 +4,8 @@ This directory contains Dockerfile for sandbox environment and utility scripts.
 ## Tips for Development
 ### Updating mypy
 ```console
-$ pipenv update
+$ vim requirements.in
+$ pip-compile -U
 ```
 
 ### Build all Docker images
