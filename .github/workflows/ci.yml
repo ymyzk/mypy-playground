@@ -52,7 +52,6 @@ jobs:
         npm run test
       working-directory: ./app/frontend
 
-  # TODO: multiple sandbox images (only in prod?)
   build_docker_images:
     name: Build and push Docker images
     needs:
