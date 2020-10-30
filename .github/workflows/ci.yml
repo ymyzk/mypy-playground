@@ -17,15 +17,17 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Upgrade packaging tools and install pipenv
+    - name: Upgrade packaging tools
       run: |
         python -m pip install --upgrade pip setuptools wheel
-        python -m pip install --upgrade pipenv
     - name: Install dependencies
-      run: pipenv install --dev
+      run: pip install -r requirements.txt -r requirements.dev.txt
       working-directory: ./app
-    - name: Run tests
-      run: pipenv run test
+    - name: Run flake8
+      run: flake8
+      working-directory: ./app
+    - name: Run mypy
+      run: mypy .
       working-directory: ./app
 
   test_frontend:
