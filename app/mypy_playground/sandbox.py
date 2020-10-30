@@ -136,7 +136,7 @@ class DockerSandbox(AbstractSandbox):
                     "SecurityOpt": ["no-new-privileges"]
                 }
             }
-            c = await self.client.containers.create(config=config)
+            c = await self.client.containers.create(config=config)  # type: ignore
             await c.put_archive(str(self.source_file_path.parent),
                                 self.create_archive(source))
             await c.start()
