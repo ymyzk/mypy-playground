@@ -4,11 +4,11 @@
 #
 #    pip-compile requirements.dev.in
 #
-flake8==3.7.8             # via -r requirements.dev.in
+flake8==3.8.4             # via -r requirements.dev.in
 mccabe==0.6.1             # via flake8
 mypy-extensions==0.4.3    # via mypy
-mypy==0.720               # via -r requirements.dev.in
-pycodestyle==2.5.0        # via flake8
-pyflakes==2.1.1           # via flake8
-typed-ast==1.4.0          # via mypy
-typing-extensions==3.7.4  # via mypy
+mypy==0.790               # via -r requirements.dev.in
+pycodestyle==2.6.0        # via flake8
+pyflakes==2.2.0           # via flake8
+typed-ast==1.4.1          # via mypy
+typing-extensions==3.7.4.3  # via -c requirements.txt, mypy
