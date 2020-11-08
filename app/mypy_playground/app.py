@@ -7,6 +7,7 @@ from tornado.options import define, options
 import tornado.web
 
 from . import handlers
+from .prometheus import PrometheusMixin
 
 
 logger = logging.getLogger(__name__)
@@ -29,6 +30,10 @@ define("port", default=8080, help="Port number")
 define("debug", default=False, help="Debug mode")
 
 
+class Application(PrometheusMixin, tornado.web.Application):
+    pass
+
+
 def make_app(**kwargs: Any) -> tornado.web.Application:
     # TODO: We can give more precise type to this variable
     #       But it doesn't work well as of mypy 0.700 / tornado 6.0.2
@@ -38,7 +43,7 @@ def make_app(**kwargs: Any) -> tornado.web.Application:
         (r"/gist", handlers.GistHandler),
         (r"/", handlers.IndexHandler),
     ]
-    return tornado.web.Application(
+    return Application(
         routes,
         static_path=static_dir,
         template_path=templates_dir,
