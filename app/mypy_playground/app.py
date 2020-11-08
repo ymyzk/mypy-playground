@@ -33,6 +33,7 @@ def make_app(**kwargs: Any) -> tornado.web.Application:
     # TODO: We can give more precise type to this variable
     #       But it doesn't work well as of mypy 0.700 / tornado 6.0.2
     routes: List[Any] = [
+        (r"/private/metrics", handlers.PrometheusMetricsHandler),
         (r"/typecheck.json", handlers.TypecheckHandler),
         (r"/gist", handlers.GistHandler),
         (r"/", handlers.IndexHandler),

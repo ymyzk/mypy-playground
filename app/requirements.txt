@@ -12,6 +12,7 @@ chardet==3.0.4            # via aiohttp
 dataclasses==0.6          # via -r requirements.in
 idna==2.10                # via yarl
 multidict==5.0.0          # via aiohttp, yarl
+prometheus-client==0.8.0  # via -r requirements.in
 tornado==6.0.4            # via -r requirements.in
 typing-extensions==3.7.4.3  # via aiodocker, aiohttp
 yarl==1.6.2               # via aiohttp

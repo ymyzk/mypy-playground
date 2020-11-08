@@ -4,6 +4,7 @@ import logging
 import traceback
 from typing import Any, Dict, Union
 
+from prometheus_client import exposition, REGISTRY
 import tornado.escape
 from tornado.options import options
 import tornado.web
@@ -137,3 +138,12 @@ class GistHandler(JsonRequestHandler):
 
         self.set_status(201)
         self.write(result)
+
+
+class PrometheusMetricsHandler(tornado.web.RequestHandler):
+    async def get(self) -> None:
+        accept_header = self.request.headers.get("accept")
+        encoder, content_type = exposition.choose_encoder(accept_header)
+        output = encoder(REGISTRY)
+        self.set_header("Content-Type", content_type)
+        self.write(output)
