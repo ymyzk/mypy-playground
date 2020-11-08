@@ -1,3 +1,4 @@
 aiodocker>=0.13.0,<1.0
 dataclasses
+prometheus_client<1
 tornado>=6.0.0,<7.0.0

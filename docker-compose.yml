@@ -9,6 +9,7 @@ services:
       DOCKER_CERT_PATH: /certs/client
       DOCKER_TLS_VERIFY: 1
       DEBUG: "1"
+      ENABLE_PROMETHEUS: "1"
     volumes:
       - docker_certs:/certs
       - ./app:/app

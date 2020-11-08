@@ -32,3 +32,4 @@
 | `GA_TRACKING_ID` | str | No | A tracking id for Google Analytics. If not specified, Google Analytics is disabled. |
 | `GITHUB_TOKEN` | str | No | A token used to create gists |
 | `MYPY_VERSIONS` | list | No | List of mypy versions used by a sandbox (default: `mypy latest:latest`) |
+| `ENABLE_PROMETHEUS` | bool | No | Enable Prometheus metrics endpoint (default: False) |

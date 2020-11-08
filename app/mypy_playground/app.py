@@ -7,6 +7,7 @@ from tornado.options import define, options
 import tornado.web
 
 from . import handlers
+from .prometheus import PrometheusMixin
 
 
 logger = logging.getLogger(__name__)
@@ -25,8 +26,13 @@ define("github_token", default=None,
 define("mypy_versions",
        default="mypy latest:latest",
        help="List of mypy versions used by a sandbox")
+define("enable_prometheus", default=False, help="Prometheus metrics endpoint")
 define("port", default=8080, help="Port number")
 define("debug", default=False, help="Debug mode")
+
+
+class Application(PrometheusMixin, tornado.web.Application):
+    pass
 
 
 def make_app(**kwargs: Any) -> tornado.web.Application:
@@ -37,7 +43,9 @@ def make_app(**kwargs: Any) -> tornado.web.Application:
         (r"/gist", handlers.GistHandler),
         (r"/", handlers.IndexHandler),
     ]
-    return tornado.web.Application(
+    if options.enable_prometheus:
+        routes.append((r"/private/metrics", handlers.PrometheusMetricsHandler))
+    return Application(
         routes,
         static_path=static_dir,
         template_path=templates_dir,
