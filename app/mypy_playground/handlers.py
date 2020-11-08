@@ -2,14 +2,15 @@ from http import HTTPStatus
 import json
 import logging
 import traceback
-from typing import Any, Dict, Union
+from typing import Any, cast, Dict, Union
 
-from prometheus_client import exposition, REGISTRY
+from prometheus_client import exposition
 import tornado.escape
 from tornado.options import options
 import tornado.web
 
 from . import gist, sandbox
+from .prometheus import PrometheusMixin
 from .utils import get_mypy_versions
 
 
@@ -141,9 +142,14 @@ class GistHandler(JsonRequestHandler):
 
 
 class PrometheusMetricsHandler(tornado.web.RequestHandler):
+    """Endpoint to expose Prometheus metrics.
+
+    This handler must be used with PrometheusMixin for getting a registry.
+    """
     async def get(self) -> None:
         accept_header = self.request.headers.get("accept")
         encoder, content_type = exposition.choose_encoder(accept_header)
-        output = encoder(REGISTRY)
+        application = cast(PrometheusMixin, self.application)
+        output = encoder(application.prometheus_registry)
         self.set_header("Content-Type", content_type)
         self.write(output)
