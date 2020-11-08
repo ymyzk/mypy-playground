@@ -26,6 +26,7 @@ define("github_token", default=None,
 define("mypy_versions",
        default="mypy latest:latest",
        help="List of mypy versions used by a sandbox")
+define("enable_prometheus", default=False, help="Prometheus metrics endpoint")
 define("port", default=8080, help="Port number")
 define("debug", default=False, help="Debug mode")
 
@@ -38,11 +39,12 @@ def make_app(**kwargs: Any) -> tornado.web.Application:
     # TODO: We can give more precise type to this variable
     #       But it doesn't work well as of mypy 0.700 / tornado 6.0.2
     routes: List[Any] = [
-        (r"/private/metrics", handlers.PrometheusMetricsHandler),
         (r"/typecheck.json", handlers.TypecheckHandler),
         (r"/gist", handlers.GistHandler),
         (r"/", handlers.IndexHandler),
     ]
+    if options.enable_prometheus:
+        routes.append((r"/private/metrics", handlers.PrometheusMetricsHandler))
     return Application(
         routes,
         static_path=static_dir,
