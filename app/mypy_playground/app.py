@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Any, List
+from typing import Any, List, Tuple, Type
 
 from tornado.options import define, options
 import tornado.web
@@ -35,9 +35,7 @@ class Application(PrometheusMixin, tornado.web.Application):
 
 
 def make_app(**kwargs: Any) -> tornado.web.Application:
-    # TODO: We can give more precise type to this variable
-    #       But it doesn't work well as of mypy 0.700 / tornado 6.0.2
-    routes: List[Any] = [
+    routes: List[Tuple[str, Type[tornado.web.RequestHandler]]] = [
         (r"/typecheck.json", handlers.TypecheckHandler),
         (r"/gist", handlers.GistHandler),
         (r"/", handlers.IndexHandler),
