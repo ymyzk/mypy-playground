@@ -2,12 +2,11 @@ import logging
 from pathlib import Path
 from typing import Any, List
 
-import tornado.ioloop
 from tornado.options import define, options
 import tornado.web
 
-from . import handlers
-from .prometheus import PrometheusMixin
+from mypy_playground import handlers
+from mypy_playground.prometheus import PrometheusMixin
 
 
 logger = logging.getLogger(__name__)

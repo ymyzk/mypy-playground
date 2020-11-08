@@ -11,7 +11,7 @@ from typing import Any, Dict, Optional
 import aiodocker
 from tornado.options import options
 
-from .utils import parse_option_as_dict
+from mypy_playground.utils import parse_option_as_dict
 
 
 ARGUMENT_FLAGS_NORMAL = (
