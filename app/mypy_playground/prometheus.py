@@ -33,7 +33,7 @@ class PrometheusMixin(_Base):
             registry=self.prometheus_registry,
             namespace=_NAMESPACE,
             subsystem=_SUB_SYSTEM,
-            name="requests_duration_seconds",
+            name="request_duration_seconds",
             documentation="Histogram of latencies for HTTP requests.",
             buckets=(0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 3, 8, 20, 60),
             labelnames=("handler", "method"),
