@@ -4,7 +4,7 @@ from os import environ
 import tornado.ioloop
 from tornado.options import options, parse_command_line
 
-from .app import make_app
+from mypy_playground.app import make_app
 
 
 def parse_environment_variables() -> None:

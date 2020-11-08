@@ -9,9 +9,9 @@ import tornado.escape
 from tornado.options import options
 import tornado.web
 
-from . import gist, sandbox
-from .prometheus import PrometheusMixin
-from .utils import get_mypy_versions
+from mypy_playground import gist, sandbox
+from mypy_playground.prometheus import PrometheusMixin
+from mypy_playground.utils import get_mypy_versions
 
 
 logger = logging.getLogger(__name__)
