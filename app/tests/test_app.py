@@ -3,7 +3,6 @@ from typing import Awaitable, Generator
 from prometheus_client import CollectorRegistry
 import pytest
 import tornado
-from tornado.concurrent import Future
 from tornado.httpclient import AsyncHTTPClient, HTTPResponse
 
 from mypy_playground.app import make_app

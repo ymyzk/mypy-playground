@@ -1,7 +1,6 @@
 import tornado
 from prometheus_client import CollectorRegistry
 from pytest_mock import MockerFixture, pytest
-from tornado.web import RequestHandler
 
 from mypy_playground.prometheus import PrometheusMixin
 
