@@ -1,87 +1,17 @@
-from abc import ABC, abstractmethod
-import asyncio
-from dataclasses import dataclass
 from io import BytesIO
 import logging
 from pathlib import Path
 import tarfile
 import time
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 import aiodocker
-from tornado.options import options
 
+from mypy_playground.sandbox.base import AbstractSandbox, ARGUMENT_FLAGS, Result
 from mypy_playground.utils import parse_option_as_dict
 
 
-ARGUMENT_FLAGS_NORMAL = (
-    "verbose",
-    "ignore-missing-imports",
-    "show-error-context",
-    "stats",
-    "inferstats",
-    "scripts-are-modules",
-    "show-column-numbers",
-)
-
-ARGUMENT_FLAGS_STRICT = (
-    "strict",
-    "check-untyped-defs",
-    "disallow-any-decorated",
-    "disallow-any-expr",
-    "disallow-any-explicit",
-    "disallow-any-generics",
-    "disallow-any-unimported",
-    "disallow-incomplete-defs",
-    "disallow-subclassing-any",
-    "disallow-untyped-calls",
-    "disallow-untyped-decorators",
-    "disallow-untyped-defs",
-    "no-strict-optional",
-    "no-warn-no-return",
-    "warn-incomplete-stub",
-    "warn-redundant-casts",
-    "warn-return-any",
-    "warn-unreachable",
-    "warn-unused-configs",
-    "warn-unused-ignores",
-)
-
-ARGUMENT_FLAGS = ARGUMENT_FLAGS_NORMAL + ARGUMENT_FLAGS_STRICT
-PYTHON_VERSIONS = ["3.9", "3.8", "3.7", "3.6", "3.5", "3.4", "2.7"]
-
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class Result:
-    exit_code: int
-    stdout: str
-    stderr: str
-    duration: int
-
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            "exit_code": self.exit_code,
-            "stdout": self.stdout,
-            "stderr": self.stderr,
-            "duration": self.duration,
-        }
-
-
-class AbstractSandbox(ABC):
-    @abstractmethod
-    def __init__(self) -> None:
-        pass
-
-    @abstractmethod
-    async def run_typecheck(self,
-                            source: str,
-                            *,
-                            mypy_version: str,
-                            python_version: Optional[str] = None,
-                            **kwargs: Any) -> Optional[Result]:
-        pass
 
 
 class DockerSandbox(AbstractSandbox):
@@ -158,26 +88,3 @@ class DockerSandbox(AbstractSandbox):
 
     def get_docker_image(self, mypy_version_id: str) -> Optional[str]:
         return parse_option_as_dict("docker_images").get(mypy_version_id)
-
-
-semaphore: Optional[asyncio.Semaphore] = None
-
-
-def get_semaphore() -> asyncio.Semaphore:
-    # Lazy initialization of the semaphore to use options correctly
-    global semaphore
-    if not semaphore:
-        value = options.sandbox_concurrency
-        logger.info("created semaphore for sandbox: concurrency=%d", value)
-        semaphore = asyncio.Semaphore(value)
-    return semaphore
-
-
-async def run_typecheck_in_sandbox(sandbox: AbstractSandbox,
-                                   source: str,
-                                   **kwargs: Any
-                                   ) -> Optional[Result]:
-    logger.debug("acquiring semaphore")
-    async with get_semaphore():
-        logger.debug("acquired semaphore")
-        return await sandbox.run_typecheck(source, **kwargs)
