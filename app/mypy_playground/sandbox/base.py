@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 
 ARGUMENT_FLAGS_NORMAL = (
@@ -46,15 +46,7 @@ class Result:
     exit_code: int
     stdout: str
     stderr: str
-    duration: int
-
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            "exit_code": self.exit_code,
-            "stdout": self.stdout,
-            "stderr": self.stderr,
-            "duration": self.duration,
-        }
+    duration: int  # in millisecond
 
 
 class AbstractSandbox(ABC):

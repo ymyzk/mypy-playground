@@ -1,3 +1,4 @@
+import dataclasses
 from http import HTTPStatus
 import json
 import logging
@@ -115,7 +116,7 @@ class TypecheckHandler(JsonRequestHandler):
                 HTTPStatus.INTERNAL_SERVER_ERROR,
                 log_message="an error occurred during running mypy")
 
-        self.write(result.to_dict())
+        self.write(dataclasses.asdict(result))
 
 
 class GistHandler(JsonRequestHandler):
