@@ -4,15 +4,31 @@
 #
 #    pip-compile
 #
-aiodocker==0.19.1         # via -r requirements.in
-aiohttp==3.7.2            # via aiodocker
-async-timeout==3.0.1      # via aiohttp
-attrs==20.2.0             # via aiohttp
-chardet==3.0.4            # via aiohttp
-dataclasses==0.6          # via -r requirements.in
-idna==2.10                # via yarl
-multidict==5.0.0          # via aiohttp, yarl
-prometheus-client==0.8.0  # via -r requirements.in
-tornado==6.0.4            # via -r requirements.in
-typing-extensions==3.7.4.3  # via aiodocker, aiohttp
-yarl==1.6.2               # via aiohttp
+aiodocker==0.19.1
+    # via -r requirements.in
+aiohttp==3.7.3
+    # via aiodocker
+async-timeout==3.0.1
+    # via aiohttp
+attrs==20.3.0
+    # via aiohttp
+chardet==3.0.4
+    # via aiohttp
+dataclasses==0.6
+    # via -r requirements.in
+idna==3.1
+    # via yarl
+multidict==5.1.0
+    # via
+    #   aiohttp
+    #   yarl
+prometheus-client==0.9.0
+    # via -r requirements.in
+tornado==6.1
+    # via -r requirements.in
+typing-extensions==3.7.4.3
+    # via
+    #   aiodocker
+    #   aiohttp
+yarl==1.6.3
+    # via aiohttp

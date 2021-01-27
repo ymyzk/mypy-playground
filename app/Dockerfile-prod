@@ -10,7 +10,7 @@ COPY ./frontend/ /app/
 RUN npm run build
 
 
-FROM python:3.8-alpine
+FROM python:3.9-alpine
 
 ENV PYTHONUNBUFFERED 1
 
