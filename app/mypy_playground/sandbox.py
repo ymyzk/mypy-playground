@@ -178,6 +178,6 @@ async def run_typecheck_in_sandbox(sandbox: AbstractSandbox,
                                    **kwargs: Any
                                    ) -> Optional[Result]:
     logger.debug("acquiring semaphore")
-    with await get_semaphore():
+    async with get_semaphore():
         logger.debug("acquired semaphore")
         return await sandbox.run_typecheck(source, **kwargs)
