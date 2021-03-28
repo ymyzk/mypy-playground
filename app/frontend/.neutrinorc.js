@@ -21,20 +21,13 @@ module.exports = {
     react({
       hot: false,
       html: {
+        // Custom template based on @neutrinojs/html-template/template.ejs
+        // for injecting additional context using the <script> element.
+        template: 'src/template.ejs',//require.resolve(''),
         title: 'mypy Playground',
-        bodyHtmlSnippet: '<script id="context" type="application/json">{% raw context %}</script>',
       },
       publicPath: "/static/"
     }),
     jest(),
-    (neutrino) => {
-      neutrino.config.watchOptions({
-        poll: 1000,
-      });
-      if (neutrino.options.command === 'start') {
-        neutrino.config.devServer.hot = false;
-        neutrino.config.devServer.clear();
-      }
-    },
   ]
 };
