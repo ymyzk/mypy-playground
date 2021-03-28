@@ -1,20 +1,25 @@
+import dataclasses
 from http import HTTPStatus
 import json
 import logging
 import traceback
-from typing import Any, cast, Dict, Union
+from typing import Any, cast, Dict, Type, Union
 
 from prometheus_client import exposition
 import tornado.escape
 from tornado.options import options
 import tornado.web
 
-from mypy_playground import gist, sandbox
+from mypy_playground import gist
 from mypy_playground.prometheus import PrometheusMixin
+from mypy_playground.sandbox import run_typecheck_in_sandbox
+from mypy_playground.sandbox.base import AbstractSandbox, ARGUMENT_FLAGS, PYTHON_VERSIONS
+from mypy_playground.sandbox.docker import DockerSandbox
 from mypy_playground.utils import get_mypy_versions
 
 
 logger = logging.getLogger(__name__)
+SANDBOX_CLASS: Type[AbstractSandbox] = DockerSandbox
 initial_code = """from typing import Iterator
 
 
@@ -33,15 +38,15 @@ fib("10")
 class IndexHandler(tornado.web.RequestHandler):
     async def get(self) -> None:
         mypy_versions = get_mypy_versions()
-        default: Dict[str, Union[bool, str]] = {flag: False for flag in sandbox.ARGUMENT_FLAGS}
+        default: Dict[str, Union[bool, str]] = {flag: False for flag in ARGUMENT_FLAGS}
         default["mypyVersion"] = mypy_versions[0][1]
-        default["pythonVersion"] = sandbox.PYTHON_VERSIONS[0]
+        default["pythonVersion"] = PYTHON_VERSIONS[0]
         context = {
             "defaultConfig": default,
             "initial_code": initial_code,
-            "python_versions": sandbox.PYTHON_VERSIONS,
+            "python_versions": PYTHON_VERSIONS,
             "mypy_versions": mypy_versions,
-            "flags": sandbox.ARGUMENT_FLAGS,
+            "flags": ARGUMENT_FLAGS,
             "ga_tracking_id": options.ga_tracking_id,
         }
         self.render("index.html", context=json.dumps(context))
@@ -92,10 +97,9 @@ class TypecheckHandler(JsonRequestHandler):
 
         args = {}
         python_version = json.get("pythonVersion")
-        if (python_version is not None
-                and python_version in sandbox.PYTHON_VERSIONS):
+        if python_version is not None and python_version in PYTHON_VERSIONS:
             args["python_version"] = python_version
-        for flag in sandbox.ARGUMENT_FLAGS:
+        for flag in ARGUMENT_FLAGS:
             flag_value = json.get(flag)
             if flag_value is not None and flag_value is True:
                 args[flag] = flag_value
@@ -105,18 +109,15 @@ class TypecheckHandler(JsonRequestHandler):
             mypy_version = get_mypy_versions()[0][1]
         args["mypy_version"] = mypy_version
 
-        result = await sandbox.run_typecheck_in_sandbox(
-            sandbox.DockerSandbox(),
-            source,
-            **args
-        )
+        sandbox = SANDBOX_CLASS()
+        result = await run_typecheck_in_sandbox(sandbox, source, **args)
         if result is None:
             logger.error("an error occurred during running type-check")
             raise tornado.web.HTTPError(
                 HTTPStatus.INTERNAL_SERVER_ERROR,
                 log_message="an error occurred during running mypy")
 
-        self.write(result.to_dict())
+        self.write(dataclasses.asdict(result))
 
 
 class GistHandler(JsonRequestHandler):
