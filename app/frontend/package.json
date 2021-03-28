@@ -12,15 +12,15 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "bootstrap": "^4.3.1",
+    "bootstrap": "^4.6.0",
     "brace": "^0.11.1",
     "prop-types": "^15.7.2",
-    "react": "^16.8.6",
-    "react-ace": "^7.0.2",
-    "react-dom": "^16.8.6",
-    "react-ga": "^2.6.0",
-    "react-hot-loader": "^4.12.10",
-    "reactstrap": "^8.0.1"
+    "react": "^16.14.0",
+    "react-ace": "^7.0.5",
+    "react-dom": "^16.14.0",
+    "react-ga": "^2.7.0",
+    "react-hot-loader": "^4.13.0",
+    "reactstrap": "^8.9.0"
   },
   "devDependencies": {
     "@neutrinojs/airbnb": "^8.3.0",
