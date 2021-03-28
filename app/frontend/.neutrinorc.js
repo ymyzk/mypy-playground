@@ -1,3 +1,7 @@
+const airbnb = require('@neutrinojs/airbnb');
+const react = require('@neutrinojs/react');
+const jest = require('@neutrinojs/jest');
+
 module.exports = {
   options: {
     output: "../static",
@@ -7,28 +11,22 @@ module.exports = {
     publicPath: "/static/",
   },
   use: [
-    [
-      '@neutrinojs/airbnb',
-      {
-        eslint: {
-          rules: {
-            'react/prop-types': 'off',
-          }
+    airbnb({
+      eslint: {
+        rules: {
+          'react/prop-types': 'off',
         }
       }
-    ],
-    [
-      '@neutrinojs/react',
-      {
-        hot: false,
-        html: {
-          title: 'mypy Playground',
-          bodyHtmlSnippet: '<script id="context" type="application/json">{% raw context %}</script>',
-        },
-        publicPath: "/static/"
-      }
-    ],
-    '@neutrinojs/jest',
+    }),
+    react({
+      hot: false,
+      html: {
+        title: 'mypy Playground',
+        bodyHtmlSnippet: '<script id="context" type="application/json">{% raw context %}</script>',
+      },
+      publicPath: "/static/"
+    }),
+    jest(),
     (neutrino) => {
       neutrino.config.watchOptions({
         poll: 1000,
