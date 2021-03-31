@@ -16,5 +16,5 @@ export function parseMessages(stdout) {
       type: getType(match[2]),
       text: match[3],
     } : null;
-  }).filter(m => m !== null);
+  }).filter((m) => m !== null);
 }
