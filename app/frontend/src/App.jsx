@@ -15,7 +15,7 @@ export default class App extends Component {
     super(props);
 
     const context = JSON.parse(document.getElementById('context').textContent);
-    this.state = {
+    this.state = { // eslint-disable-line react/state-in-constructor
       annotations: [],
       config: context.defaultConfig,
       context,
@@ -32,8 +32,10 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    if (this.state.context.ga_tracking_id) {
-      ReactGA.initialize(this.state.context.ga_tracking_id);
+    const { context } = this.state;
+
+    if (context.ga_tracking_id) {
+      ReactGA.initialize(context.ga_tracking_id);
       ReactGA.pageview(window.location.pathname + window.location.search);
     }
 
@@ -67,11 +69,13 @@ export default class App extends Component {
 
   // eslint-disable-next-line no-unused-vars
   componentDidUpdate(prevProps, prevState, snapshot) {
+    const { config, source } = this.state;
+
     // Push history when configuration has changed
     const params = new URLSearchParams(window.location.search);
-    if (prevState.config !== this.state.config) {
+    if (prevState.config !== config) {
       const flags = [];
-      Object.entries(this.state.config).forEach(([k, v]) => {
+      Object.entries(config).forEach(([k, v]) => {
         if (k === 'mypyVersion') {
           params.set('mypy', v);
         } else if (k === 'pythonVersion') {
@@ -86,8 +90,8 @@ export default class App extends Component {
       window.history.pushState({}, '', `?${params.toString()}`);
     }
 
-    if (prevState.source !== this.state.source) {
-      window.localStorage.setItem('source', this.state.source);
+    if (prevState.source !== source) {
+      window.localStorage.setItem('source', source);
     }
   }
 
@@ -96,16 +100,26 @@ export default class App extends Component {
   }
 
   updateConfig(configDiff) {
-    this.setState({ config: { ...this.state.config, ...configDiff } });
+    this.setState((prevState) => ({
+      config: {
+        ...prevState.config,
+        ...configDiff,
+      },
+    }));
   }
 
   async run() {
+    const {
+      config,
+      source,
+    } = this.state;
+
     this.setState({ result: { status: 'running' } });
 
     try {
       const result = await runTypecheck({
-        ...this.state.config,
-        source: this.state.source,
+        ...config, // eslint-disable-line react/no-access-state-in-setstate
+        source, // eslint-disable-line react/no-access-state-in-setstate
       });
       this.setState({
         result: { status: 'succeeded', result },
@@ -117,6 +131,7 @@ export default class App extends Component {
   }
 
   async shareGist() {
+    const { source } = this.state;
     this.setState({ result: { status: 'creating_gist' } });
     try {
       const playgroundUrl = new URL(window.location.href);
@@ -124,7 +139,7 @@ export default class App extends Component {
       const {
         gistId,
         gistUrl,
-      } = await shareGist(this.state.source);
+      } = await shareGist(source);
       params.set('gist', gistId);
       playgroundUrl.search = `?${params.toString()}`;
       this.setState({
@@ -155,22 +170,29 @@ export default class App extends Component {
   }
 
   render() {
+    const {
+      annotations,
+      config,
+      context,
+      result,
+      source,
+    } = this.state;
     return (
       <div className="App">
         <Header
-          context={this.state.context}
-          config={this.state.config}
-          status={this.state.result.status}
+          context={context}
+          config={config}
+          status={result.status}
           onGistClick={this.shareGist}
           onRunClick={this.run}
           onConfigChange={this.updateConfig}
         />
         <Editor
           onChange={this.onChange}
-          annotations={this.state.annotations}
-          source={this.state.source}
+          annotations={annotations}
+          source={source}
         />
-        <Result result={this.state.result} />
+        <Result result={result} />
       </div>
     );
   }

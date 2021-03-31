@@ -25,9 +25,9 @@ class Header extends React.Component {
 
   toggle(name) {
     const stateName = `${name}IsOpen`;
-    this.setState({
-      [stateName]: !this.state[stateName],
-    });
+    this.setState((prevState) => ({
+      [stateName]: !prevState[stateName],
+    }));
   }
 
   render() {
@@ -39,6 +39,11 @@ class Header extends React.Component {
       onRunClick,
       onConfigChange,
     } = this.props;
+    const {
+      aboutIsOpen,
+      navbarIsOpen,
+      optionsIsOpen,
+    } = this.state;
 
     const half = Math.ceil(context.flags.length / 2);
     const flagsColumns = [
@@ -51,7 +56,7 @@ class Header extends React.Component {
         <Navbar dark expand="lg">
           <NavbarBrand href="/" className="h1 mb-0">mypy Playground</NavbarBrand>
           <NavbarToggler onClick={() => this.toggle('navbar')} />
-          <Collapse navbar isOpen={this.state.navbarIsOpen}>
+          <Collapse navbar isOpen={navbarIsOpen}>
             <Form inline className="my-2 my-lg-0 mr-auto">
               <Button color="light" className="my-2 my-sm-0 mr-sm-2" id="run" disabled={status === 'running'} onClick={onRunClick}>Run</Button>
               <Button color="light" className="my-sm-0 mr-sm-2" disabled={status === 'creating_gist'} onClick={onGistClick}>Gist</Button>
@@ -60,7 +65,7 @@ class Header extends React.Component {
                 className="mr-sm-2"
                 title="mypy Version"
                 value={config.mypyVersion}
-                onChange={e => onConfigChange({ mypyVersion: e.target.value })}
+                onChange={(e) => onConfigChange({ mypyVersion: e.target.value })}
               >
                 {
                   context.mypy_versions.map(([name, id]) => (
@@ -73,11 +78,14 @@ class Header extends React.Component {
                 className="mr-sm-2"
                 title="Python Version (--python--version)"
                 value={config.pythonVersion}
-                onChange={e => onConfigChange({ pythonVersion: e.target.value })}
+                onChange={(e) => onConfigChange({ pythonVersion: e.target.value })}
               >
                 {
-                  context.python_versions.map(ver => (
-                    <option key={ver} value={ver}>Python { ver }</option>
+                  context.python_versions.map((ver) => (
+                    <option key={ver} value={ver}>
+                      Python
+                      { ver }
+                    </option>
                   ))
                 }
               </Input>
@@ -92,7 +100,7 @@ class Header extends React.Component {
             </Form>
           </Collapse>
         </Navbar>
-        <Modal isOpen={this.state.optionsIsOpen} toggle={() => this.toggle('options')}>
+        <Modal isOpen={optionsIsOpen} toggle={() => this.toggle('options')}>
           <ModalHeader toggle={() => this.toggle('options')}>
             Options
           </ModalHeader>
@@ -100,19 +108,22 @@ class Header extends React.Component {
             <Form>
               <FormGroup row>
                 {
-                  flagsColumns.map(flags => (
+                  flagsColumns.map((flags) => (
                     <Col md={6} key={flags[0]}>
                       {
-                        flags.map(flag => (
+                        flags.map((flag) => (
                           <FormGroup check key={flag}>
                             <Input
                               type="checkbox"
                               id={flag}
                               checked={config[flag]}
-                              onChange={e => onConfigChange({ [flag]: e.target.checked })}
+                              onChange={(e) => onConfigChange({ [flag]: e.target.checked })}
                             />
                             <Label check for={flag}>
-                              <code>--{ flag }</code>
+                              <code>
+                                --
+                                { flag }
+                              </code>
                             </Label>
                           </FormGroup>
                         ))
@@ -127,7 +138,7 @@ class Header extends React.Component {
             <Button color="primary" onClick={() => this.toggle('options')}>Close</Button>
           </ModalFooter>
         </Modal>
-        <Modal isOpen={this.state.aboutIsOpen} toggle={() => this.toggle('about')}>
+        <Modal isOpen={aboutIsOpen} toggle={() => this.toggle('about')}>
           <ModalHeader toggle={() => this.toggle('about')}>About the mypy Playground</ModalHeader>
           <ModalBody>
             <p>
@@ -135,8 +146,14 @@ class Header extends React.Component {
               runs mypy inside a sandbox, then returns the output.
             </p>
             <p>
-              This project is an open source project started by <a href="https://www.ymyzk.com">Yusuke Miyazaki (@ymyzk)</a>.
-              Source code is available at <a href="https://github.com/ymyzk/mypy-playground">GitHub</a>.
+              This project is an open source project started by
+              {' '}
+              <a href="https://www.ymyzk.com">Yusuke Miyazaki (@ymyzk)</a>
+              .
+              Source code is available at
+              {' '}
+              <a href="https://github.com/ymyzk/mypy-playground">GitHub</a>
+              .
             </p>
           </ModalBody>
           <ModalFooter>

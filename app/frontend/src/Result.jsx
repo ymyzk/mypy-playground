@@ -7,21 +7,36 @@ function Result({ result }) {
     case 'running':
       return 'Running...';
     case 'succeeded':
+    {
+      const succeeded = (
+        <span>
+          Succeeded!! (
+          { result.result.duration }
+          {' '}
+          ms)
+        </span>
+      );
+      const failed = (
+        <span>
+          Failed (exit code:
+          {' '}
+          { result.result.exit_code }
+          )
+          (
+          { result.result.duration }
+          {' '}
+          ms)
+        </span>
+      );
       return (
         <div>
-          {
-            result.result.exit_code === 0 ?
-              <span>Succeeded!! ({ result.result.duration } ms)</span> :
-              <span>
-                Failed (exit code: { result.result.exit_code })
-                ({ result.result.duration } ms)
-              </span>
-          }
+          { result.result.exit_code === 0 ? succeeded : failed }
           <hr />
           <pre>{ result.result.stdout }</pre>
           <pre>{ result.result.stderr }</pre>
         </div>
       );
+    }
     case 'failed':
       return `Error: ${result.message}`;
     case 'creating_gist':
@@ -34,9 +49,11 @@ function Result({ result }) {
       return (
         <div>
           <span>Gist URL: </span>
-          <a href={gistUrl} target="_blank" rel="noopener noreferrer">{gistUrl}</a><br />
+          <a href={gistUrl} target="_blank" rel="noopener noreferrer">{gistUrl}</a>
+          <br />
           <span>Playground URL: </span>
-          <a href={playgroundUrl}>{playgroundUrl}</a><br />
+          <a href={playgroundUrl}>{playgroundUrl}</a>
+          <br />
           <hr />
         </div>
       );
