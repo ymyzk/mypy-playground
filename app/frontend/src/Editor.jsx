@@ -1,8 +1,8 @@
 import React from 'react';
 import AceEditor from 'react-ace';
 
-import 'brace/mode/python';
-import 'brace/theme/textmate';
+import 'ace-builds/src-noconflict/mode-python';
+import 'ace-builds/src-noconflict/theme-textmate';
 
 function Editor({
   annotations,
