@@ -1,6 +1,7 @@
 const airbnb = require('@neutrinojs/airbnb');
 const react = require('@neutrinojs/react');
 const jest = require('@neutrinojs/jest');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
   options: {
@@ -29,5 +30,20 @@ module.exports = {
       publicPath: "/static/"
     }),
     jest(),
+    // See https://github.com/neutrinojs/neutrino/blob/master/docs/webpack-chain.md
+    // for how to customze Neutrino and webpack configuration.
+    (neutrino) => {
+      neutrino.config
+      .when(
+        process.env.NODE_ENV === 'production',
+        (config) => config.plugin("analyzer").use(BundleAnalyzerPlugin, [{
+          analyzerMode: "static",
+          generateStatsFile: true,
+          openAnalyzer: false,
+          reportFilename: "../frontend/analyze/report.html",
+          statsFilename: "../frontend/analyze/stats.json",
+        }])
+      );
+    }
   ]
 };

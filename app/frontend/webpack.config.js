@@ -3,4 +3,5 @@
 // Neutrino's inspect feature can be used to view/export the generated configuration.
 const neutrino = require('neutrino');
 
+// Hint: We can add `console.log(neutrino().webpack());` to see webpack config
 module.exports = neutrino().webpack();
