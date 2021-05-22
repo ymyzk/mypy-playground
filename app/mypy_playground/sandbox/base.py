@@ -12,6 +12,7 @@ ARGUMENT_FLAGS_NORMAL = (
     "inferstats",
     "scripts-are-modules",
     "show-column-numbers",
+    "show-error-codes",
 )
 
 ARGUMENT_FLAGS_STRICT = (
