@@ -84,6 +84,7 @@ class Header extends React.Component {
                   context.python_versions.map((ver) => (
                     <option key={ver} value={ver}>
                       Python
+                      { ' ' }
                       { ver }
                     </option>
                   ))
