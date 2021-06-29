@@ -1,2 +1,2 @@
-mypy==0.910
+mypy[python2]==0.910
 typing-extensions
