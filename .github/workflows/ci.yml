@@ -60,12 +60,12 @@ jobs:
         run: docker build --pull -t app:dev ./app
       - name: Build app image for production
         run: docker build --pull -t app:latest -f ./app/Dockerfile-prod ./app
-      - name: Build latest sandbox image
+      - name: Build latest Docker sandbox image
         if: github.ref != 'refs/heads/master'
-        run: docker build -t sandbox:latest ./sandbox/latest
-      - name: Build sandbox images
+        run: docker build -t sandbox:latest ./sandbox/docker/latest
+      - name: Build Docker sandbox images
         if: github.ref == 'refs/heads/master'
-        run: ./sandbox/build.sh $SANDBOX_IMAGE_NAME
+        run: ./sandbox/docker/build.sh $SANDBOX_IMAGE_NAME
       - name: Login to Docker Hub
         if: github.ref == 'refs/heads/master'
         uses: docker/login-action@v1
@@ -77,6 +77,6 @@ jobs:
         run: |
           docker tag app:latest $APP_IMAGE_NAME:latest
           docker push $APP_IMAGE_NAME:latest
-      - name: Push sandbox images
+      - name: Push Docker sandbox images
         if: github.ref == 'refs/heads/master'
-        run: ./sandbox/push.sh $SANDBOX_IMAGE_NAME
+        run: ./sandbox/docker/push.sh $SANDBOX_IMAGE_NAME
