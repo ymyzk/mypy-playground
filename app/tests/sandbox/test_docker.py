@@ -1,6 +1,7 @@
 import tarfile
 
 import pytest
+from pytest_mock import MockerFixture
 
 from mypy_playground.sandbox.docker import DockerSandbox
 
@@ -12,7 +13,9 @@ print(this.__name__)
 
 
 @pytest.mark.gen_test
-async def test_create_archive() -> None:
+async def test_create_archive(mocker: MockerFixture) -> None:
+    # DockerSandbox checks existence of DOCKER_HOST or local sockets in __init__().
+    mocker.patch("mypy_playground.sandbox.docker.aiodocker.Docker")
     sandbox = DockerSandbox()
     tar_bytes = sandbox._create_archive(SAMPLE_CODE)
     with tarfile.open(fileobj=tar_bytes, mode="r") as tar:
