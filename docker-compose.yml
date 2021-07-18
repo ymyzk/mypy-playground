@@ -27,7 +27,7 @@ services:
       DOCKER_TLS_CERT_DIR: /certs
     volumes:
       - docker_certs:/certs
-      - ./sandbox:/sandbox
+      - ./sandbox/docker:/sandbox
 
 volumes:
   docker_certs:
