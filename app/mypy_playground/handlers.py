@@ -3,7 +3,7 @@ from http import HTTPStatus
 import json
 import logging
 import traceback
-from typing import Any, cast, Dict, Type, Union
+from typing import Any, cast, Dict, Union
 
 from prometheus_client import exposition
 import tornado.escape
@@ -14,12 +14,12 @@ from mypy_playground import gist
 from mypy_playground.prometheus import PrometheusMixin
 from mypy_playground.sandbox import run_typecheck_in_sandbox
 from mypy_playground.sandbox.base import AbstractSandbox, ARGUMENT_FLAGS, PYTHON_VERSIONS
+from mypy_playground.sandbox.cloud_functions import CloudFunctionsSandbox
 from mypy_playground.sandbox.docker import DockerSandbox
 from mypy_playground.utils import get_mypy_versions
 
 
 logger = logging.getLogger(__name__)
-SANDBOX_CLASS: Type[AbstractSandbox] = DockerSandbox
 initial_code = """from typing import Iterator
 
 
@@ -109,7 +109,7 @@ class TypecheckHandler(JsonRequestHandler):
             mypy_version = get_mypy_versions()[0][1]
         args["mypy_version"] = mypy_version
 
-        sandbox = SANDBOX_CLASS()
+        sandbox = self._get_sandbox()
         result = await run_typecheck_in_sandbox(sandbox, source, **args)
         if result is None:
             logger.error("an error occurred during running type-check")
@@ -118,6 +118,14 @@ class TypecheckHandler(JsonRequestHandler):
                 log_message="an error occurred during running mypy")
 
         self.write(dataclasses.asdict(result))
+
+    def _get_sandbox(self) -> AbstractSandbox:
+        sandbox_class = options["sandbox"]
+        if sandbox_class == "mypy_playground.sandbox.docker.DockerSandbox":
+            return DockerSandbox()
+        elif sandbox_class == "mypy_playground.sandbox.cloud_functions.CloudFunctionsSandbox":
+            return CloudFunctionsSandbox()
+        raise Exception("Unsupported sandbox")
 
 
 class GistHandler(JsonRequestHandler):
