@@ -107,7 +107,7 @@ class CloudFunctionsSandbox(AbstractSandbox):
         """
         # 1. Options
         token_from_options = options["cloud_functions_identity_token"]
-        if token_from_options:
+        if isinstance(token_from_options, str):
             return token_from_options
 
         # 2. google-auth library
@@ -115,4 +115,8 @@ class CloudFunctionsSandbox(AbstractSandbox):
         # https://googleapis.dev/python/google-auth/latest/reference/google.auth.transport._aiohttp_requests.html
         auth_req = google.auth.transport.requests.Request()
         # Get a token or raise an exception
-        return google.oauth2.id_token.fetch_id_token(auth_req, url)
+        token_from_library = google.oauth2.id_token.fetch_id_token(auth_req, url)
+        if isinstance(token_from_library, str):
+            return token_from_library
+
+        raise Exception("failed to get identity token")
