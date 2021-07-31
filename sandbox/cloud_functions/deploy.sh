@@ -32,7 +32,6 @@ deploy() {
     --role=roles/cloudfunctions.invoker
 }
 
-for ver in 0.*; do
+for ver in "$@"; do
   deploy "$ver"
 done
-deploy latest
