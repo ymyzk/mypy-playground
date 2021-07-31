@@ -17,6 +17,8 @@ templates_dir = root_dir / "static"
 define("docker_images",
        default="latest:ymyzk/mypy-playground-sandbox:latest",
        help="Docker image used by DockerSandbox")
+define("sandbox", default="mypy_playground.sandbox.docker.DockerSandbox",
+       help="Sandbox implementation to use.")
 define("sandbox_concurrency", default=3,
        help="The number of running sandboxes at the same time")
 define("ga_tracking_id", default=None, help="Google Analytics tracking ID")

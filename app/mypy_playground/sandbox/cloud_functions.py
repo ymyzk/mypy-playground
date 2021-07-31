@@ -1,0 +1,122 @@
+import json
+import urllib.parse
+from logging import getLogger
+import time
+from typing import Any, Optional
+
+import google.auth.transport.requests
+import google.oauth2.id_token
+from tornado.httpclient import AsyncHTTPClient
+from tornado.options import define, options
+
+from mypy_playground.sandbox import AbstractSandbox, Result
+from mypy_playground.sandbox.base import ARGUMENT_FLAGS
+from mypy_playground.utils import parse_option_as_dict
+
+logger = getLogger(__name__)
+
+
+# https://cloud.google.com/functions/docs/securing/authenticating#authenticating_developer_testing
+define("cloud_functions_base_url",
+       default=None,
+       help=("URL of Cloud Functions without function name. "
+             "Example: https://<region>-<project>.cloudfunctions.net/"))
+define("cloud_functions_identity_token",
+       default=None,
+       help="Identity token used by CloudFunctionsSandbox. This is mainly for local development.")
+define("cloud_functions_names",
+       default="latest:mypy-latest",
+       help="Map from mypy version ID to name of Cloud Functions")
+
+
+class CloudFunctionsSandbox(AbstractSandbox):
+    def __init__(self) -> None:
+        super().__init__()
+
+    async def run_typecheck(self,
+                            source: str,
+                            *,
+                            mypy_version: str,
+                            python_version: Optional[str] = None,
+                            **kwargs: Any
+                            ) -> Optional[Result]:
+        start_time = time.time()
+
+        function_url = self._get_cloud_function_url(mypy_version)
+        if function_url is None:
+            logger.error(f"cannot find a Cloud function for mypy version: {mypy_version}")
+            return None
+
+        token = self._get_identity_token(function_url)
+
+        args = ["--cache-dir", "/dev/null", "--no-site-packages"]
+        if python_version:
+            args += ["--python-version", f"{python_version}"]
+        for key, value in kwargs.items():
+            if key in ARGUMENT_FLAGS:
+                args.append(f"--{key}")
+
+        data = {
+            "source": source,
+            "options": args,
+        }
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+            "User-Agent": "mypy-playground"  # TODO: Better UA w/ version?
+        }
+
+        client = AsyncHTTPClient()
+        res = await client.fetch(function_url,
+                                 method="POST",
+                                 headers=headers,
+                                 body=json.dumps(data),
+                                 raise_error=False)
+        if res.code != 200:
+            # TODO: better error handling
+            logger.error('unexpected status code from Cloud Functions: %d', res.code)
+            return None
+        res_data = json.loads(res.body)
+        duration = int(1000 * (time.time() - start_time))
+        return Result(
+            exit_code=res_data["exit_code"],
+            stdout=res_data["stdout"],
+            stderr=res_data["stderr"],
+            duration=duration,
+        )
+
+    def _get_cloud_function_url(self, mypy_version_id: str) -> Optional[str]:
+        base_url = options["cloud_functions_base_url"]
+        if not isinstance(base_url, str):
+            return None
+
+        name = parse_option_as_dict("cloud_functions_names").get(mypy_version_id)
+        if not isinstance(name, str):
+            return None
+
+        return urllib.parse.urljoin(base_url, name)
+
+    def _get_identity_token(self, url: str) -> str:
+        """Get identity token to invoke a Cloud Function.
+
+        1. Get a token given via options (development use).
+        2. Use google-auth library to get a token.
+        3. Raises an exception if all of the above fails.
+
+        https://cloud.google.com/functions/docs/securing/authenticating
+        """
+        # 1. Options
+        token_from_options = options["cloud_functions_identity_token"]
+        if isinstance(token_from_options, str):
+            return token_from_options
+
+        # 2. google-auth library
+        # Experimental async support
+        # https://googleapis.dev/python/google-auth/latest/reference/google.auth.transport._aiohttp_requests.html
+        auth_req = google.auth.transport.requests.Request()
+        # Get a token or raise an exception
+        token_from_library = google.oauth2.id_token.fetch_id_token(auth_req, url)
+        if isinstance(token_from_library, str):
+            return token_from_library
+
+        raise Exception("failed to get identity token")
