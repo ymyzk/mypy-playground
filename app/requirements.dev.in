@@ -6,3 +6,7 @@ pytest-cov
 pytest-mock
 pytest-randomly
 pytest-tornado
+types-chardet
+types-mock
+types-setuptools
+types-toml
