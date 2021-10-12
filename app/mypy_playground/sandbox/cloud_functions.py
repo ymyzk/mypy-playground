@@ -9,8 +9,7 @@ import google.oauth2.id_token
 from tornado.httpclient import AsyncHTTPClient
 from tornado.options import define, options
 
-from mypy_playground.sandbox import AbstractSandbox, Result
-from mypy_playground.sandbox.base import ARGUMENT_FLAGS
+from mypy_playground.sandbox.base import AbstractSandbox, ARGUMENT_FLAGS, Result
 from mypy_playground.utils import parse_option_as_dict
 
 logger = getLogger(__name__)
@@ -35,11 +34,10 @@ class CloudFunctionsSandbox(AbstractSandbox):
 
     async def run_typecheck(self,
                             source: str,
-                            *,
+                            /,
                             mypy_version: str,
                             python_version: Optional[str] = None,
-                            **kwargs: Any
-                            ) -> Optional[Result]:
+                            **kwargs: Any) -> Optional[Result]:
         start_time = time.time()
 
         function_url = self._get_cloud_function_url(mypy_version)
@@ -106,17 +104,15 @@ class CloudFunctionsSandbox(AbstractSandbox):
         https://cloud.google.com/functions/docs/securing/authenticating
         """
         # 1. Options
-        token_from_options = options["cloud_functions_identity_token"]
-        if isinstance(token_from_options, str):
-            return token_from_options
+        if isinstance(token := options["cloud_functions_identity_token"], str):
+            return token
 
         # 2. google-auth library
         # Experimental async support
         # https://googleapis.dev/python/google-auth/latest/reference/google.auth.transport._aiohttp_requests.html
         auth_req = google.auth.transport.requests.Request()
         # Get a token or raise an exception
-        token_from_library = google.oauth2.id_token.fetch_id_token(auth_req, url)
-        if isinstance(token_from_library, str):
-            return token_from_library
+        if isinstance(token := google.oauth2.id_token.fetch_id_token(auth_req, url), str):
+            return token
 
         raise Exception("failed to get identity token")
