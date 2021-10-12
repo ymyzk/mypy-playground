@@ -8,7 +8,7 @@ attrs==21.2.0
     # via
     #   -c requirements.txt
     #   pytest
-coverage[toml]==6.0.1
+coverage[toml]==6.0.2
     # via pytest-cov
 flake8==3.9.2
     # via -r requirements.dev.in
@@ -57,6 +57,14 @@ tornado==6.1
     # via
     #   -c requirements.txt
     #   pytest-tornado
+types-chardet==4.0.1
+    # via -r requirements.dev.in
+types-mock==4.0.2
+    # via -r requirements.dev.in
+types-setuptools==57.4.1
+    # via -r requirements.dev.in
+types-toml==0.10.1
+    # via -r requirements.dev.in
 typing-extensions==3.10.0.2
     # via
     #   -c requirements.txt
