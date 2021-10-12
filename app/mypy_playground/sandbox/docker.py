@@ -25,7 +25,7 @@ class DockerSandbox(AbstractSandbox):
 
     async def run_typecheck(self,
                             source: str,
-                            *,
+                            /,
                             mypy_version: str,
                             python_version: Optional[str] = None,
                             **kwargs: Any

@@ -3,7 +3,7 @@ from http import HTTPStatus
 import json
 import logging
 import traceback
-from typing import Any, cast, Dict, Union
+from typing import Any, cast, Dict
 
 from prometheus_client import exposition
 import tornado.escape
@@ -38,7 +38,7 @@ fib("10")
 class IndexHandler(tornado.web.RequestHandler):
     async def get(self) -> None:
         mypy_versions = get_mypy_versions()
-        default: Dict[str, Union[bool, str]] = {flag: False for flag in ARGUMENT_FLAGS}
+        default: Dict[str, bool | str] = {flag: False for flag in ARGUMENT_FLAGS}
         default["mypyVersion"] = mypy_versions[0][1]
         default["pythonVersion"] = PYTHON_VERSIONS[0]
         context = {
@@ -96,18 +96,18 @@ class TypecheckHandler(JsonRequestHandler):
                 log_message="'source' is required")
 
         args = {}
-        python_version = json.get("pythonVersion")
-        if python_version is not None and python_version in PYTHON_VERSIONS:
-            args["python_version"] = python_version
+        if (version := json.get("pythonVersion")) is not None and version in PYTHON_VERSIONS:
+            args["python_version"] = version
         for flag in ARGUMENT_FLAGS:
             flag_value = json.get(flag)
             if flag_value is not None and flag_value is True:
                 args[flag] = flag_value
 
-        mypy_version = json.get("mypyVersion")
-        if mypy_version is None:
-            mypy_version = get_mypy_versions()[0][1]
-        args["mypy_version"] = mypy_version
+        if mypy_version := json.get("mypyVersion"):
+            args["mypy_version"] = mypy_version
+        else:
+            # Use the first item as the default
+            args["mypy_version"] = get_mypy_versions()[0][1]
 
         sandbox = self._get_sandbox()
         result = await run_typecheck_in_sandbox(sandbox, source, **args)
