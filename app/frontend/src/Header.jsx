@@ -144,7 +144,11 @@ class Header extends React.Component {
           <ModalBody>
             <p>
               The mypy Playground is a web service that receives a Python program with type hints,
-              runs mypy inside a sandbox, then returns the output.
+              runs
+              {' '}
+              <a href="http://www.mypy-lang.org/">mypy</a>
+              {' '}
+              inside a sandbox, then returns the output.
             </p>
             <p>
               This project is an open source project started by
@@ -154,7 +158,8 @@ class Header extends React.Component {
               Source code is available at
               {' '}
               <a href="https://github.com/ymyzk/mypy-playground">GitHub</a>
-              .
+              {' '}
+              and you can run your own mypy Playground instance if you want.
             </p>
           </ModalBody>
           <ModalFooter>
