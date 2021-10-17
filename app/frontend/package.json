@@ -11,25 +11,25 @@
     "test": "jest"
   },
   "dependencies": {
-    "ace-builds": "^1.4.12",
-    "axios": "^0.21.1",
+    "ace-builds": "^1.4.13",
+    "axios": "^0.23.0",
     "bootstrap": "^4.6.0",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
-    "react-ace": "^9.4.1",
+    "react-ace": "^9.4.4",
     "react-dom": "^16.14.0",
     "react-ga": "^2.7.0",
-    "reactstrap": "^8.9.0"
+    "reactstrap": "^8.10.0"
   },
   "devDependencies": {
     "@neutrinojs/airbnb": "^9.5.0",
     "@neutrinojs/jest": "^9.5.0",
     "@neutrinojs/react": "^9.5.0",
-    "eslint": "^7.29.0",
+    "eslint": "^7.32.0",
     "jest": "^26.6.3",
     "neutrino": "^9.5.0",
     "webpack": "^4.46.0",
-    "webpack-bundle-analyzer": "^4.4.2",
+    "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^3.3.12"
   }
 }
