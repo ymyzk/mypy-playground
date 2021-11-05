@@ -1,7 +1,7 @@
 import subprocess
 import sys
 import tempfile
-from typing import Dict, List, Union
+from typing import NoReturn
 
 from flask import Request, Response, abort, jsonify, make_response
 
@@ -27,7 +27,7 @@ def run_typecheck(request: Request) -> Response:
     return jsonify(run_mypy(source, options))
 
 
-def run_mypy(source: str, options: List[str]) -> Dict[str, Union[int, str]]:
+def run_mypy(source: str, options: list[str]) -> dict[str, int | str]:
     with tempfile.NamedTemporaryFile(mode="w") as f:
         f.write(source)
         f.flush()
@@ -42,5 +42,5 @@ def run_mypy(source: str, options: List[str]) -> Dict[str, Union[int, str]]:
         }
 
 
-def abort_api(status: int, message: str) -> None:
+def abort_api(status: int, message: str) -> NoReturn:
     abort(make_response(jsonify(message=message), status))
