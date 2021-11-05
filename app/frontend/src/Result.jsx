@@ -59,7 +59,7 @@ function Result({ result }) {
       );
     }
     case 'fetched_gist':
-      return 'Completed to fetch a Gist!';
+      return 'Successfully loaded the Gist!';
     default:
       return `Unexpected error: ${result}`;
   }
