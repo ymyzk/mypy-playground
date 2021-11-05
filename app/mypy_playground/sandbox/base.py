@@ -30,6 +30,7 @@ ARGUMENT_FLAGS_STRICT = (
     "disallow-untyped-defs",
     "no-strict-optional",
     "no-warn-no-return",
+    "strict-equality",
     "warn-incomplete-stub",
     "warn-redundant-casts",
     "warn-return-any",
