@@ -28,6 +28,8 @@ ARGUMENT_FLAGS_STRICT = (
     "disallow-untyped-calls",
     "disallow-untyped-decorators",
     "disallow-untyped-defs",
+    "no-implicit-optional",
+    "no-implicit-reexport",
     "no-strict-optional",
     "no-warn-no-return",
     "strict-equality",
