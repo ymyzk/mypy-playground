@@ -1,5 +1,4 @@
 import json
-from typing import Dict, Optional
 
 from tornado.httpclient import AsyncHTTPClient
 from tornado.options import options
@@ -8,7 +7,7 @@ from tornado.options import options
 API_ENDPOINT = "https://api.github.com/gists"
 
 
-async def create_gist(source: str) -> Optional[Dict[str, str]]:
+async def create_gist(source: str) -> dict[str, str] | None:
     data = {
       "description": "Shared via mypy Playground",
       "public": True,

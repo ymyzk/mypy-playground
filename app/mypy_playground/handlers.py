@@ -3,7 +3,7 @@ from http import HTTPStatus
 import json
 import logging
 import traceback
-from typing import Any, cast, Dict
+from typing import Any, cast
 
 from prometheus_client import exposition
 import tornado.escape
@@ -38,7 +38,7 @@ fib("10")
 class IndexHandler(tornado.web.RequestHandler):
     async def get(self) -> None:
         mypy_versions = get_mypy_versions()
-        default: Dict[str, bool | str] = {flag: False for flag in ARGUMENT_FLAGS}
+        default: dict[str, bool | str] = {flag: False for flag in ARGUMENT_FLAGS}
         default["mypyVersion"] = mypy_versions[0][1]
         default["pythonVersion"] = PYTHON_VERSIONS[0]
         context = {

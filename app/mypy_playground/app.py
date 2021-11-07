@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Any, List, Tuple, Type
+from typing import Any
 
 from tornado.options import define, options
 import tornado.web
@@ -37,7 +37,7 @@ class Application(PrometheusMixin, tornado.web.Application):
 
 
 def make_app(**kwargs: Any) -> tornado.web.Application:
-    routes: List[Tuple[str, Type[tornado.web.RequestHandler]]] = [
+    routes: list[tuple[str, type[tornado.web.RequestHandler]]] = [
         (r"/typecheck.json", handlers.TypecheckHandler),
         (r"/gist", handlers.GistHandler),
         (r"/", handlers.IndexHandler),
