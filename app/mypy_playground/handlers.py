@@ -13,7 +13,7 @@ import tornado.web
 from mypy_playground import gist
 from mypy_playground.prometheus import PrometheusMixin
 from mypy_playground.sandbox import run_typecheck_in_sandbox
-from mypy_playground.sandbox.base import AbstractSandbox, ARGUMENT_FLAGS, PYTHON_VERSIONS
+from mypy_playground.sandbox.base import AbstractSandbox, ARGUMENT_FLAGS, ARGUMENT_FLAGS_DEFAULT, PYTHON_VERSIONS
 from mypy_playground.sandbox.cloud_functions import CloudFunctionsSandbox
 from mypy_playground.sandbox.docker import DockerSandbox
 from mypy_playground.utils import get_mypy_versions
@@ -38,7 +38,7 @@ fib("10")
 class IndexHandler(tornado.web.RequestHandler):
     async def get(self) -> None:
         mypy_versions = get_mypy_versions()
-        default: dict[str, bool | str] = {flag: False for flag in ARGUMENT_FLAGS}
+        default: dict[str, bool | str] = {flag: flag in ARGUMENT_FLAGS_DEFAULT for flag in ARGUMENT_FLAGS}
         default["mypyVersion"] = mypy_versions[0][1]
         default["pythonVersion"] = PYTHON_VERSIONS[0]
         context = {

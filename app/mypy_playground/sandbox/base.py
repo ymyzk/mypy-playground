@@ -41,6 +41,31 @@ ARGUMENT_FLAGS_STRICT = (
     "warn-unused-ignores",
 )
 
+ARGUMENT_FLAGS_DEFAULT = (
+    "strict",
+    "check-untyped-defs",
+    "disallow-any-decorated",
+    "disallow-any-expr",
+    "disallow-any-explicit",
+    "disallow-any-generics",
+    "disallow-any-unimported",
+    "disallow-incomplete-defs",
+    "disallow-subclassing-any",
+    "disallow-untyped-calls",
+    "disallow-untyped-decorators",
+    "disallow-untyped-defs",
+    "no-implicit-optional",
+    "no-implicit-reexport",
+    "show-error-codes",
+    "strict-equality",
+    "warn-incomplete-stub",
+    "warn-redundant-casts",
+    "warn-return-any",
+    "warn-unreachable",
+    "warn-unused-configs",
+    "warn-unused-ignores",
+)
+
 ARGUMENT_FLAGS = ARGUMENT_FLAGS_NORMAL + ARGUMENT_FLAGS_STRICT
 PYTHON_VERSIONS = ["3.10", "3.9", "3.8", "3.7", "3.6", "3.5", "3.4", "2.7"]
 
