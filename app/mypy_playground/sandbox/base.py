@@ -16,6 +16,8 @@ ARGUMENT_FLAGS_NORMAL = (
 )
 
 ARGUMENT_FLAGS_STRICT = (
+    "allow-redefinition",
+    "allow-untyped-globals",
     "strict",
     "check-untyped-defs",
     "disallow-any-decorated",
@@ -30,6 +32,7 @@ ARGUMENT_FLAGS_STRICT = (
     "disallow-untyped-defs",
     "no-implicit-optional",
     "no-implicit-reexport",
+    "local-partial-types",
     "no-strict-optional",
     "no-warn-no-return",
     "strict-equality",
