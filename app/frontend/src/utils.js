@@ -8,13 +8,14 @@ export function parseMessages(stdout) {
     const type = types[level];
     return type || 'error';
   };
-  const matcher = /^main\.py:(\d+): (\w+): (.+)/;
+  const matcher = /^main\.py:(\d+):(\d+:)? (\w+): (.+)/;
   return stdout.split('\n').map((m) => {
     const match = m.match(matcher);
     return match ? {
       row: match[1] - 1,
-      type: getType(match[2]),
-      text: match[3],
+      ...(match[2] && { column: match[2].slice(0, -1) - 1 }),
+      type: getType(match[3]),
+      text: match[4],
     } : null;
   }).filter((m) => m !== null);
 }
