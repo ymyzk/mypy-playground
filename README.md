@@ -20,7 +20,7 @@
 ## Components
 - [app](app): Application server
 - [app/frontend](app/frontend): Frontend
-- [sandbox](sandbox): Docker images for running mypy
+- [sandbox](sandbox): Sandbox environments for running mypy
 
 ## Configuration
 | Name | Type | Required | Description |
