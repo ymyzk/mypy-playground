@@ -178,7 +178,7 @@ export default class App extends Component {
       source,
     } = this.state;
     return (
-      <div className="App">
+      <div className="App d-flex flex-flow flex-column vh-100">
         <Header
           context={context}
           config={config}

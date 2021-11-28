@@ -1,11 +1,10 @@
-html {
-    height: 100%;
+:root {
+    --bs-primary: #2d618c;
+    --bs-primary-rgb: 45,97,140;
 }
 
-.App {
-    display: flex;
-    flex-flow: column;
-    height: 100vh;
+html {
+    height: 100%;
 }
 
 header {
@@ -23,10 +22,6 @@ header {
     background: #eee;
 }
 
-.navbar {
-    background-color: #2d618c;
-}
-
 .navbar #run {
     background-color: #ffd343;
     border-color: #ffd343;
@@ -34,8 +29,7 @@ header {
 
 /* We use default :focus effect now */
 .navbar #run:hover {
-    /* darken 10% */
-    background-color: #e5b93e;
-    /* darken 12% */
-    border-color: #e0b53d;
+    /* tint-color 15% = mix white 15% */
+    background-color: #ffda5f;
+    border-color: #ffda5f;
 }

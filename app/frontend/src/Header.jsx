@@ -54,7 +54,7 @@ class Header extends React.Component {
 
     return (
       <header>
-        <Navbar dark expand="lg">
+        <Navbar color="primary" dark expand="lg">
           {/* .mb-0 is for overriding margin by .h1 */}
           <NavbarBrand href="/" className="h1 mb-0">mypy Playground</NavbarBrand>
           <NavbarToggler onClick={() => this.toggle('navbar')} />
