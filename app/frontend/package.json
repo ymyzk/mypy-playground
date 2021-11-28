@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "ace-builds": "^1.4.13",
-    "axios": "^0.23.0",
+    "axios": "^0.24.0",
     "bootstrap": "^4.6.0",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
