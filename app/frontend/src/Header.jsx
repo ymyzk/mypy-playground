@@ -11,6 +11,7 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
+  Nav,
   Navbar,
   NavbarBrand,
   NavbarToggler,
@@ -53,52 +54,53 @@ class Header extends React.Component {
 
     return (
       <header>
-        <Navbar dark expand="lg">
+        <Navbar color="primary" dark expand="lg">
+          {/* .mb-0 is for overriding margin by .h1 */}
           <NavbarBrand href="/" className="h1 mb-0">mypy Playground</NavbarBrand>
           <NavbarToggler onClick={() => this.toggle('navbar')} />
           <Collapse navbar isOpen={navbarIsOpen}>
-            <Form inline className="my-2 my-lg-0 mr-auto">
-              <Button color="light" className="my-2 my-sm-0 mr-sm-2" id="run" disabled={status === 'running'} onClick={onRunClick}>Run</Button>
-              <Button color="light" className="my-sm-0 mr-sm-2" disabled={status === 'creating_gist'} onClick={onGistClick}>Gist</Button>
-              <Input
-                type="select"
-                className="mr-sm-2"
-                title="mypy Version"
-                value={config.mypyVersion}
-                onChange={(e) => onConfigChange({ mypyVersion: e.target.value })}
-              >
-                {
-                  context.mypy_versions.map(([name, id]) => (
-                    <option key={id} value={id}>{ name }</option>
-                  ))
-                }
-              </Input>
-              <Input
-                type="select"
-                className="mr-sm-2"
-                title="Python Version (--python--version)"
-                value={config.pythonVersion}
-                onChange={(e) => onConfigChange({ pythonVersion: e.target.value })}
-              >
-                {
-                  context.python_versions.map((ver) => (
-                    <option key={ver} value={ver}>
-                      Python
-                      { ' ' }
-                      { ver }
-                    </option>
-                  ))
-                }
-              </Input>
-              <Button color="light" className="my-2 my-sm-0" data-toggle="modal" data-target="#options-modal" onClick={() => this.toggle('options')}>
-                Options
-              </Button>
-            </Form>
-            <Form className="form-inline my-2 my-lg-0">
-              <Button color="light" className="my-2 my-sm-0" data-toggle="modal" data-target="#about-modal" onClick={() => this.toggle('about')}>
-                About
-              </Button>
-            </Form>
+            <Nav navbar className="me-auto my-2 my-lg-0">
+              <Form className="d-flex flex-wrap flex-md-nowrap">
+                <Button color="light" className="me-2 mb-2 mb-lg-0" id="run" disabled={status === 'running'} onClick={onRunClick}>Run</Button>
+                <Button color="light" className="me-2 mb-2 mb-lg-0" disabled={status === 'creating_gist'} onClick={onGistClick}>Gist</Button>
+                <Input
+                  type="select"
+                  className="me-2 mb-2 mb-lg-0"
+                  title="mypy Version"
+                  value={config.mypyVersion}
+                  onChange={(e) => onConfigChange({ mypyVersion: e.target.value })}
+                >
+                  {
+                    context.mypy_versions.map(([name, id]) => (
+                      <option key={id} value={id}>{ name }</option>
+                    ))
+                  }
+                </Input>
+                <Input
+                  type="select"
+                  className="me-2 mb-2 mb-lg-0"
+                  title="Python Version (--python--version)"
+                  value={config.pythonVersion}
+                  onChange={(e) => onConfigChange({ pythonVersion: e.target.value })}
+                >
+                  {
+                    context.python_versions.map((ver) => (
+                      <option key={ver} value={ver}>
+                        Python
+                        { ' ' }
+                        { ver }
+                      </option>
+                    ))
+                  }
+                </Input>
+                <Button color="light" className="me-2 mb-2 mb-lg-0" data-toggle="modal" data-target="#options-modal" onClick={() => this.toggle('options')}>
+                  Options
+                </Button>
+              </Form>
+            </Nav>
+            <Button color="light" className="my-2 my-lg-0" data-toggle="modal" data-target="#about-modal" onClick={() => this.toggle('about')}>
+              About
+            </Button>
           </Collapse>
         </Navbar>
         <Modal isOpen={optionsIsOpen} toggle={() => this.toggle('options')}>
@@ -120,7 +122,7 @@ class Header extends React.Component {
                               checked={config[flag]}
                               onChange={(e) => onConfigChange({ [flag]: e.target.checked })}
                             />
-                            <Label check for={flag}>
+                            <Label check for={flag} className="mb-0">
                               <code>
                                 --
                                 { flag }
