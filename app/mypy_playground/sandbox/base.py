@@ -10,6 +10,8 @@ ARGUMENT_FLAGS_NORMAL = (
     "show-error-context",
     "stats",
     "inferstats",
+    "version",
+    "show-traceback",
     "scripts-are-modules",
     "show-column-numbers",
     "show-error-codes",
