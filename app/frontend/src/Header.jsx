@@ -63,9 +63,11 @@ class Header extends React.Component {
               <Form className="d-flex flex-wrap flex-md-nowrap">
                 <Button color="light" className="me-2 mb-2 mb-lg-0" id="run" disabled={status === 'running'} onClick={onRunClick}>Run</Button>
                 <Button color="light" className="me-2 mb-2 mb-lg-0" disabled={status === 'creating_gist'} onClick={onGistClick}>Gist</Button>
+                {/* Using w-auto for <Input type="select"> to override "width: 100%" set by
+                    the form-select class. */}
                 <Input
                   type="select"
-                  className="me-2 mb-2 mb-lg-0"
+                  className="me-2 mb-2 mb-lg-0 w-auto"
                   title="mypy Version"
                   value={config.mypyVersion}
                   onChange={(e) => onConfigChange({ mypyVersion: e.target.value })}
@@ -78,7 +80,7 @@ class Header extends React.Component {
                 </Input>
                 <Input
                   type="select"
-                  className="me-2 mb-2 mb-lg-0"
+                  className="me-2 mb-2 mb-lg-0 w-auto"
                   title="Python Version (--python--version)"
                   value={config.pythonVersion}
                   onChange={(e) => onConfigChange({ pythonVersion: e.target.value })}
