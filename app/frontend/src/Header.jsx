@@ -110,6 +110,13 @@ class Header extends React.Component {
             Options
           </ModalHeader>
           <ModalBody>
+            <p>
+              Please see
+              {' '}
+              <a href="https://mypy.readthedocs.io/en/stable/command_line.html">mypy&apos;s documentation</a>
+              {' '}
+              to learn effect of each option.
+            </p>
             <Form>
               <FormGroup row>
                 {
