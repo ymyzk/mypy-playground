@@ -37,19 +37,7 @@ fib("10")
 
 class IndexHandler(tornado.web.RequestHandler):
     async def get(self) -> None:
-        mypy_versions = get_mypy_versions()
-        default: dict[str, bool | str] = {flag: False for flag in ARGUMENT_FLAGS}
-        default["mypyVersion"] = mypy_versions[0][1]
-        default["pythonVersion"] = PYTHON_VERSIONS[0]
-        context = {
-            "defaultConfig": default,
-            "initial_code": initial_code,
-            "python_versions": PYTHON_VERSIONS,
-            "mypy_versions": mypy_versions,
-            "flags": ARGUMENT_FLAGS,
-            "ga_tracking_id": options.ga_tracking_id,
-        }
-        self.render("index.html", context=json.dumps(context))
+        self.render("index.html")
 
 
 class JsonRequestHandler(tornado.web.RequestHandler):
