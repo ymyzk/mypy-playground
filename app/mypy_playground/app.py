@@ -40,6 +40,7 @@ def make_app(**kwargs: Any) -> tornado.web.Application:
     routes: list[tuple[str, type[tornado.web.RequestHandler]]] = [
         (r"/typecheck.json", handlers.TypecheckHandler),
         (r"/gist", handlers.GistHandler),
+        (r"/api/context", handlers.ContextHandler),
         (r"/", handlers.IndexHandler),
     ]
     if options.enable_prometheus:

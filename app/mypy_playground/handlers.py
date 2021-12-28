@@ -37,23 +37,13 @@ fib("10")
 
 class IndexHandler(tornado.web.RequestHandler):
     async def get(self) -> None:
-        mypy_versions = get_mypy_versions()
-        default: dict[str, bool | str] = {flag: False for flag in ARGUMENT_FLAGS}
-        default["mypyVersion"] = mypy_versions[0][1]
-        default["pythonVersion"] = PYTHON_VERSIONS[0]
-        context = {
-            "defaultConfig": default,
-            "initial_code": initial_code,
-            "python_versions": PYTHON_VERSIONS,
-            "mypy_versions": mypy_versions,
-            "flags": ARGUMENT_FLAGS,
-            "ga_tracking_id": options.ga_tracking_id,
-        }
-        self.render("index.html", context=json.dumps(context))
+        self.render("index.html")
 
 
 class JsonRequestHandler(tornado.web.RequestHandler):
     def prepare(self) -> None:
+        if self.request.method in {"HEAD", "GET"}:
+            return
         content_type = self.request.headers.get("Content-Type", "")
         if not content_type.startswith("application/json"):
             raise tornado.web.HTTPError(
@@ -83,6 +73,23 @@ class JsonRequestHandler(tornado.web.RequestHandler):
             raise tornado.web.HTTPError(
                 HTTPStatus.BAD_REQUEST,
                 log_message="failed to parse JSON body")
+
+
+class ContextHandler(JsonRequestHandler):
+    async def get(self) -> None:
+        mypy_versions = get_mypy_versions()
+        default: dict[str, bool | str] = {flag: False for flag in ARGUMENT_FLAGS}
+        default["mypyVersion"] = mypy_versions[0][1]
+        default["pythonVersion"] = PYTHON_VERSIONS[0]
+        context = {
+            "defaultConfig": default,
+            "initialCode": initial_code,
+            "pythonVersions": PYTHON_VERSIONS,
+            "mypyVersions": mypy_versions,
+            "flags": ARGUMENT_FLAGS,
+            "gaTrackingId": options.ga_tracking_id,
+        }
+        self.write(context)
 
 
 class TypecheckHandler(JsonRequestHandler):
