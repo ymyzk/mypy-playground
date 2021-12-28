@@ -14,12 +14,12 @@ export default class App extends Component {
   constructor(props) {
     super(props);
 
-    const context = JSON.parse(document.getElementById('context').textContent);
+    const { context } = props;
     this.state = { // eslint-disable-line react/state-in-constructor
       annotations: [],
       config: context.defaultConfig,
       context,
-      source: context.initial_code,
+      source: context.initialCode,
       result: {
         status: 'ready',
       },

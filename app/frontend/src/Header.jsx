@@ -71,7 +71,7 @@ class Header extends React.Component {
                   onChange={(e) => onConfigChange({ mypyVersion: e.target.value })}
                 >
                   {
-                    context.mypy_versions.map(([name, id]) => (
+                    context.mypyVersions.map(([name, id]) => (
                       <option key={id} value={id}>{ name }</option>
                     ))
                   }
@@ -84,7 +84,7 @@ class Header extends React.Component {
                   onChange={(e) => onConfigChange({ pythonVersion: e.target.value })}
                 >
                   {
-                    context.python_versions.map((ver) => (
+                    context.pythonVersions.map((ver) => (
                       <option key={ver} value={ver}>
                         Python
                         { ' ' }
