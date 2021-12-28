@@ -1,2 +1,1 @@
-mypy==0.761
-typing-extensions
+../../common/0.761/requirements.in
