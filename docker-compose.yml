@@ -10,6 +10,12 @@ services:
       DOCKER_TLS_VERIFY: 1
       DEBUG: "1"
       ENABLE_PROMETHEUS: "1"
+      # Example to use Cloud Functions
+      # SANDBOX: mypy_playground.sandbox.cloud_functions.CloudFunctionsSandbox
+      # We can issue one using CLI: gcloud auth print-identity-token
+      # CLOUD_FUNCTIONS_IDENTITY_TOKEN: TOKEN
+      # CLOUD_FUNCTIONS_BASE_URL: https://REGION-PROJECT.cloudfunctions.net
+      # CLOUD_FUNCTIONS_NAMES: latest:mypy-latest
     volumes:
       - docker_certs:/certs
       - ./app:/app
