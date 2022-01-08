@@ -4,11 +4,11 @@
 #
 #    pip-compile requirements.dev.in
 #
-attrs==21.2.0
+attrs==21.4.0
     # via
     #   -c requirements.txt
     #   pytest
-coverage[toml]==6.0.2
+coverage[toml]==6.2
     # via pytest-cov
 flake8==3.9.2
     # via -r requirements.dev.in
@@ -16,21 +16,21 @@ iniconfig==1.1.1
     # via pytest
 mccabe==0.6.1
     # via flake8
-mypy==0.910
+mypy==0.931
     # via -r requirements.dev.in
 mypy-extensions==0.4.3
     # via mypy
-packaging==21.0
+packaging==21.3
     # via pytest
 pluggy==1.0.0
     # via pytest
-py==1.10.0
+py==1.11.0
     # via pytest
 pycodestyle==2.7.0
     # via flake8
 pyflakes==2.3.1
     # via flake8
-pyparsing==2.4.7
+pyparsing==3.0.6
     # via packaging
 pytest==6.2.5
     # via
@@ -43,29 +43,29 @@ pytest-cov==3.0.0
     # via -r requirements.dev.in
 pytest-mock==3.6.1
     # via -r requirements.dev.in
-pytest-randomly==3.10.1
+pytest-randomly==3.10.3
     # via -r requirements.dev.in
 pytest-tornado==0.8.1
     # via -r requirements.dev.in
 toml==0.10.2
+    # via pytest
+tomli==2.0.0
     # via
+    #   coverage
     #   mypy
-    #   pytest
-tomli==1.2.1
-    # via coverage
 tornado==6.1
     # via
     #   -c requirements.txt
     #   pytest-tornado
-types-chardet==4.0.1
+types-chardet==4.0.3
     # via -r requirements.dev.in
-types-mock==4.0.2
+types-mock==4.0.7
     # via -r requirements.dev.in
-types-setuptools==57.4.1
+types-setuptools==57.4.6
     # via -r requirements.dev.in
-types-toml==0.10.1
+types-toml==0.10.2
     # via -r requirements.dev.in
-typing-extensions==3.10.0.2
+typing-extensions==4.0.1
     # via
     #   -c requirements.txt
     #   mypy

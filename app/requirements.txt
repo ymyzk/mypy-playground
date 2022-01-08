@@ -6,25 +6,31 @@
 #
 aiodocker==0.21.0
     # via -r requirements.in
-aiohttp==3.7.4.post0
+aiohttp==3.8.1
     # via aiodocker
-async-timeout==3.0.1
+aiosignal==1.2.0
     # via aiohttp
-attrs==21.2.0
+async-timeout==4.0.2
+    # via aiohttp
+attrs==21.4.0
     # via aiohttp
 cachetools==4.2.4
     # via google-auth
 certifi==2021.10.8
     # via requests
-chardet==4.0.0
-    # via aiohttp
-charset-normalizer==2.0.6
-    # via requests
+charset-normalizer==2.0.10
+    # via
+    #   aiohttp
+    #   requests
 dataclasses==0.6
     # via -r requirements.in
-google-auth==2.3.0
+frozenlist==1.2.0
+    # via
+    #   aiohttp
+    #   aiosignal
+google-auth==2.3.3
     # via -r requirements.in
-idna==3.2
+idna==3.3
     # via
     #   requests
     #   yarl
@@ -32,7 +38,7 @@ multidict==5.2.0
     # via
     #   aiohttp
     #   yarl
-prometheus-client==0.11.0
+prometheus-client==0.12.0
     # via -r requirements.in
 pyasn1==0.4.8
     # via
@@ -40,19 +46,19 @@ pyasn1==0.4.8
     #   rsa
 pyasn1-modules==0.2.8
     # via google-auth
-requests==2.26.0
+requests==2.27.1
     # via -r requirements.in
-rsa==4.7.2
+rsa==4.8
+    # via google-auth
+six==1.16.0
     # via google-auth
 tornado==6.1
     # via -r requirements.in
-typing-extensions==3.10.0.2
-    # via
-    #   aiodocker
-    #   aiohttp
-urllib3==1.26.7
+typing-extensions==4.0.1
+    # via aiodocker
+urllib3==1.26.8
     # via requests
-yarl==1.7.0
+yarl==1.7.2
     # via aiohttp
 
 # The following packages are considered to be unsafe in a requirements file:
