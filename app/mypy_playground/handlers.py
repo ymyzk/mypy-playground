@@ -80,7 +80,7 @@ class ContextHandler(JsonRequestHandler):
         mypy_versions = get_mypy_versions()
         default: dict[str, bool | str] = {flag: False for flag in ARGUMENT_FLAGS}
         default["mypyVersion"] = mypy_versions[0][1]
-        default["pythonVersion"] = PYTHON_VERSIONS[0]
+        default["pythonVersion"] = PYTHON_VERSIONS[1]
         context = {
             "defaultConfig": default,
             "initialCode": initial_code,
