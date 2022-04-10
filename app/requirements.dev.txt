@@ -10,12 +10,8 @@ attrs==21.4.0
     #   pytest
 coverage[toml]==6.2
     # via pytest-cov
-flake8==3.9.2
-    # via -r requirements.dev.in
 iniconfig==1.1.1
     # via pytest
-mccabe==0.6.1
-    # via flake8
 mypy==0.931
     # via -r requirements.dev.in
 mypy-extensions==0.4.3
@@ -26,10 +22,6 @@ pluggy==1.0.0
     # via pytest
 py==1.11.0
     # via pytest
-pycodestyle==2.7.0
-    # via flake8
-pyflakes==2.3.1
-    # via flake8
 pyparsing==3.0.6
     # via packaging
 pytest==6.2.5
