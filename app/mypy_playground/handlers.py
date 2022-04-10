@@ -16,7 +16,6 @@ from mypy_playground.sandbox import run_typecheck_in_sandbox
 from mypy_playground.sandbox.base import (
     AbstractSandbox,
     ARGUMENT_FLAGS,
-    PYTHON_VERSIONS,
 )
 from mypy_playground.sandbox.cloud_functions import CloudFunctionsSandbox
 from mypy_playground.sandbox.docker import DockerSandbox
@@ -84,11 +83,11 @@ class ContextHandler(JsonRequestHandler):
         mypy_versions = options.mypy_versions
         default: dict[str, bool | str] = {flag: False for flag in ARGUMENT_FLAGS}
         default["mypyVersion"] = mypy_versions[0][1]
-        default["pythonVersion"] = PYTHON_VERSIONS[1]
+        default["pythonVersion"] = options.default_python_version
         context = {
             "defaultConfig": default,
             "initialCode": initial_code,
-            "pythonVersions": PYTHON_VERSIONS,
+            "pythonVersions": options.python_versions,
             "mypyVersions": mypy_versions,
             "flags": ARGUMENT_FLAGS,
             "gaTrackingId": options.ga_tracking_id,
@@ -109,7 +108,7 @@ class TypecheckHandler(JsonRequestHandler):
         args = {}
         if (
             version := json.get("pythonVersion")
-        ) is not None and version in PYTHON_VERSIONS:
+        ) is not None and version in options.python_versions:
             args["python_version"] = version
         for flag in ARGUMENT_FLAGS:
             flag_value = json.get(flag)
