@@ -5,6 +5,5 @@ strict = true
 [[tool.mypy.overrides]]
 module = [
     'google.*',
-    'prometheus_client',
 ]
 ignore_missing_imports = true

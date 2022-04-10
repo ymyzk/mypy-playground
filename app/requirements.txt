@@ -14,31 +14,31 @@ async-timeout==4.0.2
     # via aiohttp
 attrs==21.4.0
     # via aiohttp
-cachetools==4.2.4
+cachetools==5.0.0
     # via google-auth
 certifi==2021.10.8
     # via requests
-charset-normalizer==2.0.10
+charset-normalizer==2.0.12
     # via
     #   aiohttp
     #   requests
 dataclasses==0.6
     # via -r requirements.in
-frozenlist==1.2.0
+frozenlist==1.3.0
     # via
     #   aiohttp
     #   aiosignal
-google-auth==2.3.3
+google-auth==2.6.3
     # via -r requirements.in
 idna==3.3
     # via
     #   requests
     #   yarl
-multidict==5.2.0
+multidict==6.0.2
     # via
     #   aiohttp
     #   yarl
-prometheus-client==0.12.0
+prometheus-client==0.14.1
     # via -r requirements.in
 pyasn1==0.4.8
     # via
@@ -54,12 +54,9 @@ six==1.16.0
     # via google-auth
 tornado==6.1
     # via -r requirements.in
-typing-extensions==4.0.1
+typing-extensions==4.1.1
     # via aiodocker
-urllib3==1.26.8
+urllib3==1.26.9
     # via requests
 yarl==1.7.2
     # via aiohttp
-
-# The following packages are considered to be unsafe in a requirements file:
-# setuptools
