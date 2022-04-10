@@ -6,13 +6,21 @@ import time
 from typing import Any, Optional, cast
 
 import aiodocker
-from tornado.options import options
+from tornado.options import define, options
 
 from mypy_playground.sandbox.base import AbstractSandbox, ARGUMENT_FLAGS, Result
 from mypy_playground.utils import DictOption
 
 
 logger = logging.getLogger(__name__)
+
+
+define(
+    "docker_images",
+    type=DictOption,
+    default={"latest": "ymyzk/mypy-playground-sandbox:latest"},
+    help="Docker image used by DockerSandbox",
+)
 
 
 class DockerSandbox(AbstractSandbox):

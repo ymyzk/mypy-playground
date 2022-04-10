@@ -18,6 +18,7 @@ logger = getLogger(__name__)
 # https://cloud.google.com/functions/docs/securing/authenticating#authenticating_developer_testing
 define(
     "cloud_functions_base_url",
+    type=str,
     default=None,
     help=(
         "URL of Cloud Functions without function name. "
@@ -26,6 +27,7 @@ define(
 )
 define(
     "cloud_functions_identity_token",
+    type=str,
     default=None,
     help=(
         "Identity token used by CloudFunctionsSandbox. "

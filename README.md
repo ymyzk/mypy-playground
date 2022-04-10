@@ -23,6 +23,13 @@
 - [sandbox](sandbox): Sandbox environments for running mypy
 
 ## Configuration
+Please run `python -m mypy_playground --help` to see all configurations.
+Configurations are considered in the following order:
+
+1. Command line arguments
+2. Environment variables
+3. Default configurations
+
 | Name | Type | Required | Description |
 |:-----|:-----|:---------|:------------|
 | `DEBUG` | bool | No | Enable debug mode (default: False) |
