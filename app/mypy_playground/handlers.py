@@ -13,7 +13,11 @@ import tornado.web
 from mypy_playground import gist
 from mypy_playground.prometheus import PrometheusMixin
 from mypy_playground.sandbox import run_typecheck_in_sandbox
-from mypy_playground.sandbox.base import AbstractSandbox, ARGUMENT_FLAGS, PYTHON_VERSIONS
+from mypy_playground.sandbox.base import (
+    AbstractSandbox,
+    ARGUMENT_FLAGS,
+    PYTHON_VERSIONS,
+)
 from mypy_playground.sandbox.cloud_functions import CloudFunctionsSandbox
 from mypy_playground.sandbox.docker import DockerSandbox
 
@@ -47,7 +51,8 @@ class JsonRequestHandler(tornado.web.RequestHandler):
         if not content_type.startswith("application/json"):
             raise tornado.web.HTTPError(
                 HTTPStatus.UNSUPPORTED_MEDIA_TYPE,
-                log_message="Content-type must be application/json")
+                log_message="Content-type must be application/json",
+            )
 
     def write_error(self, status_code: int, **kwargs: Any) -> None:
         error = {}
@@ -70,8 +75,8 @@ class JsonRequestHandler(tornado.web.RequestHandler):
             return tornado.escape.json_decode(self.request.body)
         except json.JSONDecodeError:
             raise tornado.web.HTTPError(
-                HTTPStatus.BAD_REQUEST,
-                log_message="failed to parse JSON body")
+                HTTPStatus.BAD_REQUEST, log_message="failed to parse JSON body"
+            )
 
 
 class ContextHandler(JsonRequestHandler):
@@ -98,11 +103,13 @@ class TypecheckHandler(JsonRequestHandler):
         source = json.get("source")
         if source is None or not isinstance(source, str):
             raise tornado.web.HTTPError(
-                HTTPStatus.BAD_REQUEST,
-                log_message="'source' is required")
+                HTTPStatus.BAD_REQUEST, log_message="'source' is required"
+            )
 
         args = {}
-        if (version := json.get("pythonVersion")) is not None and version in PYTHON_VERSIONS:
+        if (
+            version := json.get("pythonVersion")
+        ) is not None and version in PYTHON_VERSIONS:
             args["python_version"] = version
         for flag in ARGUMENT_FLAGS:
             flag_value = json.get(flag)
@@ -121,7 +128,8 @@ class TypecheckHandler(JsonRequestHandler):
             logger.error("an error occurred during running type-check")
             raise tornado.web.HTTPError(
                 HTTPStatus.INTERNAL_SERVER_ERROR,
-                log_message="an error occurred during running mypy")
+                log_message="an error occurred during running mypy",
+            )
 
         self.write(dataclasses.asdict(result))
 
@@ -129,7 +137,10 @@ class TypecheckHandler(JsonRequestHandler):
         sandbox_class = options["sandbox"]
         if sandbox_class == "mypy_playground.sandbox.docker.DockerSandbox":
             return DockerSandbox()
-        elif sandbox_class == "mypy_playground.sandbox.cloud_functions.CloudFunctionsSandbox":
+        elif (
+            sandbox_class
+            == "mypy_playground.sandbox.cloud_functions.CloudFunctionsSandbox"
+        ):
             return CloudFunctionsSandbox()
         raise Exception("Unsupported sandbox")
 
@@ -141,8 +152,8 @@ class GistHandler(JsonRequestHandler):
         source = json.get("source")
         if source is None or not isinstance(source, str):
             raise tornado.web.HTTPError(
-                HTTPStatus.BAD_REQUEST,
-                log_message="'source' is required")
+                HTTPStatus.BAD_REQUEST, log_message="'source' is required"
+            )
 
         result = await gist.create_gist(source)
 
@@ -150,7 +161,8 @@ class GistHandler(JsonRequestHandler):
             logger.error("an error occurred during creating a gist")
             raise tornado.web.HTTPError(
                 HTTPStatus.INTERNAL_SERVER_ERROR,
-                log_message="an error occurred during creating a gist")
+                log_message="an error occurred during creating a gist",
+            )
 
         self.set_status(201)
         self.write(result)
@@ -161,6 +173,7 @@ class PrometheusMetricsHandler(tornado.web.RequestHandler):
 
     This handler must be used with PrometheusMixin for getting a registry.
     """
+
     async def get(self) -> None:
         accept_header = self.request.headers.get("accept")
         encoder, content_type = exposition.choose_encoder(accept_header)

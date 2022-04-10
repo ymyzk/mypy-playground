@@ -38,8 +38,7 @@ def run_mypy(source: str, options: List[str]) -> Dict[str, Union[int, str]]:
         f.write(source)
         f.flush()
         process = subprocess.run(
-            [sys.executable, "-m", "mypy"] + options + [f.name],
-            capture_output=True
+            [sys.executable, "-m", "mypy"] + options + [f.name], capture_output=True
         )
         return {
             "exit_code": process.returncode,

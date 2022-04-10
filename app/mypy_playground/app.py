@@ -15,21 +15,30 @@ root_dir = Path(__file__).parents[1]
 static_dir = root_dir / "static"
 templates_dir = root_dir / "static"
 
-define("docker_images",
-       type=DictOption,
-       default={"latest": "ymyzk/mypy-playground-sandbox:latest"},
-       help="Docker image used by DockerSandbox")
-define("sandbox", default="mypy_playground.sandbox.docker.DockerSandbox",
-       help="Sandbox implementation to use.")
-define("sandbox_concurrency", default=3,
-       help="The number of running sandboxes at the same time")
+define(
+    "docker_images",
+    type=DictOption,
+    default={"latest": "ymyzk/mypy-playground-sandbox:latest"},
+    help="Docker image used by DockerSandbox",
+)
+define(
+    "sandbox",
+    default="mypy_playground.sandbox.docker.DockerSandbox",
+    help="Sandbox implementation to use.",
+)
+define(
+    "sandbox_concurrency",
+    default=3,
+    help="The number of running sandboxes at the same time",
+)
 define("ga_tracking_id", default=None, help="Google Analytics tracking ID")
-define("github_token", default=None,
-       help="GitHub API token for creating gists")
-define("mypy_versions",
-       type=ListPairOption,
-       default=[("mypy latest", "latest")],
-       help="List of mypy versions used by a sandbox")
+define("github_token", default=None, help="GitHub API token for creating gists")
+define(
+    "mypy_versions",
+    type=ListPairOption,
+    default=[("mypy latest", "latest")],
+    help="List of mypy versions used by a sandbox",
+)
 define("enable_prometheus", default=False, help="Prometheus metrics endpoint")
 define("port", default=8080, help="Port number")
 define("debug", default=False, help="Debug mode")
@@ -53,4 +62,5 @@ def make_app(**kwargs: Any) -> tornado.web.Application:
         static_path=static_dir,
         template_path=templates_dir,
         debug=options.debug,
-        **kwargs)
+        **kwargs
+    )
