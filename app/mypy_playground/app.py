@@ -23,25 +23,31 @@ define(
 )
 define(
     "sandbox",
+    type=str,
     default="mypy_playground.sandbox.docker.DockerSandbox",
     help="Sandbox implementation to use.",
 )
 define(
     "sandbox_concurrency",
+    type=int,
     default=3,
     help="The number of running sandboxes at the same time",
 )
-define("ga_tracking_id", default=None, help="Google Analytics tracking ID")
-define("github_token", default=None, help="GitHub API token for creating gists")
+define("ga_tracking_id", type=str, default=None, help="Google Analytics tracking ID")
+define(
+    "github_token", type=str, default=None, help="GitHub API token for creating gists"
+)
 define(
     "mypy_versions",
     type=ListPairOption,
     default=[("mypy latest", "latest")],
     help="List of mypy versions used by a sandbox",
 )
-define("enable_prometheus", default=False, help="Prometheus metrics endpoint")
-define("port", default=8080, help="Port number")
-define("debug", default=False, help="Debug mode")
+define(
+    "enable_prometheus", type=bool, default=False, help="Prometheus metrics endpoint"
+)
+define("port", type=int, default=8080, help="Port number")
+define("debug", type=bool, default=False, help="Debug mode")
 
 
 class Application(PrometheusMixin, tornado.web.Application):
