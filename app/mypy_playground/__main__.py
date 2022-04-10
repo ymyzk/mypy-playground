@@ -18,8 +18,8 @@ def parse_environment_variables() -> None:
 
 
 def load_config() -> None:
-    parse_command_line()
     parse_environment_variables()
+    parse_command_line()
 
 
 load_config()
