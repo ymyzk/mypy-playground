@@ -10,7 +10,7 @@ from tornado.httpclient import AsyncHTTPClient
 from tornado.options import define, options
 
 from mypy_playground.sandbox.base import AbstractSandbox, ARGUMENT_FLAGS, Result
-from mypy_playground.utils import parse_option_as_dict
+from mypy_playground.utils import DictOption
 
 logger = getLogger(__name__)
 
@@ -24,7 +24,8 @@ define("cloud_functions_identity_token",
        default=None,
        help="Identity token used by CloudFunctionsSandbox. This is mainly for local development.")
 define("cloud_functions_names",
-       default="latest:mypy-latest",
+       type=DictOption,
+       default={"latest": "mypy-latest"},
        help="Map from mypy version ID to name of Cloud Functions")
 
 
@@ -88,7 +89,7 @@ class CloudFunctionsSandbox(AbstractSandbox):
         if not isinstance(base_url, str):
             return None
 
-        name = parse_option_as_dict("cloud_functions_names").get(mypy_version_id)
+        name = options.cloud_functions_names.get(mypy_version_id)
         if not isinstance(name, str):
             return None
 

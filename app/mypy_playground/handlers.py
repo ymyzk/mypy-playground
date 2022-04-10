@@ -16,7 +16,6 @@ from mypy_playground.sandbox import run_typecheck_in_sandbox
 from mypy_playground.sandbox.base import AbstractSandbox, ARGUMENT_FLAGS, PYTHON_VERSIONS
 from mypy_playground.sandbox.cloud_functions import CloudFunctionsSandbox
 from mypy_playground.sandbox.docker import DockerSandbox
-from mypy_playground.utils import get_mypy_versions
 
 
 logger = logging.getLogger(__name__)
@@ -77,7 +76,7 @@ class JsonRequestHandler(tornado.web.RequestHandler):
 
 class ContextHandler(JsonRequestHandler):
     async def get(self) -> None:
-        mypy_versions = get_mypy_versions()
+        mypy_versions = options.mypy_versions
         default: dict[str, bool | str] = {flag: False for flag in ARGUMENT_FLAGS}
         default["mypyVersion"] = mypy_versions[0][1]
         default["pythonVersion"] = PYTHON_VERSIONS[1]
@@ -114,7 +113,7 @@ class TypecheckHandler(JsonRequestHandler):
             args["mypy_version"] = mypy_version
         else:
             # Use the first item as the default
-            args["mypy_version"] = get_mypy_versions()[0][1]
+            args["mypy_version"] = options.mypy_versions
 
         sandbox = self._get_sandbox()
         result = await run_typecheck_in_sandbox(sandbox, source, **args)

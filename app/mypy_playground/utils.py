@@ -1,19 +1,39 @@
-from functools import lru_cache
 from typing import cast
 
-from tornado.options import options
+
+def _parse_pair(config: str) -> tuple[str, str]:
+    pair = tuple(config.split(":", 1))
+    if len(pair) != 2:
+        raise SyntaxError(f"The given string is not a pair: {config}")
+    # It's safe to cast as we already verified the length
+    return cast(tuple[str, str], pair)
 
 
-@lru_cache()
-def parse_option_as_dict(name: str) -> dict[str, str]:
-    # This function assumes that dict is insertion order-preserving
-    # (Python 3.7+)
-    return dict(
-        cast(list[tuple[str, str]],
-             [tuple(i.split(":", 1)) for i in options[name].split(",")])
-    )
+class DictOption(dict[str, str]):
+    """Custom dict[str, str] type for Tornado option
+
+    Input 1: "a:b,c:d"
+    Output 1: {"a": "b", "c": "d"}
+
+    Input 2: 123
+    Output 2: TypeError
+    """
+    def __init__(self, config: str) -> None:
+        if isinstance(config, str):
+            if config.strip() == "":
+                super().__init__()
+                return
+            super().__init__(_parse_pair(c) for c in config.split(","))
+        else:
+            raise TypeError(f"Unsupported type was given: {type(config)}")
 
 
-@lru_cache(maxsize=1)
-def get_mypy_versions() -> list[tuple[str, str]]:
-    return list(parse_option_as_dict("mypy_versions").items())
+class ListPairOption(list[tuple[str, str]]):
+    def __init__(self, config: str) -> None:
+        if isinstance(config, str):
+            if config.strip() == "":
+                super().__init__()
+                return
+            super().__init__(_parse_pair(c) for c in config.split(","))
+        else:
+            raise TypeError(f"Unsupported type was given: {type(config)}")
