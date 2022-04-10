@@ -24,13 +24,14 @@ class DockerSandbox(AbstractSandbox):
         self.client = aiodocker.Docker()
         self.source_file_path = Path("/tmp/main.py")
 
-    async def run_typecheck(self,
-                            source: str,
-                            /,
-                            mypy_version: str,
-                            python_version: Optional[str] = None,
-                            **kwargs: Any
-                            ) -> Optional[Result]:
+    async def run_typecheck(
+        self,
+        source: str,
+        /,
+        mypy_version: str,
+        python_version: Optional[str] = None,
+        **kwargs: Any,
+    ) -> Optional[Result]:
         start_time = time.time()
 
         docker_image = self._get_docker_image(mypy_version)
@@ -54,8 +55,8 @@ class DockerSandbox(AbstractSandbox):
                 "Memory": 128 * 1024 * 1024,
                 "NetworkMode": "none",
                 "PidsLimit": 32,
-                "SecurityOpt": ["no-new-privileges"]
-            }
+                "SecurityOpt": ["no-new-privileges"],
+            },
         }
 
         # Using Any to suppress type errors around aiodocker
@@ -63,8 +64,9 @@ class DockerSandbox(AbstractSandbox):
         try:
             logger.info("creating container")
             c = await self.client.containers.create(config=config)  # type: ignore
-            await c.put_archive(str(self.source_file_path.parent),
-                                self._create_archive(source))
+            await c.put_archive(
+                str(self.source_file_path.parent), self._create_archive(source)
+            )
             await c.start()
             exit_code = (await c.wait())["StatusCode"]
             stdout = "".join(await c.log(stdout=True, stderr=False)).strip()

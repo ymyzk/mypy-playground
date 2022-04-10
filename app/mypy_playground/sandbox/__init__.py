@@ -24,10 +24,10 @@ def _get_semaphore() -> asyncio.Semaphore:
 
 
 async def run_typecheck_in_sandbox(
-        sandbox: AbstractSandbox,
-        source: str,
-        semaphore: Optional[asyncio.Semaphore] = None,
-        **kwargs: Any
+    sandbox: AbstractSandbox,
+    source: str,
+    semaphore: Optional[asyncio.Semaphore] = None,
+    **kwargs: Any
 ) -> Optional[Result]:
     if semaphore is None:
         logger.debug("using the default semaphore")

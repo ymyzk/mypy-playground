@@ -18,6 +18,7 @@ class DictOption(dict[str, str]):
     Input 2: 123
     Output 2: TypeError
     """
+
     def __init__(self, config: str) -> None:
         if isinstance(config, str):
             if config.strip() == "":

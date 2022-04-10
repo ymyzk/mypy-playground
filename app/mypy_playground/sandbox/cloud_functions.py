@@ -16,34 +16,49 @@ logger = getLogger(__name__)
 
 
 # https://cloud.google.com/functions/docs/securing/authenticating#authenticating_developer_testing
-define("cloud_functions_base_url",
-       default=None,
-       help=("URL of Cloud Functions without function name. "
-             "Example: https://<region>-<project>.cloudfunctions.net/"))
-define("cloud_functions_identity_token",
-       default=None,
-       help="Identity token used by CloudFunctionsSandbox. This is mainly for local development.")
-define("cloud_functions_names",
-       type=DictOption,
-       default={"latest": "mypy-latest"},
-       help="Map from mypy version ID to name of Cloud Functions")
+define(
+    "cloud_functions_base_url",
+    default=None,
+    help=(
+        "URL of Cloud Functions without function name. "
+        "Example: https://<region>-<project>.cloudfunctions.net/"
+    ),
+)
+define(
+    "cloud_functions_identity_token",
+    default=None,
+    help=(
+        "Identity token used by CloudFunctionsSandbox. "
+        "This is mainly for local development."
+    ),
+)
+define(
+    "cloud_functions_names",
+    type=DictOption,
+    default={"latest": "mypy-latest"},
+    help="Map from mypy version ID to name of Cloud Functions",
+)
 
 
 class CloudFunctionsSandbox(AbstractSandbox):
     def __init__(self) -> None:
         super().__init__()
 
-    async def run_typecheck(self,
-                            source: str,
-                            /,
-                            mypy_version: str,
-                            python_version: Optional[str] = None,
-                            **kwargs: Any) -> Optional[Result]:
+    async def run_typecheck(
+        self,
+        source: str,
+        /,
+        mypy_version: str,
+        python_version: Optional[str] = None,
+        **kwargs: Any,
+    ) -> Optional[Result]:
         start_time = time.time()
 
         function_url = self._get_cloud_function_url(mypy_version)
         if function_url is None:
-            logger.error(f"cannot find a Cloud function for mypy version: {mypy_version}")
+            logger.error(
+                f"cannot find a Cloud function for mypy version: {mypy_version}"
+            )
             return None
 
         token = self._get_identity_token(function_url)
@@ -62,18 +77,20 @@ class CloudFunctionsSandbox(AbstractSandbox):
         headers = {
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/json",
-            "User-Agent": "mypy-playground"  # TODO: Better UA w/ version?
+            "User-Agent": "mypy-playground",  # TODO: Better UA w/ version?
         }
 
         client = AsyncHTTPClient()
-        res = await client.fetch(function_url,
-                                 method="POST",
-                                 headers=headers,
-                                 body=json.dumps(data),
-                                 raise_error=False)
+        res = await client.fetch(
+            function_url,
+            method="POST",
+            headers=headers,
+            body=json.dumps(data),
+            raise_error=False,
+        )
         if res.code != 200:
             # TODO: better error handling
-            logger.error('unexpected status code from Cloud Functions: %d', res.code)
+            logger.error("unexpected status code from Cloud Functions: %d", res.code)
             return None
         res_data = json.loads(res.body)
         duration = int(1000 * (time.time() - start_time))
@@ -113,7 +130,9 @@ class CloudFunctionsSandbox(AbstractSandbox):
         # https://googleapis.dev/python/google-auth/latest/reference/google.auth.transport._aiohttp_requests.html
         auth_req = google.auth.transport.requests.Request()
         # Get a token or raise an exception
-        if isinstance(token := google.oauth2.id_token.fetch_id_token(auth_req, url), str):
+        if isinstance(
+            token := google.oauth2.id_token.fetch_id_token(auth_req, url), str
+        ):
             return token
 
         raise Exception("failed to get identity token")
