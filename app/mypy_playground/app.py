@@ -7,7 +7,7 @@ import tornado.web
 
 from mypy_playground import handlers
 from mypy_playground.prometheus import PrometheusMixin
-from mypy_playground.utils import DictOption, ListPairOption
+from mypy_playground.utils import ListPairOption
 
 
 logger = logging.getLogger(__name__)
@@ -15,12 +15,6 @@ root_dir = Path(__file__).parents[1]
 static_dir = root_dir / "static"
 templates_dir = root_dir / "static"
 
-define(
-    "docker_images",
-    type=DictOption,
-    default={"latest": "ymyzk/mypy-playground-sandbox:latest"},
-    help="Docker image used by DockerSandbox",
-)
 define(
     "sandbox",
     type=str,
