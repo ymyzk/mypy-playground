@@ -175,6 +175,8 @@ class PrometheusMetricsHandler(tornado.web.RequestHandler):
 
     async def get(self) -> None:
         accept_header = self.request.headers.get("accept")
+        if not isinstance(accept_header, str):
+            accept_header = ""
         encoder, content_type = exposition.choose_encoder(accept_header)
         application = cast(PrometheusMixin, self.application)
         output = encoder(application.prometheus_registry)
