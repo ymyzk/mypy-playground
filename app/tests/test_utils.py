@@ -1,31 +1,58 @@
-from pytest_mock import MockerFixture
-from tornado.options import define, options
+from typing import Any
 
-from mypy_playground.utils import get_mypy_versions, parse_option_as_dict
+import pytest
 
-
-def test_parse_option_as_dict(mocker: MockerFixture) -> None:
-    define("opt1")
-    define("opt2")
-    mocker.patch.object(options.mockable(), "opt1", "k1:v1,k2:v2")
-    mocker.patch.object(options.mockable(), "opt2", "a:b:c")
-    parse_option_as_dict.cache_clear()
-
-    # Compare as a list to verify insertion order
-    assert list(parse_option_as_dict("opt1").items()) == [
-        ("k1", "v1"),
-        ("k2", "v2"),
-    ]
-    # Case with multiple colons in the value
-    assert parse_option_as_dict("opt2") == {
-        "a": "b:c",
-    }
+from mypy_playground.utils import (
+    DictOption,
+    ListPairOption,
+)
 
 
-def test_get_mypy_versions(mocker: MockerFixture) -> None:
-    mocker.patch.object(options.mockable(), "mypy_versions", "mypy 0.790:0.790")
-    get_mypy_versions.cache_clear()
+@pytest.mark.parametrize(
+    "config,expected",
+    [
+        ("", {}),
+        ("a:b", {"a": "b"}),
+        ("a:b", {"a": "b"}),
+        ("a:b:c", {"a": "b:c"}),
+        ("a:b:c,d:e", {"a": "b:c", "d": "e"}),
+    ],
+)
+def test_dict_option_succeeds(config: str, expected: dict[str, str]) -> None:
+    assert DictOption(config) == expected
 
-    assert get_mypy_versions() == [
-        ("mypy 0.790", "0.790")
-    ]
+
+def test_dict_option_raises_syntax_error() -> None:
+    with pytest.raises(SyntaxError):
+        DictOption("abc")
+
+
+def test_dict_option_raises_type_error() -> None:
+    with pytest.raises(TypeError):
+        config: Any = 123
+        DictOption(config)
+
+
+@pytest.mark.parametrize(
+    "config,expected",
+    [
+        ("", []),
+        ("a:b", [("a", "b")]),
+        ("a:b:c,d:e", [("a", "b:c"), ("d", "e")]),
+    ],
+)
+def test_list_pair_option_succeeds(
+    config: str, expected: list[tuple[str, str]]
+) -> None:
+    assert ListPairOption(config) == expected
+
+
+def test_list_pair_option_raises_syntax_error() -> None:
+    with pytest.raises(SyntaxError):
+        ListPairOption("abc")
+
+
+def test_list_pair_option_raises_type_error() -> None:
+    with pytest.raises(TypeError):
+        config: Any = 123
+        ListPairOption(config)

@@ -3,12 +3,13 @@ import logging
 from pathlib import Path
 import tarfile
 import time
-from typing import Any, Optional
+from typing import Any, Optional, cast
 
 import aiodocker
+from tornado.options import options
 
 from mypy_playground.sandbox.base import AbstractSandbox, ARGUMENT_FLAGS, Result
-from mypy_playground.utils import parse_option_as_dict
+from mypy_playground.utils import DictOption
 
 
 logger = logging.getLogger(__name__)
@@ -100,4 +101,4 @@ class DockerSandbox(AbstractSandbox):
         return stream
 
     def _get_docker_image(self, mypy_version_id: str) -> Optional[str]:
-        return parse_option_as_dict("docker_images").get(mypy_version_id)
+        return cast(DictOption, options.docker_images).get(mypy_version_id)
