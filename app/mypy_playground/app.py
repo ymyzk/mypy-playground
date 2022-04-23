@@ -63,9 +63,9 @@ class Application(PrometheusMixin, tornado.web.Application):
 
 def make_app(**kwargs: Any) -> tornado.web.Application:
     routes: list[tuple[str, type[tornado.web.RequestHandler]]] = [
-        (r"/typecheck.json", handlers.TypecheckHandler),
-        (r"/gist", handlers.GistHandler),
         (r"/api/context", handlers.ContextHandler),
+        (r"/api/gist", handlers.GistHandler),
+        (r"/api/typecheck", handlers.TypecheckHandler),
         (r"/", handlers.IndexHandler),
     ]
     if options.enable_prometheus:
