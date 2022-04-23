@@ -28,7 +28,8 @@ Configurations are considered in the following order:
 
 1. Command line arguments
 2. Environment variables
-3. Default configurations
+3. Configuration file (`config.toml`)
+4. Default configurations
 
 | Name | Type | Required | Description |
 |:-----|:-----|:---------|:------------|

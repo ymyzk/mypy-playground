@@ -52,6 +52,8 @@ rsa==4.8
     # via google-auth
 six==1.16.0
     # via google-auth
+tomli==2.0.1
+    # via -r requirements.in
 tornado==6.1
     # via -r requirements.in
 typing-extensions==4.1.1

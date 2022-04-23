@@ -1,4 +1,9 @@
+from os import environ
+from pathlib import Path
 from typing import Any, cast
+
+import tomli
+from tornado.options import options
 
 
 def _parse_pair_str(config: str) -> tuple[str, str]:
@@ -50,3 +55,31 @@ class ListPairOption(list[tuple[str, str]]):
             super().__init__(map(_parse_pair_list, config))
         else:
             raise TypeError(f"Unsupported type was given: {type(config)}")
+
+
+def parse_environment_variables() -> None:
+    """Load Tornado options from environment variables"""
+    for option_name in options._options:
+        env_name = option_name.upper().replace("-", "_")
+        env_value = environ.get(env_name)
+        if env_value is None:
+            continue
+        option = options._options[option_name]
+        option.parse(env_value)
+
+
+def parse_toml_file(path: Path) -> None:
+    """Load Tornado options from TOML file"""
+    if not path.is_file():
+        return
+    with open(path, "rb") as f:
+        config = tomli.load(f)
+    for option_name in options._options:
+        value = config.get(option_name)
+        if value is None:
+            continue
+        option = options._options[option_name]
+        if option.multiple:
+            option.parse(",".join(value))
+        else:
+            option.parse(value)
