@@ -1,23 +1,15 @@
 import logging
-from os import environ
+from pathlib import Path
 
 import tornado.ioloop
 from tornado.options import options, parse_command_line
 
 from mypy_playground.app import make_app
-
-
-def parse_environment_variables() -> None:
-    for option_name in options._options:
-        env_name = option_name.upper().replace("-", "_")
-        env_value = environ.get(env_name)
-        if env_value is None:
-            continue
-        option = options._options[option_name]
-        option.parse(env_value)
+from mypy_playground.utils import parse_environment_variables, parse_toml_file
 
 
 def load_config() -> None:
+    parse_toml_file(Path("config.toml"))
     parse_environment_variables()
     parse_command_line()
 

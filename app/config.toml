@@ -1,0 +1,20 @@
+debug = "1"
+enable-prometheus = "1"
+
+default-python-version = "3.10"
+python-versions = ["3.9", "3.10", "3.11"]
+mypy-versions = [
+    ["mypy latest", "latest"],
+]
+
+# Example to use Cloud Functions
+# sandbox = "mypy_playground.sandbox.cloud_functions.CloudFunctionsSandbox"
+cloud-functions-base-url = "https://REGION-PROJECT.cloudfunctions.net"
+# We can issue one using CLI: gcloud auth print-identity-token
+cloud-functions-identity-token = "TOKEN"
+
+[cloud-functions-names]
+latest = "mypy-latest"
+
+[docker-images]
+latest = "ymyzk/mypy-playground-sandbox:latest"
