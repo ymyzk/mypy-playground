@@ -45,3 +45,9 @@ Configurations are considered in the following order:
 | `CLOUD_FUNCTIONS_BASE_URL` | str | No | URL of Cloud Functions without function name |
 | `CLOUD_FUNCTIONS_NAMES` | str | No | Map from mypy version ID to name of Cloud Functions |
 | `CLOUD_FUNCTIONS_IDENTITY_TOKEN` | str | No | Identity token for development purpose |
+
+## Endpoints
+- `/`: Entrypoint
+- `/api/`: APIs provided by Tornado
+- `/private/metrics`: Prometheus metrics (when enabled)
+- `/static/`: Static files
