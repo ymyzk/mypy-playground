@@ -1,0 +1,65 @@
+name: Add mypy version
+
+on:
+  workflow_dispatch:
+    inputs:
+      mypy_version:
+        description: mypy version
+        required: true
+        type: string
+      python_version:
+        description: Python version
+        required: true
+        type: string
+        default: "3.10"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  add-mypy-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show inputs
+        run: |
+          echo "Inputs:"
+          echo "  mypy version: $MYPY_VERSION"
+          echo "  Python version: $PYTHON_VERSION"
+        env:
+          MYPY_VERSION: ${{ github.event.inputs.mypy_version }}
+          PYTHON_VERSION: ${{ github.event.inputs.python_version }}
+
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ github.event.inputs.python_version }}
+
+      - name: Set up pip-tools
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install pip-tools
+
+      - name: Add mypy version and update latest tag
+        run: |
+          ./add_version.sh ${{ github.event.inputs.mypy_version }}
+          ./update_latest.sh ${{ github.event.inputs.mypy_version }}
+        working-directory: ./sandbox
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Add mypy ${{ github.event.inputs.mypy_version }}
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: mypy-${{ github.event.inputs.mypy_version }}
+          delete-branch: true
+          title: Add mypy ${{ github.event.inputs.mypy_version }}
+          body: |
+            - Add mypy ${{ github.event.inputs.mypy_version }}
+            - Update latest tag
+          draft: false
