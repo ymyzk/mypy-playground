@@ -1,0 +1,49 @@
+name: Deploy Cloud Functions
+
+on:
+  workflow_dispatch:
+    inputs:
+      mypy_version:
+        description: mypy version
+        required: true
+        type: string
+      runtime:
+        description: Runtime version
+        required: true
+        type: string
+        default: python39
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  gcp-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Add mask
+        run: echo "::add-mask::${{ secrets.GCP_PROJECT }}"
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+
+      - name: Use gcloud CLI
+        run: gcloud info
+
+      - name: Deploy Cloud Function
+        run: ./deploy.sh ${{ github.event.inputs.mypy_version }}
+        working-directory: ./sandbox/cloud_functions
+        env:
+          REGION: ${{ secrets.GCP_REGION }}
+          RUNTIME: ${{ github.event.inputs.runtime }}
+          INVOKER_MEMBER: ${{ secrets.GCP_INVOKER_MEMBER }}
+          SERVICE_ACCOUNT: ${{ secrets.GCP_FUNCTION_SERVICE_ACCOUNT }}
