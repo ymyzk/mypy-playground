@@ -51,3 +51,8 @@ Configurations are considered in the following order:
 - `/api/`: APIs provided by Tornado
 - `/private/metrics`: Prometheus metrics (when enabled)
 - `/static/`: Static files
+
+## Sponsoring
+mypy Playground is looking for sponsors to host mypy-play.net using [GitHub sponsors](https://github.com/sponsors/ymyzk)
+
+Development of mypy Playground is supported by JetBrains software. See https://jb.gg/OpenSourceSupport for more details.
