@@ -12,7 +12,7 @@ on:
         description: Runtime version
         required: true
         type: string
-        default: python39
+        default: python310
 
 permissions:
   contents: read
