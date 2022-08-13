@@ -18,7 +18,7 @@ $ ./update_latest.sh 0.930
 
 ### Deploy to Cloud Functions
 ```console
-$ RUNTIME=python39 REGION=us-central1 INVOKER_MEMBER=serviceAccount:... SERVICE_ACCOUNT=... ./deploy.sh latest
+$ RUNTIME=python310 REGION=us-central1 INVOKER_MEMBER=serviceAccount:... SERVICE_ACCOUNT=... ./deploy.sh latest
 ```
 
 ### Build all Docker images
