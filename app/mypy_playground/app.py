@@ -47,7 +47,7 @@ define(
 define(
     "mypy_versions",
     type=ListPairOption,
-    default=[("mypy latest", "latest")],
+    default=[("mypy latest", "latest"), ("basedmypy 2.1.0", "basedmypy-2.1.0")],
     help="List of mypy versions used by a sandbox",
 )
 define(
