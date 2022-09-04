@@ -68,14 +68,26 @@ class Header extends React.Component {
                 <Input
                   type="select"
                   className="me-2 mb-2 mb-lg-0 w-auto"
-                  title="mypy Version"
-                  value={config.mypyVersion}
-                  onChange={(e) => onConfigChange({ mypyVersion: e.target.value })}
+                  title="tool selection"
+                  value={config.toolSelection}
+                  onChange={(e) => onConfigChange({ toolSelection: e.target.value })}
                 >
                   {
-                    context.mypyVersions.map(([name, id]) => (
-                      <option key={id} value={id}>{ name }</option>
+                    context.toolSelections.map((name) => (
+                      <option key={name} value={name}>{ name }</option>
                     ))
+                  }
+                </Input>
+                <Input
+                  type="select"
+                  className="me-2 mb-2 mb-lg-0 w-auto"
+                  title="tool version"
+                  value={config.toolVersion}
+                  onChange={(e) => onConfigChange({ version: e.target.value })}
+                >
+                  {
+                    context.toolVersions[config.toolSelection].map(([name, id]) => (
+                      <option key={id} value={id}>{ name }</option>))
                   }
                 </Input>
                 <Input

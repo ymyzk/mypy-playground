@@ -3,13 +3,14 @@ import logging
 from pathlib import Path
 import tarfile
 import time
-from typing import Any, Optional, cast
+from typing import Any, cast
 
 import aiodocker
 from tornado.options import define, options
 
-from mypy_playground.sandbox.base import AbstractSandbox, ARGUMENT_FLAGS, Result
+from mypy_playground.sandbox.base import AbstractSandbox, Result
 from mypy_playground.utils import DictOption
+from ..tools.mypy import ARGUMENT_FLAGS
 
 
 logger = logging.getLogger(__name__)
@@ -37,9 +38,9 @@ class DockerSandbox(AbstractSandbox):
         source: str,
         /,
         mypy_version: str,
-        python_version: Optional[str] = None,
+        python_version: str | None = None,
         **kwargs: Any,
-    ) -> Optional[Result]:
+    ) -> Result | None:
         start_time = time.time()
 
         docker_image = self._get_docker_image(mypy_version)
@@ -68,7 +69,7 @@ class DockerSandbox(AbstractSandbox):
         }
 
         # Using Any to suppress type errors around aiodocker
-        c: Optional[Any] = None
+        c: Any | None = None
         try:
             logger.info("creating container")
             c = await self.client.containers.create(config=config)  # type: ignore
@@ -110,5 +111,5 @@ class DockerSandbox(AbstractSandbox):
         stream.seek(0)
         return stream
 
-    def _get_docker_image(self, mypy_version_id: str) -> Optional[str]:
+    def _get_docker_image(self, mypy_version_id: str) -> str | None:
         return cast(DictOption, options.docker_images).get(mypy_version_id)

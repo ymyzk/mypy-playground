@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from tornado.options import options
 
@@ -10,7 +10,7 @@ from mypy_playground.sandbox.base import AbstractSandbox, Result
 logger = logging.getLogger(__name__)
 
 
-semaphore: Optional[asyncio.Semaphore] = None
+semaphore: asyncio.Semaphore | None = None
 
 
 def _get_semaphore() -> asyncio.Semaphore:
@@ -26,9 +26,9 @@ def _get_semaphore() -> asyncio.Semaphore:
 async def run_typecheck_in_sandbox(
     sandbox: AbstractSandbox,
     source: str,
-    semaphore: Optional[asyncio.Semaphore] = None,
+    semaphore: asyncio.Semaphore | None = None,
     **kwargs: Any
-) -> Optional[Result]:
+) -> Result | None:
     if semaphore is None:
         logger.debug("using the default semaphore")
         semaphore = _get_semaphore()

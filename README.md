@@ -31,20 +31,21 @@ Configurations are considered in the following order:
 3. Configuration file (`config.toml`)
 4. Default configurations
 
-| Name | Type | Required | Description |
-|:-----|:-----|:---------|:------------|
-| `DEBUG` | bool | No | Enable debug mode (default: False) |
-| `PORT` | int | No | Port number (default: 8080) |
-| `SANDBOX` | str | No | Sandbox implementation to use (default: `mypy_playground.sandbox.docker.DockerSandbox`) |
-| `SANDBOX_CONCURRENCY` | int | No | The number of running sandboxes at the same time (default: 3) |
-| `GA_TRACKING_ID` | str | No | A tracking id for Google Analytics. If not specified, Google Analytics is disabled. |
-| `GITHUB_TOKEN` | str | No | A token used to create gists |
-| `ENABLE_PROMETHEUS` | bool | No | Enable Prometheus metrics endpoint (default: False) |
-| `MYPY_VERSIONS` | list | No | List of mypy versions used by a sandbox (default: `mypy latest:latest`) |
-| `DOCKER_IMAGES` | list | No | Docker images used by sandbox (default: `latest:ymyzk/mypy-playground-sandbox:latest`) |
-| `CLOUD_FUNCTIONS_BASE_URL` | str | No | URL of Cloud Functions without function name |
-| `CLOUD_FUNCTIONS_NAMES` | str | No | Map from mypy version ID to name of Cloud Functions |
-| `CLOUD_FUNCTIONS_IDENTITY_TOKEN` | str | No | Identity token for development purpose |
+| Name                             | Type | Required | Description                                                                             |
+|:---------------------------------|:-----|:---------|:----------------------------------------------------------------------------------------|
+| `DEBUG`                          | bool | No | Enable debug mode (default: False)                                                      |
+| `PORT`                           | int | No | Port number (default: 8080)                                                             |
+| `SANDBOX`                        | str | No | Sandbox implementation to use (default: `mypy_playground.sandbox.docker.DockerSandbox`) |
+| `SANDBOX_CONCURRENCY`            | int | No | The number of running sandboxes at the same time (default: 3)                           |
+| `GA_TRACKING_ID`                 | str | No | A tracking id for Google Analytics. If not specified, Google Analytics is disabled.     |
+| `GITHUB_TOKEN`                   | str | No | A token used to create gists                                                            |
+| `ENABLE_PROMETHEUS`              | bool | No | Enable Prometheus metrics endpoint (default: False)                                     |
+| `TOOL_SELECTIONS`                | list | No | List of tools used by a sandbox (default: `mypy`)                                       |
+| `MYPY_VERSIONS`                  | list | No | List of mypy versions used by a sandbox (default: `mypy latest:latest`)                 |
+| `DOCKER_IMAGES`                  | list | No | Docker images used by sandbox (default: `latest:ymyzk/mypy-playground-sandbox:latest`)  |
+| `CLOUD_FUNCTIONS_BASE_URL`       | str | No | URL of Cloud Functions without function name                                            |
+| `CLOUD_FUNCTIONS_NAMES`          | str | No | Map from mypy version ID to name of Cloud Functions                                     |
+| `CLOUD_FUNCTIONS_IDENTITY_TOKEN` | str | No | Identity token for development purpose                                                  |
 
 ## Endpoints
 - `/`: Entrypoint

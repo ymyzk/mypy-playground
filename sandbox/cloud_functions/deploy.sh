@@ -11,8 +11,12 @@ cd "$(dirname "$0")"
 
 deploy() {
   VERSION="$1"
+  if [[ $VERSION =~ master|^[0-9] ]]; then
+    # We append 'mypy' to the numbered and master directories
+    VERSION="${FUNCTION_NAME_BASE}${VERSION}"
+  fi
   # We cannot use "." in a function name.
-  FUNCTION_NAME="${FUNCTION_NAME_BASE}${VERSION//./-}"
+  FUNCTION_NAME="${VERSION//./-}"
   echo "Deploying ${VERSION} as ${FUNCTION_NAME}..."
   gcloud functions deploy "${FUNCTION_NAME}" \
     --trigger-http \

@@ -2,14 +2,15 @@ import json
 import urllib.parse
 from logging import getLogger
 import time
-from typing import Any, Optional
+from typing import Any
 
 import google.auth.transport.requests
 import google.oauth2.id_token
 from tornado.httpclient import AsyncHTTPClient
 from tornado.options import define, options
 
-from mypy_playground.sandbox.base import AbstractSandbox, ARGUMENT_FLAGS, Result
+from mypy_playground.sandbox.base import AbstractSandbox, Result
+from ..tools.mypy import ARGUMENT_FLAGS
 from mypy_playground.utils import DictOption
 
 logger = getLogger(__name__)
@@ -50,16 +51,17 @@ class CloudFunctionsSandbox(AbstractSandbox):
         self,
         source: str,
         /,
-        mypy_version: str,
-        python_version: Optional[str] = None,
+        tool_selection: str,
+        tool_version: str,
+        python_version: str | None = None,
         **kwargs: Any,
-    ) -> Optional[Result]:
+    ) -> Result | None:
         start_time = time.time()
 
-        function_url = self._get_cloud_function_url(mypy_version)
+        function_url = self._get_cloud_function_url(tool_version)
         if function_url is None:
             logger.error(
-                f"cannot find a Cloud function for mypy version: {mypy_version}"
+                f"cannot find a Cloud function for {tool_selection} version: {tool_version}"
             )
             return None
 
@@ -103,7 +105,7 @@ class CloudFunctionsSandbox(AbstractSandbox):
             duration=duration,
         )
 
-    def _get_cloud_function_url(self, mypy_version_id: str) -> Optional[str]:
+    def _get_cloud_function_url(self, mypy_version_id: str) -> str | None:
         base_url = options["cloud_functions_base_url"]
         if not isinstance(base_url, str):
             return None

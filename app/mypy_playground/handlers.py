@@ -15,8 +15,8 @@ from mypy_playground.prometheus import PrometheusMixin
 from mypy_playground.sandbox import run_typecheck_in_sandbox
 from mypy_playground.sandbox.base import (
     AbstractSandbox,
-    ARGUMENT_FLAGS,
 )
+from .tools.mypy import     ARGUMENT_FLAGS
 from mypy_playground.sandbox.cloud_functions import CloudFunctionsSandbox
 from mypy_playground.sandbox.docker import DockerSandbox
 
@@ -80,15 +80,18 @@ class JsonRequestHandler(tornado.web.RequestHandler):
 
 class ContextHandler(JsonRequestHandler):
     async def get(self) -> None:
-        mypy_versions = options.mypy_versions
+        tool_selections = options.tool_selections
+        tool_versions = options.tool_versions
         default: dict[str, bool | str] = {flag: False for flag in ARGUMENT_FLAGS}
-        default["mypyVersion"] = mypy_versions[0][1]
+        default["toolSelection"] = "mypy"
+        default["toolVersion"] = tool_versions[default["toolSelection"]][0][1]
         default["pythonVersion"] = options.default_python_version
         context = {
             "defaultConfig": default,
             "initialCode": initial_code,
             "pythonVersions": options.python_versions,
-            "mypyVersions": mypy_versions,
+            "toolSelections": tool_selections,
+            "toolVersions": tool_versions,
             "flags": ARGUMENT_FLAGS,
             "gaTrackingId": options.ga_tracking_id,
         }
@@ -115,19 +118,16 @@ class TypecheckHandler(JsonRequestHandler):
             if flag_value is not None and flag_value is True:
                 args[flag] = flag_value
 
-        if mypy_version := json.get("mypyVersion"):
-            args["mypy_version"] = mypy_version
-        else:
-            # Use the first item as the default
-            args["mypy_version"] = options.mypy_versions
+        tool = args["tool_selection"] = json.get("toolSelection", "mypy")
+        args["tool_version"] = json.get("tool_version", options.tool_versions)  # TODO: get the version for the tool
 
         sandbox = self._get_sandbox()
         result = await run_typecheck_in_sandbox(sandbox, source, **args)
         if result is None:
-            logger.error("an error occurred during running type-check")
+            logger.error("an error occurred during running check")
             raise tornado.web.HTTPError(
                 HTTPStatus.INTERNAL_SERVER_ERROR,
-                log_message="an error occurred during running mypy",
+                log_message=f"an error occurred during running {tool}",
             )
 
         self.write(dataclasses.asdict(result))

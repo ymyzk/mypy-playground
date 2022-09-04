@@ -45,9 +45,15 @@ define(
     "github_token", type=str, default=None, help="GitHub API token for creating gists"
 )
 define(
-    "mypy_versions",
+    "tool_selections",
     type=ListPairOption,
-    default=[("mypy latest", "latest")],
+    default=["mypy", "basedmypy", "pylint"],
+    help="List of tools available to a sandbox",
+)
+define(
+    "tool_versions",
+    type=dict[str, ListPairOption],
+    default={"mypy": [("mypy latest", "latest")]},
     help="List of mypy versions used by a sandbox",
 )
 define(

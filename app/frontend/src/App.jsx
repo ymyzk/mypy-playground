@@ -43,7 +43,7 @@ export default class App extends Component {
     // Load configurations
     const diff = {};
     if (params.has('mypy')) {
-      diff.mypyVersion = params.get('mypy');
+      diff.version = params.get('version');
     }
     if (params.has('python')) {
       diff.pythonVersion = params.get('python');
@@ -76,8 +76,10 @@ export default class App extends Component {
     if (prevState.config !== config) {
       const flags = [];
       Object.entries(config).forEach(([k, v]) => {
-        if (k === 'mypyVersion') {
-          params.set('mypy', v);
+        if (k === 'toolSelection') {
+          params.set("tool", v);
+        } else if (k === 'toolVersion') {
+          params.set('toolVersion', v);
         } else if (k === 'pythonVersion') {
           params.set('python', v);
         } else if (v) {
