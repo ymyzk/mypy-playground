@@ -58,7 +58,7 @@ class CloudFunctionsSandbox(AbstractSandbox):
     ) -> Result | None:
         start_time = time.time()
 
-        function_url = self._get_cloud_function_url(tool_version)
+        function_url = self._get_cloud_function_url(f"{tool_selection}-{tool_version}")
         if function_url is None:
             logger.error(
                 f"cannot find a Cloud function for {tool_selection} version: {tool_version}"

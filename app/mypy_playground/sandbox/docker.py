@@ -37,20 +37,23 @@ class DockerSandbox(AbstractSandbox):
         self,
         source: str,
         /,
-        mypy_version: str,
+        tool_selection: str,
+        tool_version: str,
         python_version: str | None = None,
         **kwargs: Any,
     ) -> Result | None:
         start_time = time.time()
 
-        docker_image = self._get_docker_image(mypy_version)
+        docker_image = self._get_docker_image(f"{tool_selection}-{tool_version}")
         if docker_image is None:
-            logger.error(f"cannot find a docker image for mypy version: {mypy_version}")
+            logger.error(f"cannot find a docker image for {tool_selection} version: {tool_version}")
             return None
 
-        cmd = ["mypy", "--cache-dir", "/dev/null", "--no-site-packages"]
-        if python_version:
-            cmd += ["--python-version", f"{python_version}"]
+        cmd = [tool_selection]
+        if "mypy" in tool_selection:
+            cmd += ["--cache-dir", "/dev/null", "--no-site-packages"]
+            if python_version:
+                cmd += ["--python-version", f"{python_version}"]
         for key, value in kwargs.items():
             if key in ARGUMENT_FLAGS:
                 cmd.append(f"--{key}")
@@ -112,4 +115,5 @@ class DockerSandbox(AbstractSandbox):
         return stream
 
     def _get_docker_image(self, mypy_version_id: str) -> str | None:
+        print(options.docker_images)
         return cast(DictOption, options.docker_images).get(mypy_version_id)

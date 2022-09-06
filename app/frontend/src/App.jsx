@@ -13,7 +13,6 @@ import { parseMessages } from './utils';
 export default class App extends Component {
   constructor(props) {
     super(props);
-
     const { context } = props;
     this.state = { // eslint-disable-line react/state-in-constructor
       annotations: [],
@@ -43,7 +42,14 @@ export default class App extends Component {
     // Load configurations
     const diff = {};
     if (params.has('mypy')) {
-      diff.version = params.get('version');
+      diff.toolSelection = 'mypy';
+      diff.toolVersion = params.get('mypy');
+    }
+    if (params.has('toolSelection')) {
+      diff.toolSelection = params.get('toolSelection');
+    }
+    if (params.has('toolVersion')) {
+      diff.toolVersion = params.get('toolVersion');
     }
     if (params.has('python')) {
       diff.pythonVersion = params.get('python');
@@ -76,10 +82,11 @@ export default class App extends Component {
     if (prevState.config !== config) {
       const flags = [];
       Object.entries(config).forEach(([k, v]) => {
+        params.delete('mypy');
         if (k === 'toolSelection') {
-          params.set("tool", v);
+          params.set('tool', v);
         } else if (k === 'toolVersion') {
-          params.set('toolVersion', v);
+          params.set('version', v);
         } else if (k === 'pythonVersion') {
           params.set('python', v);
         } else if (v) {
@@ -89,6 +96,7 @@ export default class App extends Component {
       if (flags.length > 0) {
         params.set('flags', flags.join(','));
       }
+      console.log(params);
       window.history.pushState({}, '', `?${params.toString()}`);
     }
 

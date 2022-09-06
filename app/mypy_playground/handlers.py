@@ -119,7 +119,7 @@ class TypecheckHandler(JsonRequestHandler):
                 args[flag] = flag_value
 
         tool = args["tool_selection"] = json.get("toolSelection", "mypy")
-        args["tool_version"] = json.get("tool_version", options.tool_versions)  # TODO: get the version for the tool
+        args["tool_version"] = json.get("tool_version", options.tool_versions[args["tool_selection"]][0][0])
 
         sandbox = self._get_sandbox()
         result = await run_typecheck_in_sandbox(sandbox, source, **args)

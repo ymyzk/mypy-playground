@@ -19,4 +19,6 @@ pylint = [["2.15.0", "pylint-2.15.0"]]
 latest = "mypy-latest"
 
 [docker-images]
-latest = "ymyzk/mypy-playground-sandbox:latest"
+mypy-latest = "ymyzk/mypy-playground-sandbox:mypy-latest"
+"basedmypy-1.5.0" = "ymyzk/mypy-playground-sandbox:basedmypy-1.5.0"
+"pylint-2.15.0" = "ymyzk/mypy-playground-sandbox:pylint-2.15.0"
