@@ -1,0 +1,35 @@
+:root {
+    --bs-primary: #2d618c;
+    --bs-primary-rgb: 45,97,140;
+}
+
+html {
+    height: 100%;
+}
+
+header {
+    flex: 0 0;
+}
+
+#editor {
+    flex: 1 1 60%;
+}
+
+#result {
+    flex: 1 1 40%;
+    padding: 8px;
+    overflow: auto;
+    background: #eee;
+}
+
+.navbar #run {
+    background-color: #ffd343;
+    border-color: #ffd343;
+}
+
+/* We use default :focus effect now */
+.navbar #run:hover {
+    /* tint-color 15% = mix white 15% */
+    background-color: #ffda5f;
+    border-color: #ffda5f;
+}
