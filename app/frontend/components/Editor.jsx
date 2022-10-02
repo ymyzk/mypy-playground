@@ -1,8 +1,14 @@
+import dynamic from 'next/dynamic';
 import React from 'react';
-import AceEditor from 'react-ace';
-
-import 'ace-builds/src-noconflict/mode-python';
-import 'ace-builds/src-noconflict/theme-textmate';
+// Disable SSR as AceEditor needs "window"
+const AceEditor = dynamic(async () => {
+    const ace = await import('react-ace');
+    await import('ace-builds/src-noconflict/mode-python');
+    await import('ace-builds/src-noconflict/theme-textmate');
+    return ace
+  },
+  { ssr: false }
+);
 
 function Editor({
   annotations,

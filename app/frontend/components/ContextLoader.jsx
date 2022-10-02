@@ -10,14 +10,15 @@ function ContextLoader(WrappedComponent) {
 
     useEffect(() => {
       if (status !== 'init') return;
+      setStatus('loading');
       (async () => {
+        // TODO: /api/context is called 4 times on start up
         const { data } = await axios.get('/api/context');
         // Utility to add extra wait for development purpose
         // await new Promise((resolve) => setTimeout(resolve, 3000));
         setContext(data);
         setStatus('done');
       })();
-      setStatus('loading');
     }, [status]);
 
     if (status !== 'done') {

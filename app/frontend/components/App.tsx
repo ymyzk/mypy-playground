@@ -1,17 +1,26 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { Component } from 'react';
-import ReactGA from 'react-ga';
+import React from 'react';
 
-import './App.css';
-import Editor from './Editor';
-import Header from './Header';
-import Result from './Result';
 import { runTypecheck } from './api';
 import { fetchGist, shareGist } from './gist';
 import { parseMessages } from './utils';
+import Editor from './Editor';
+import Header from './Header';
+import Result from './Result';
 
-export default class App extends Component {
-  constructor(props) {
+type Props = {
+  context: any,
+};
+
+type State = {
+  annotations: any[],
+  config: { [key: string]: any },
+  context: any,
+  source: string,
+  result: any,
+}
+
+export default class App extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     const { context } = props;
@@ -34,23 +43,23 @@ export default class App extends Component {
   componentDidMount() {
     const { context } = this.state;
 
-    if (context.ga_tracking_id) {
-      ReactGA.initialize(context.ga_tracking_id);
-      ReactGA.pageview(window.location.pathname + window.location.search);
-    }
+    // if (context.ga_tracking_id) {
+    //   ReactGA.initialize(context.ga_tracking_id);
+    //   ReactGA.pageview(window.location.pathname + window.location.search);
+    // }
 
     const params = new URLSearchParams(window.location.search);
     // Load configurations
-    const diff = {};
+    const diff: { [key: string]: boolean | string } = {};
     if (params.has('mypy')) {
-      diff.mypyVersion = params.get('mypy');
+      diff.mypyVersion = params.get('mypy')!;
     }
     if (params.has('python')) {
-      diff.pythonVersion = params.get('python');
+      diff.pythonVersion = params.get('python')!;
     }
     if (params.has('flags')) {
       // eslint-disable-next-line no-restricted-syntax
-      for (const flag of params.get('flags').split(',')) {
+      for (const flag of params.get('flags')!.split(',')) {
         diff[flag] = true;
       }
     }
@@ -63,18 +72,18 @@ export default class App extends Component {
     }
     // Load gist
     if (params.has('gist')) {
-      this.fetchGist(params.get('gist'));
+      this.fetchGist(params.get('gist')!);
     }
   }
 
   // eslint-disable-next-line no-unused-vars
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate(prevProps: Props, prevState: State) {
     const { config, source } = this.state;
 
     // Push history when configuration has changed
     const params = new URLSearchParams(window.location.search);
     if (prevState.config !== config) {
-      const flags = [];
+      const flags: string[] = [];
       Object.entries(config).forEach(([k, v]) => {
         if (k === 'mypyVersion') {
           params.set('mypy', v);
@@ -87,6 +96,7 @@ export default class App extends Component {
       if (flags.length > 0) {
         params.set('flags', flags.join(','));
       }
+      console.log(flags);
       window.history.pushState({}, '', `?${params.toString()}`);
     }
 
@@ -95,11 +105,11 @@ export default class App extends Component {
     }
   }
 
-  onChange(source) {
+  onChange(source: string) {
     this.setState({ source });
   }
 
-  updateConfig(configDiff) {
+  updateConfig(configDiff: any) {
     this.setState((prevState) => ({
       config: {
         ...prevState.config,
@@ -154,7 +164,7 @@ export default class App extends Component {
     }
   }
 
-  async fetchGist(gistId) {
+  async fetchGist(gistId: string) {
     this.setState({ result: { status: 'fetching_gist' } });
     try {
       const { source } = await fetchGist(gistId);
@@ -180,15 +190,15 @@ export default class App extends Component {
     return (
       <div className="App d-flex flex-flow flex-column vh-100">
         <Header
-          context={context}
-          config={config}
-          status={result.status}
-          onGistClick={this.shareGist}
-          onRunClick={this.run}
-          onConfigChange={this.updateConfig}
+            context={context}
+            config={config}
+            status={result.status}
+            onGistClick={this.shareGist}
+            onRunClick={this.run}
+            onConfigChange={this.updateConfig}
         />
         <Editor
-          onChange={this.onChange}
+          onChange={() => {}}
           annotations={annotations}
           source={source}
         />
