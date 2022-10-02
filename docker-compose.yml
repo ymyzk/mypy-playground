@@ -15,9 +15,12 @@ services:
 
   frontend:
     build: app/frontend
+    ports:
+      - 127.0.0.1:3000:3000
     volumes:
-      - ./app/frontend:/app
-      - ./app/static:/static
+      - ./app/frontend/components:/app/components
+      - ./app/frontend/pages:/app/pages
+      - ./app/frontend/styles:/app/styles
 
   docker:
     image: docker:20.10-dind

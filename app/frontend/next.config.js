@@ -5,7 +5,8 @@ const nextConfig = {
     fallback: [
       {
         source: "/api/:path*",
-        destination: "http://127.0.0.1:8080/api/:path*"
+        // TODO: this is for local Docker development only
+        destination: "http://app:8080/api/:path*"
       }
     ]
   }),
