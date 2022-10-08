@@ -10,6 +10,9 @@
     "test:ci": "jest --ci",
     "lint": "next lint"
   },
+  "engines": {
+    "node": ">=16"
+  },
   "dependencies": {
     "ace-builds": "^1.4.13",
     "axios": "^0.26.0",
