@@ -198,7 +198,7 @@ export default class App extends React.Component<Props, State> {
             onConfigChange={this.updateConfig}
         />
         <Editor
-          onChange={() => {}}
+          onChange={this.onChange}
           annotations={annotations}
           source={source}
         />
