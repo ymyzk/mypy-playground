@@ -44,7 +44,7 @@ jobs:
       run: |
         npm run build
         npm run lint
-      # npm run test
+        npm run test:ci
       working-directory: ./app/frontend
 
   build_docker_images:

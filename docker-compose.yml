@@ -21,6 +21,7 @@ services:
       - ./app/frontend/components:/app/components
       - ./app/frontend/pages:/app/pages
       - ./app/frontend/styles:/app/styles
+      - ./app/frontend/utils:/app/utils
 
   docker:
     image: docker:20.10-dind

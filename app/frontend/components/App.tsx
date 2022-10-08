@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { runTypecheck } from './api';
-import { fetchGist, shareGist } from './gist';
-import { parseMessages } from './utils';
+import { runTypecheck } from '../utils/api';
+import { fetchGist, shareGist } from '../utils/gist';
+import { parseMessages } from '../utils/utils';
 import Editor from './Editor';
 import Header from './Header';
 import Result from './Result';
