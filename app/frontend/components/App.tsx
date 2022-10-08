@@ -96,7 +96,6 @@ export default class App extends React.Component<Props, State> {
       if (flags.length > 0) {
         params.set('flags', flags.join(','));
       }
-      console.log(flags);
       window.history.pushState({}, '', `?${params.toString()}`);
     }
 
@@ -198,7 +197,7 @@ export default class App extends React.Component<Props, State> {
             onConfigChange={this.updateConfig}
         />
         <Editor
-          onChange={() => {}}
+          onChange={this.onChange}
           annotations={annotations}
           source={source}
         />
