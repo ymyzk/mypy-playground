@@ -96,7 +96,6 @@ export default class App extends React.Component<Props, State> {
       if (flags.length > 0) {
         params.set('flags', flags.join(','));
       }
-      console.log(flags);
       window.history.pushState({}, '', `?${params.toString()}`);
     }
 
