@@ -1,7 +1,14 @@
 import axios from 'axios';
 
-// eslint-disable-next-line import/prefer-default-export
-export async function runTypecheck(data) {
+type Request = { [key: string]: any };
+type Response = {
+    "exit_code": number,
+    "stdout": string,
+    "stderr":string,
+    "duration": number,
+}
+
+export async function runTypecheck(data: Request): Promise<Response> {
   const response = await axios.post('/api/typecheck', data, {
     headers: {
       'Content-Type': 'application/json',
