@@ -10,11 +10,17 @@ const AceEditor = dynamic(async () => {
   { ssr: false }
 );
 
+type Props = {
+  annotations: any[],
+  onChange: any,
+  source: string,
+}
+
 function Editor({
   annotations,
   onChange,
   source,
-}) {
+}: Props): JSX.Element {
   return (
     <AceEditor
       name="editor"

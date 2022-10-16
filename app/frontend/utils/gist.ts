@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export async function shareGist(source) {
+export async function shareGist(source: string): Promise<{ gistId: string, gistUrl: string }> {
   const { data } = await axios.post('/api/gist', { source }, {
     validateStatus(status) {
       return status === 201;
@@ -12,7 +12,7 @@ export async function shareGist(source) {
   };
 }
 
-export async function fetchGist(gistId) {
+export async function fetchGist(gistId: string): Promise<{ source: string }> {
   const response = await axios.get(`https://api.github.com/gists/${gistId}`, {
     validateStatus(status) {
       return status === 200;

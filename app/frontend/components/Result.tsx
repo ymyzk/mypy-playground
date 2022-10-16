@@ -1,11 +1,21 @@
 import React from 'react';
 
-function Result({ result }) {
+type Props = {
+    result: {
+        status: string,
+        message?: string,
+        result?: any,
+        gistUrl?: string,
+        playgroundUrl?: string,
+    },
+}
+
+function Result({ result }: Props): JSX.Element {
   switch (result.status) {
     case 'ready':
-      return 'Welcome to mypy Playground!';
+        return <span>Welcome to mypy Playground!</span>;
     case 'running':
-      return 'Running...';
+        return <span>Running...</span>
     case 'succeeded':
     {
       const succeeded = (
@@ -38,11 +48,11 @@ function Result({ result }) {
       );
     }
     case 'failed':
-      return `Error: ${result.message}`;
+        return <span>Error: { result.message }</span>;
     case 'creating_gist':
-      return 'Creating a gist...';
+        return <span>Creating a gist...</span>;
     case 'fetching_gist':
-      return 'Fetching a gist...';
+        return <span>Fetching a gist...</span>;
     case 'created_gist':
     {
       const { gistUrl, playgroundUrl } = result;
@@ -59,13 +69,13 @@ function Result({ result }) {
       );
     }
     case 'fetched_gist':
-      return 'Successfully loaded the Gist!';
+        return <span>Successfully loaded the Gist!</span>;
     default:
-      return `Unexpected error: ${result}`;
+        return <span>Unexpected error: {JSON.stringify(result)}</span>;
   }
 }
 
-export default function ResultWrapper({ result }) {
+export default function ResultWrapper({ result }: Props): JSX.Element {
   return (
     <div id="result">
       <Result result={result} />

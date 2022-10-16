@@ -17,16 +17,33 @@ import {
   NavbarToggler,
 } from 'reactstrap';
 
-class Header extends React.Component {
+type Props = {
+  context: any,
+  config: any,
+  status: any,
+  onGistClick: any,
+  onRunClick: any,
+  onConfigChange: any,
+};
+
+type State = {
+  aboutIsOpen: boolean,
+  navbarIsOpen: boolean,
+  optionsIsOpen: boolean,
+};
+
+class Header extends React.Component<Props, State> {
   state = {
     aboutIsOpen: false,
     navbarIsOpen: false,
     optionsIsOpen: false,
   };
 
-  toggle(name) {
+  toggle(name: string) {
     const stateName = `${name}IsOpen`;
+    // @ts-ignore
     this.setState((prevState) => ({
+      // @ts-ignore
       [stateName]: !prevState[stateName],
     }));
   }
@@ -73,7 +90,7 @@ class Header extends React.Component {
                   onChange={(e) => onConfigChange({ mypyVersion: e.target.value })}
                 >
                   {
-                    context.mypyVersions.map(([name, id]) => (
+                    context.mypyVersions.map(([name, id]: any) => (
                       <option key={id} value={id}>{ name }</option>
                     ))
                   }
@@ -86,7 +103,7 @@ class Header extends React.Component {
                   onChange={(e) => onConfigChange({ pythonVersion: e.target.value })}
                 >
                   {
-                    context.pythonVersions.map((ver) => (
+                    context.pythonVersions.map((ver: any) => (
                       <option key={ver} value={ver}>
                         Python
                         { ' ' }
@@ -123,7 +140,7 @@ class Header extends React.Component {
                   flagsColumns.map((flags) => (
                     <Col md={6} key={flags[0]}>
                       {
-                        flags.map((flag) => (
+                        flags.map((flag: any) => (
                           <FormGroup check key={flag}>
                             <Input
                               type="checkbox"

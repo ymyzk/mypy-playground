@@ -2,8 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Spinner } from 'reactstrap';
 
-function ContextLoader(WrappedComponent) {
-  return function ContextLoaderWrapper(props) {
+function ContextLoader(WrappedComponent: any) {
+  return function ContextLoaderWrapper(props: any) {
     const [context, setContext] = useState({});
     // State transition: init -> loading -> done
     const [status, setStatus] = useState('init');
