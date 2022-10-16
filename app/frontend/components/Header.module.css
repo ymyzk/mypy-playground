@@ -1,0 +1,15 @@
+.header {
+    flex: 0 0;
+}
+
+.run {
+    background-color: #ffd343;
+    border-color: #ffd343;
+}
+
+/* We use default :focus effect now */
+.run:hover {
+    /* tint-color 15% = mix white 15% */
+    background-color: #ffda5f;
+    border-color: #ffda5f;
+}

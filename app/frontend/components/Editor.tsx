@@ -1,5 +1,8 @@
 import dynamic from 'next/dynamic';
 import React from 'react';
+
+import styles from './Editor.module.css';
+
 // Disable SSR as AceEditor needs "window"
 const AceEditor = dynamic(async () => {
     const ace = await import('react-ace');
@@ -22,20 +25,22 @@ function Editor({
   source,
 }: Props): JSX.Element {
   return (
-    <AceEditor
-      name="editor"
-      mode="python"
-      theme="textmate"
-      fontSize={14}
-      annotations={annotations}
-      onChange={onChange}
-      value={source}
-      width="auto"
-      height="auto"
-      editorProps={{
-        $blockScrolling: true,
-      }}
-    />
+      <div className={styles.editor}>
+          <AceEditor
+              name="editor"
+              mode="python"
+              theme="textmate"
+              fontSize={14}
+              annotations={annotations}
+              onChange={onChange}
+              value={source}
+              width="100%"
+              height="100%"
+              editorProps={{
+                  $blockScrolling: true,
+              }}
+          />
+      </div>
   );
 }
 
