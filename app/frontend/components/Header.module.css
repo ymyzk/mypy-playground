@@ -13,3 +13,7 @@
     background-color: #ffda5f;
     border-color: #ffda5f;
 }
+
+.optionsModal {
+     max-width: 560px;
+}
