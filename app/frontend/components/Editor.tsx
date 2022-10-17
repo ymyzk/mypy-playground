@@ -1,3 +1,4 @@
+import { Ace } from 'ace-builds';
 import dynamic from 'next/dynamic';
 import React from 'react';
 
@@ -14,7 +15,7 @@ const AceEditor = dynamic(async () => {
 );
 
 type Props = {
-  annotations: any[],
+  annotations: Ace.Annotation[],
   onChange: any,
   source: string,
 }

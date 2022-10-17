@@ -1,9 +1,4 @@
-type Message = {
-  row: number;
-  column?: number;
-  type: string;
-  text: string;
-}
+import { Ace } from "ace-builds";
 
 function getTypeFromLevel(level: string): string {
   const levelToType: { [key: string]: string } = {
@@ -18,7 +13,8 @@ function notNull<T>(value: T | null): value is T {
   return value !== null;
 }
 
-export function parseMessages(stdout: string): Message[] {
+// TODO: Should we parse messages on the server-side instead?
+export function parseMessages(stdout: string): Ace.Annotation[] {
   const matcher: RegExp = /^main\.py:(\d+):(\d+:)? (\w+): (.+)/;
   return stdout.split('\n').map((m) => {
     const match = m.match(matcher);

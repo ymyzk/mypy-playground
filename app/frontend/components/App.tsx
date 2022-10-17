@@ -1,3 +1,4 @@
+import { Ace } from 'ace-builds';
 import React from 'react';
 
 import { runTypecheck } from '../utils/api';
@@ -12,7 +13,7 @@ type Props = {
 };
 
 type State = {
-  annotations: any[],
+  annotations: Ace.Annotation[],
   config: { [key: string]: any },
   context: any,
   source: string,

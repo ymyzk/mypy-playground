@@ -4,7 +4,7 @@ type Request = { [key: string]: any };
 type Response = {
     "exit_code": number,
     "stdout": string,
-    "stderr":string,
+    "stderr": string,
     "duration": number,
 }
 
