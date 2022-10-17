@@ -1,5 +1,7 @@
 import React from 'react';
 
+import styles from './Result.module.css';
+
 type Props = {
     result: {
         status: string,
@@ -77,7 +79,7 @@ function Result({ result }: Props): JSX.Element {
 
 export default function ResultWrapper({ result }: Props): JSX.Element {
   return (
-    <div id="result">
+    <div className={styles.result}>
       <Result result={result} />
     </div>
   );

@@ -17,6 +17,8 @@ import {
   NavbarToggler,
 } from 'reactstrap';
 
+import styles from './Header.module.css';
+
 type Props = {
   context: any,
   config: any,
@@ -70,7 +72,7 @@ class Header extends React.Component<Props, State> {
     ];
 
     return (
-      <header>
+      <header className={styles.header}>
         <Navbar color="primary" dark expand="lg">
           {/* .mb-0 is for overriding margin by .h1 */}
           <NavbarBrand href="/" className="h1 mb-0">mypy Playground</NavbarBrand>
@@ -78,7 +80,7 @@ class Header extends React.Component<Props, State> {
           <Collapse navbar isOpen={navbarIsOpen}>
             <Nav navbar className="me-auto my-2 my-lg-0">
               <Form className="d-flex flex-wrap flex-md-nowrap">
-                <Button color="light" className="me-2 mb-2 mb-lg-0" id="run" disabled={status === 'running'} onClick={onRunClick}>Run</Button>
+                <Button color="light" className={`me-2 mb-2 mb-lg-0 ${styles.run}`} disabled={status === 'running'} onClick={onRunClick}>Run</Button>
                 <Button color="light" className="me-2 mb-2 mb-lg-0" disabled={status === 'creating_gist'} onClick={onGistClick}>Gist</Button>
                 {/* Using w-auto for <Input type="select"> to override "width: 100%" set by
                     the form-select class. */}

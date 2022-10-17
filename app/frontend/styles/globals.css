@@ -1,0 +1,8 @@
+:root {
+    --bs-primary: #2d618c;
+    --bs-primary-rgb: 45,97,140;
+}
+
+html {
+    height: 100%;
+}
