@@ -1,4 +1,4 @@
-FROM python:3.9-slim AS dependencies
+FROM python:3.11-slim AS dependencies
 
 WORKDIR /tmp
 COPY ./requirements.txt /tmp/
