@@ -30,13 +30,13 @@ define(
 define(
     "default_python_version",
     type=str,
-    default="3.10",
+    default="3.11",
     help="Default Python version",
 )
 define(
     "python_versions",
     type=str,
-    default=["3.11", "3.10", "3.9", "3.8", "3.7", "3.6", "3.5", "3.4", "2.7"],
+    default=["3.12", "3.11", "3.10", "3.9", "3.8", "3.7", "3.6", "3.5", "3.4", "2.7"],
     multiple=True,
     help="Python versions",
 )
