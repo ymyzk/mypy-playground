@@ -1,6 +1,7 @@
 import { Ace } from 'ace-builds';
 import React from 'react';
 
+import axios from 'axios';
 import { runTypecheck } from '../utils/api';
 import { fetchGist, shareGist } from '../utils/gist';
 import { parseMessages } from '../utils/utils';
@@ -136,7 +137,8 @@ export default class App extends React.Component<Props, State> {
         annotations: parseMessages(result.stdout),
       });
     } catch (error) {
-      this.setState({ result: { status: 'failed', message: error } });
+      const message = axios.isAxiosError(error) ? error.message : `${error}`;
+      this.setState({ result: { status: 'failed', message, } });
     }
   }
 
