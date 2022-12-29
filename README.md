@@ -13,8 +13,8 @@
 - Share snippets with your friends using GitHub Gist
 
 ## Development
-1. Run `docker-compose up -d` to start an app and Docker for running mypy
-2. Run `docker-compose exec docker docker build --pull -t ymyzk/mypy-playground-sandbox:latest /sandbox/latest` to build a Docker image
+1. Run `docker compose up -d` to start an app and Docker for running mypy
+2. Run `docker compose exec docker docker build --pull -t ymyzk/mypy-playground-sandbox:latest /sandbox/latest` to build a Docker image
 3. Open http://localhost:3000
 
 ## Components
