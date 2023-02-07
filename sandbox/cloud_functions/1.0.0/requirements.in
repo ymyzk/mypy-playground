@@ -1,0 +1,2 @@
+mypy[python2]==1.0.0
+typing-extensions
