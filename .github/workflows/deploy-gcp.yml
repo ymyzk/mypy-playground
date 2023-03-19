@@ -1,6 +1,9 @@
 name: Deploy Cloud Functions
 
 on:
+  schedule:
+    # 00:00 (UTC)
+    - cron: "00 00 * * *"
   workflow_dispatch:
     inputs:
       mypy_version:
@@ -17,6 +20,10 @@ on:
 permissions:
   contents: read
   id-token: write
+
+env:
+  MYPY_VERSION: ${{ github.event.inputs.mypy_version || 'master' }}
+  RUNTIME: ${{ github.event.inputs.runtime || 'python310' }}
 
 jobs:
   gcp-deploy:
@@ -41,10 +48,10 @@ jobs:
         run: gcloud info
 
       - name: Deploy Cloud Function
-        run: ./deploy.sh ${{ github.event.inputs.mypy_version }}
+        run: ./deploy.sh ${{ env.MYPY_VERSION }}
         working-directory: ./sandbox/cloud_functions
         env:
           REGION: ${{ secrets.GCP_REGION }}
-          RUNTIME: ${{ github.event.inputs.runtime }}
+          RUNTIME: ${{ env.RUNTIME }}
           INVOKER_MEMBER: ${{ secrets.GCP_INVOKER_MEMBER }}
           SERVICE_ACCOUNT: ${{ secrets.GCP_FUNCTION_SERVICE_ACCOUNT }}
