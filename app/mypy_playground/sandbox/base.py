@@ -15,6 +15,7 @@ ARGUMENT_FLAGS_NORMAL = (
     "scripts-are-modules",
     "show-column-numbers",
     "show-error-codes",
+    "enable-recursive-aliases",
 )
 
 ARGUMENT_FLAGS_STRICT = (
