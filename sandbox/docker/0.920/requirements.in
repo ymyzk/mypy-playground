@@ -1,2 +1,1 @@
-mypy[python2]==0.920
-typing-extensions
+../../common/0.920/requirements.in
