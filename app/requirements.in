@@ -4,4 +4,4 @@ google-auth
 prometheus_client<1
 requests  # Until google-auth supports asyncio
 tomli
-tornado>=6.0.0,<7.0.0
+tornado>=6,<7
