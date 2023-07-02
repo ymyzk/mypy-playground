@@ -16,6 +16,8 @@ ARGUMENT_FLAGS_NORMAL = (
     "show-column-numbers",
     "show-error-codes",
     "enable-recursive-aliases",
+    "implicit-optional",
+    "new-type-inference",
 )
 
 ARGUMENT_FLAGS_STRICT = (
@@ -33,7 +35,6 @@ ARGUMENT_FLAGS_STRICT = (
     "disallow-untyped-calls",
     "disallow-untyped-decorators",
     "disallow-untyped-defs",
-    "no-implicit-optional",
     "no-implicit-reexport",
     "local-partial-types",
     "no-strict-optional",
