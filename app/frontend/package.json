@@ -17,7 +17,7 @@
     "ace-builds": "^1.23.0",
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
-    "next": "^13.3.4",
+    "next": "^13.4.8",
     "prop-types": "^15.7.2",
     "react": "^18.2.0",
     "react-ace": "^10.0.0",
