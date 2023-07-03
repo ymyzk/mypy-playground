@@ -1,2 +1,2 @@
-mypy[python2]==1.1.1
+mypy==1.1.1
 typing-extensions
