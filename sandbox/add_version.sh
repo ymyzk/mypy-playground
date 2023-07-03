@@ -26,7 +26,7 @@ set -x
 
 mkdir "$cloud_functions_dir"
 cd "$cloud_functions_dir"
-echo "mypy[python2]==${version}
+echo "mypy==${version}
 typing-extensions" > "requirements.in"
 pip-compile
 ln -s ../main.py ./
@@ -36,7 +36,7 @@ mkdir "$docker_dir"
 cd "$docker_dir"
 cp "${cloud_functions_dir}/requirements.in" ./
 cp "${cloud_functions_dir}/requirements.txt" ./
-echo 'FROM python:3.10-slim
+echo 'FROM python:3.11-slim
 
 WORKDIR /tmp
 COPY ./requirements.txt /tmp/
