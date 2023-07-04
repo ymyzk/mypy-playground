@@ -24,7 +24,7 @@ services:
       - ./app/frontend/utils:/app/utils
 
   docker:
-    image: docker:20.10-dind
+    image: docker:24-dind
     privileged: true
     environment:
       DOCKER_TLS_CERT_DIR: /certs
