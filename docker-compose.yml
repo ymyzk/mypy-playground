@@ -24,9 +24,10 @@ services:
       - ./app/frontend/utils:/app/utils
 
   docker:
-    image: docker:24-dind
+    image: docker:24-dind-rootless
     privileged: true
     environment:
+      DOCKER_HOST: unix:///run/user/1000/docker.sock
       DOCKER_TLS_CERT_DIR: /certs
     volumes:
       - docker_certs:/certs
