@@ -11,7 +11,7 @@
     "lint": "next lint"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "dependencies": {
     "ace-builds": "^1.23.3",
