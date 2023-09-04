@@ -30,7 +30,7 @@ jobs:
           MYPY_VERSION: ${{ github.event.inputs.mypy_version }}
           PYTHON_VERSION: ${{ github.event.inputs.python_version }}
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
