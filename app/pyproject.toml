@@ -1,3 +1,42 @@
+[project]
+name = "mypy-playground"
+requires-python = ">=3.11"
+
+dependencies = [
+    "aiodocker>=0.13.0,<1.0",
+    "dataclasses",
+    "google-auth",
+    "prometheus_client<1",
+    "requests",  # Until google-auth supports asyncio
+    "tornado>=6,<7",
+]
+
+[tool.pdm.dev-dependencies]
+test = [
+    "mypy",
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "pytest-randomly",
+    "pytest-tornado",
+    "types-chardet",
+    "types-mock",
+    "types-setuptools",
+    "types-toml",
+]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pyprojectx]
+pdm = "pdm==2.9.3"
+
+[tool.pyprojectx.aliases]
+check = [
+    "mypy .",
+]
+
 [tool.mypy]
 python_version = '3.11'
 strict = true
