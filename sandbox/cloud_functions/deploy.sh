@@ -11,8 +11,13 @@ cd "$(dirname "$0")"
 
 deploy() {
   VERSION="$1"
-  # We cannot use "." in a function name.
-  FUNCTION_NAME="${FUNCTION_NAME_BASE}${VERSION//./-}"
+  if [[ $VERSION == basedmypy* ]]; then
+    # We cannot use "." in a function name.
+    FUNCTION_NAME="${VERSION//./-}"
+  else
+    # We cannot use "." in a function name.
+    FUNCTION_NAME="${FUNCTION_NAME_BASE}${VERSION//./-}"
+  fi
   echo "Deploying ${VERSION} as ${FUNCTION_NAME}..."
   gcloud functions deploy "${FUNCTION_NAME}" \
     --trigger-http \
