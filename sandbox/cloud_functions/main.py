@@ -1,7 +1,7 @@
 """
 Wrapper to run mypy on Cloud Functions.
 
-This module should be able to run on Python 3.7 and later.
+This module should be able to run on Python 3.8 and later.
 """
 
 import subprocess
