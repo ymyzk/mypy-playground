@@ -1,5 +1,5 @@
 name: CI
-on: [push]
+on: [push, pull_request]
 env:
   APP_IMAGE_NAME: ymyzk/mypy-playground
   SANDBOX_IMAGE_NAME: ymyzk/mypy-playground-sandbox
@@ -53,6 +53,7 @@ jobs:
       - test_app
       - test_frontend
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
       - run: docker version
