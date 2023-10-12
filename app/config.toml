@@ -5,7 +5,7 @@ default-python-version = "3.11"
 python-versions = ["3.9", "3.10", "3.11"]
 mypy-versions = [
     ["mypy latest", "latest"],
-    ["basedmypy 2.1.0", "basedmypy-2.1.0"],
+    ["basedmypy latest", "basedmypy-latest"],
 ]
 
 # Example to use Cloud Functions
@@ -16,8 +16,8 @@ cloud-functions-identity-token = "TOKEN"
 
 [cloud-functions-names]
 latest = "mypy-latest"
-"basedmypy 2.1.0" = "basedmypy-2.1.0"
+"basedmypy latest" = "basedmypy-latest"
 
 [docker-images]
 latest = "ymyzk/mypy-playground-sandbox:latest"
-"basedmypy 2.1.0" = "ymyzk/mypy-playground-sandbox:basedmypy-2.1.0"
+"basedmypy latest" = "ymyzk/mypy-playground-sandbox:basedmypy-latest"
