@@ -34,7 +34,7 @@ define(
 define(
     "default_python_version",
     type=str,
-    default="3.11",
+    default="3.12",
     help="Default Python version",
 )
 define(

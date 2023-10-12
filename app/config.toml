@@ -1,8 +1,8 @@
 debug = "1"
 enable-prometheus = "1"
 
-default-python-version = "3.11"
-python-versions = ["3.9", "3.10", "3.11"]
+default-python-version = "3.12"
+python-versions = ["3.9", "3.10", "3.11", "3.12"]
 mypy-versions = [
     ["mypy latest", "latest"],
     ["basedmypy latest", "basedmypy-latest"],
