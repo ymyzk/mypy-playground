@@ -6,6 +6,8 @@ env:
   DOCKER_BUILDKIT: 1
 jobs:
   test_app:
+    needs:
+      - test_frontend
     name: Test app
     runs-on: ubuntu-latest
     strategy:
@@ -13,6 +15,10 @@ jobs:
         python-version: ['3.11']
     steps:
     - uses: actions/checkout@v4
+    - uses: actions/download-artifact@v3
+      with:
+        name: frontend
+        path: app/static
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
@@ -46,6 +52,10 @@ jobs:
         npm run lint
         npm run test:ci
       working-directory: ./app/frontend
+    - uses: actions/upload-artifact@v3
+      with:
+        name: frontend
+        path: app/frontend/out
 
   build_docker_images:
     name: Build and push Docker images
