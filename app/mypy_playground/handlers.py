@@ -1,25 +1,24 @@
 import dataclasses
-from http import HTTPStatus
 import json
 import logging
 import traceback
+from http import HTTPStatus
 from typing import Any, cast
 
-from prometheus_client import exposition
 import tornado.escape
-from tornado.options import options
 import tornado.web
+from prometheus_client import exposition
+from tornado.options import options
 
 from mypy_playground import gist
 from mypy_playground.prometheus import PrometheusMixin
 from mypy_playground.sandbox import run_typecheck_in_sandbox
 from mypy_playground.sandbox.base import (
-    AbstractSandbox,
     ARGUMENT_FLAGS,
+    AbstractSandbox,
 )
 from mypy_playground.sandbox.cloud_functions import CloudFunctionsSandbox
 from mypy_playground.sandbox.docker import DockerSandbox
-
 
 logger = logging.getLogger(__name__)
 initial_code = """from typing import Iterator

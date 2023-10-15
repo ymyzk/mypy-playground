@@ -1,9 +1,8 @@
-from typing import Any, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Optional
 
 import tornado
-from prometheus_client import Counter, Histogram, REGISTRY
+from prometheus_client import REGISTRY, Counter, Histogram
 from tornado.web import RequestHandler
-
 
 _NAMESPACE = "mypy_play"
 _SUB_SYSTEM = "http"

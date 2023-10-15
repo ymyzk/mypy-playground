@@ -2,13 +2,12 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from tornado.options import define, options
 import tornado.web
+from tornado.options import define, options
 
 from mypy_playground import handlers
 from mypy_playground.prometheus import PrometheusMixin
 from mypy_playground.utils import ListPairOption
-
 
 logger = logging.getLogger(__name__)
 root_dir = Path(__file__).parents[1]

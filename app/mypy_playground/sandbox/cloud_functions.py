@@ -1,7 +1,7 @@
 import json
+import time
 import urllib.parse
 from logging import getLogger
-import time
 from typing import Any, Optional
 
 import google.auth.transport.requests
@@ -9,7 +9,7 @@ import google.oauth2.id_token
 from tornado.httpclient import AsyncHTTPClient
 from tornado.options import define, options
 
-from mypy_playground.sandbox.base import AbstractSandbox, ARGUMENT_FLAGS, Result
+from mypy_playground.sandbox.base import ARGUMENT_FLAGS, AbstractSandbox, Result
 from mypy_playground.utils import DictOption
 
 logger = getLogger(__name__)

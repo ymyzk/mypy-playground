@@ -3,7 +3,6 @@ import json
 from tornado.httpclient import AsyncHTTPClient
 from tornado.options import options
 
-
 API_ENDPOINT = "https://api.github.com/gists"
 
 

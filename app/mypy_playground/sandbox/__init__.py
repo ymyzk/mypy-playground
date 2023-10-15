@@ -6,7 +6,6 @@ from tornado.options import options
 
 from mypy_playground.sandbox.base import AbstractSandbox, Result
 
-
 logger = logging.getLogger(__name__)
 
 

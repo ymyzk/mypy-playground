@@ -1,16 +1,15 @@
-from io import BytesIO
 import logging
-from pathlib import Path
 import tarfile
 import time
+from io import BytesIO
+from pathlib import Path
 from typing import Any, Optional, cast
 
 import aiodocker
 from tornado.options import define, options
 
-from mypy_playground.sandbox.base import AbstractSandbox, ARGUMENT_FLAGS, Result
+from mypy_playground.sandbox.base import ARGUMENT_FLAGS, AbstractSandbox, Result
 from mypy_playground.utils import DictOption
-
 
 logger = logging.getLogger(__name__)
 
