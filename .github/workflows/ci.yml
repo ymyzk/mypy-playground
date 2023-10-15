@@ -1,5 +1,9 @@
 name: CI
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 env:
   APP_IMAGE_NAME: ymyzk/mypy-playground
   SANDBOX_IMAGE_NAME: ymyzk/mypy-playground-sandbox
@@ -63,7 +67,7 @@ jobs:
       - test_app
       - test_frontend
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v4
       - run: docker version
@@ -72,22 +76,17 @@ jobs:
       - name: Build app image for production
         run: docker build --pull -t app:latest -f ./app/Dockerfile-prod ./app
       - name: Build latest Docker sandbox image
-        if: github.ref != 'refs/heads/master'
         run: docker build -t sandbox:latest ./sandbox/docker/latest
       - name: Build Docker sandbox images
-        if: github.ref == 'refs/heads/master'
         run: ./sandbox/docker/build.sh $SANDBOX_IMAGE_NAME
       - name: Login to Docker Hub
-        if: github.ref == 'refs/heads/master'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
       - name: Push app image
-        if: github.ref == 'refs/heads/master'
         run: |
           docker tag app:latest $APP_IMAGE_NAME:latest
           docker push $APP_IMAGE_NAME:latest
       - name: Push Docker sandbox images
-        if: github.ref == 'refs/heads/master'
         run: ./sandbox/docker/push.sh $SANDBOX_IMAGE_NAME
