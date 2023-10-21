@@ -20,6 +20,7 @@ services:
     volumes:
       - ./app/frontend/components:/app/components
       - ./app/frontend/pages:/app/pages
+      - ./app/frontend/public:/app/public
       - ./app/frontend/styles:/app/styles
       - ./app/frontend/utils:/app/utils
 
