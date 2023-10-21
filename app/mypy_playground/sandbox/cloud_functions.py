@@ -9,7 +9,12 @@ import google.oauth2.id_token
 from tornado.httpclient import AsyncHTTPClient
 from tornado.options import define, options
 
-from mypy_playground.sandbox.base import ARGUMENT_FLAGS, AbstractSandbox, Result
+from mypy_playground.sandbox.base import (
+    ARGUMENT_FLAGS,
+    ARGUMENT_MULTI_SELECT_OPTIONS,
+    AbstractSandbox,
+    Result,
+)
 from mypy_playground.utils import DictOption
 
 logger = getLogger(__name__)
@@ -71,6 +76,9 @@ class CloudFunctionsSandbox(AbstractSandbox):
         for key, value in kwargs.items():
             if key in ARGUMENT_FLAGS:
                 args.append(f"--{key}")
+            if key in ARGUMENT_MULTI_SELECT_OPTIONS:
+                for v in value:
+                    args.append(f"--{key}={v}")
 
         data = {
             "source": source,

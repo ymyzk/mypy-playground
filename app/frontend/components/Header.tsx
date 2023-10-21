@@ -18,6 +18,7 @@ import {
 } from 'reactstrap';
 
 import styles from './Header.module.css';
+import MultiSelectOption from "./MultiSelectOption";
 
 type Props = {
   context: any,
@@ -161,6 +162,13 @@ class Header extends React.Component<Props, State> {
                       }
                     </Col>
                   ))
+                }
+              </FormGroup>
+              <FormGroup>
+                {
+                  Object
+                    .entries(context.multiSelectOptions)
+                    .map(([k, v]: any) => <MultiSelectOption key={k} name={k} choices={v} values={config[k]} onConfigChange={onConfigChange} />)
                 }
               </FormGroup>
             </Form>
