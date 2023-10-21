@@ -15,7 +15,7 @@ type Props = {
 
 type State = {
   annotations: Ace.Annotation[],
-  config: { [key: string]: any },
+  config: { [key: string]: boolean | string | string[] },
   context: any,
   source: string,
   result: any,
@@ -52,13 +52,19 @@ export default class App extends React.Component<Props, State> {
 
     const params = new URLSearchParams(window.location.search);
     // Load configurations
-    const diff: { [key: string]: boolean | string } = {};
+    const diff: { [key: string]: boolean | string | string[] } = {};
     if (params.has('mypy')) {
       diff.mypyVersion = params.get('mypy')!;
     }
     if (params.has('python')) {
       diff.pythonVersion = params.get('python')!;
     }
+    Object.entries(context.multiSelectOptions).forEach(([option, choices]: any) => {
+      if (params.has(option)) {
+        const values = params.get(option)?.split(",") || [];
+        diff[option] = values.filter(v => choices.includes(v));
+      }
+    });
     if (params.has('flags')) {
       // eslint-disable-next-line no-restricted-syntax
       for (const flag of params.get('flags')!.split(',')) {
@@ -80,17 +86,23 @@ export default class App extends React.Component<Props, State> {
 
   // eslint-disable-next-line no-unused-vars
   componentDidUpdate(prevProps: Props, prevState: State) {
-    const { config, source } = this.state;
+    const { config, context, source } = this.state;
 
     // Push history when configuration has changed
     const params = new URLSearchParams(window.location.search);
     if (prevState.config !== config) {
       const flags: string[] = [];
       Object.entries(config).forEach(([k, v]) => {
-        if (k === 'mypyVersion') {
+        if (k === 'mypyVersion' && typeof v == 'string') {
           params.set('mypy', v);
-        } else if (k === 'pythonVersion') {
+        } else if (k === 'pythonVersion' && typeof v == 'string') {
           params.set('python', v);
+        } else if (k in context.multiSelectOptions && Array.isArray(v)) {
+          if (v.length > 0) {
+            params.set(k, v.join(','))
+          } else {
+            params.delete(k);
+          }
         } else if (v) {
           flags.push(k);
         }

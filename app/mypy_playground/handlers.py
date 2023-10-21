@@ -15,6 +15,7 @@ from mypy_playground.prometheus import PrometheusMixin
 from mypy_playground.sandbox import run_typecheck_in_sandbox
 from mypy_playground.sandbox.base import (
     ARGUMENT_FLAGS,
+    ARGUMENT_MULTI_SELECT_OPTIONS,
     AbstractSandbox,
 )
 from mypy_playground.sandbox.cloud_functions import CloudFunctionsSandbox
@@ -80,15 +81,20 @@ class JsonRequestHandler(tornado.web.RequestHandler):
 class ContextHandler(JsonRequestHandler):
     async def get(self) -> None:
         mypy_versions = options.mypy_versions
-        default: dict[str, bool | str] = {flag: False for flag in ARGUMENT_FLAGS}
-        default["mypyVersion"] = mypy_versions[0][1]
-        default["pythonVersion"] = options.default_python_version
+        config: dict[str, bool | str | list[str]] = {
+            flag: False for flag in ARGUMENT_FLAGS
+        }
+        for option in ARGUMENT_MULTI_SELECT_OPTIONS:
+            config[option] = []
+        config["mypyVersion"] = mypy_versions[0][1]
+        config["pythonVersion"] = options.default_python_version
         context = {
-            "defaultConfig": default,
+            "defaultConfig": config,
             "initialCode": initial_code,
             "pythonVersions": options.python_versions,
             "mypyVersions": mypy_versions,
             "flags": ARGUMENT_FLAGS,
+            "multiSelectOptions": ARGUMENT_MULTI_SELECT_OPTIONS,
             "gaTrackingId": options.ga_tracking_id,
         }
         self.write(context)
@@ -113,7 +119,14 @@ class TypecheckHandler(JsonRequestHandler):
             flag_value = json.get(flag)
             if flag_value is not None and flag_value is True:
                 args[flag] = flag_value
-
+        for option, choices in ARGUMENT_MULTI_SELECT_OPTIONS.items():
+            option_value = json.get(option)
+            if not isinstance(option_value, list):
+                continue
+            option_values = [value for value in option_value if value in choices]
+            if len(option_values) == 0:
+                continue
+            args[option] = option_values
         if mypy_version := json.get("mypyVersion"):
             args["mypy_version"] = mypy_version
         else:

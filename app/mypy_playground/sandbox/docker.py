@@ -8,7 +8,12 @@ from typing import Any, Optional, cast
 import aiodocker
 from tornado.options import define, options
 
-from mypy_playground.sandbox.base import ARGUMENT_FLAGS, AbstractSandbox, Result
+from mypy_playground.sandbox.base import (
+    ARGUMENT_FLAGS,
+    ARGUMENT_MULTI_SELECT_OPTIONS,
+    AbstractSandbox,
+    Result,
+)
 from mypy_playground.utils import DictOption
 
 logger = logging.getLogger(__name__)
@@ -52,6 +57,9 @@ class DockerSandbox(AbstractSandbox):
         for key, value in kwargs.items():
             if key in ARGUMENT_FLAGS:
                 cmd.append(f"--{key}")
+            if key in ARGUMENT_MULTI_SELECT_OPTIONS:
+                for v in value:
+                    cmd.append(f"--{key}={v}")
         cmd.append(self.source_file_path.name)
 
         config = {
