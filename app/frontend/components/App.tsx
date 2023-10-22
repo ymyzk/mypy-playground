@@ -8,15 +8,16 @@ import { parseMessages } from "../utils/utils";
 import Editor from "./Editor";
 import Header from "./Header";
 import Result from "./Result";
+import { Config, ConfigDiff, Context } from "./types";
 
 type Props = {
-  context: any;
+  context: Context;
 };
 
 type State = {
   annotations: Ace.Annotation[];
-  config: { [key: string]: boolean | string | string[] };
-  context: any;
+  config: Config;
+  context: Context;
   source: string;
   result: any;
 };
@@ -53,14 +54,14 @@ export default class App extends React.Component<Props, State> {
 
     const params = new URLSearchParams(window.location.search);
     // Load configurations
-    const diff: { [key: string]: boolean | string | string[] } = {};
+    const diff: ConfigDiff = {};
     if (params.has("mypy")) {
       diff.mypyVersion = params.get("mypy")!;
     }
     if (params.has("python")) {
       diff.pythonVersion = params.get("python")!;
     }
-    Object.entries(context.multiSelectOptions).forEach(([option, choices]: any) => {
+    Object.entries(context.multiSelectOptions).forEach(([option, choices]) => {
       if (params.has(option)) {
         const values = params.get(option)?.split(",") || [];
         diff[option] = values.filter((v) => choices.includes(v));
@@ -123,7 +124,7 @@ export default class App extends React.Component<Props, State> {
     this.setState({ source });
   }
 
-  updateConfig(configDiff: any) {
+  updateConfig(configDiff: ConfigDiff) {
     this.setState((prevState) => ({
       config: {
         ...prevState.config,
