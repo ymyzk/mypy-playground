@@ -1,6 +1,6 @@
 .result {
-    flex: 1 1 40%;
-    padding: 8px;
-    overflow: auto;
-    background: #eee;
+  flex: 1 1 40%;
+  padding: 8px;
+  overflow: auto;
+  background: #eee;
 }

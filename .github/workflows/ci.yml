@@ -53,6 +53,7 @@ jobs:
     - name: Build, lint, and test frontend
       run: |
         npm run build
+        npm run format:ci
         npm run lint
         npm run test:ci
       working-directory: ./app/frontend
