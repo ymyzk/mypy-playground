@@ -1,38 +1,39 @@
-import { Ace } from 'ace-builds';
-import React from 'react';
+import { Ace } from "ace-builds";
+import React from "react";
+import axios from "axios";
 
-import axios from 'axios';
-import { runTypecheck } from '../utils/api';
-import { fetchGist, shareGist } from '../utils/gist';
-import { parseMessages } from '../utils/utils';
-import Editor from './Editor';
-import Header from './Header';
-import Result from './Result';
+import { runTypecheck } from "../utils/api";
+import { fetchGist, shareGist } from "../utils/gist";
+import { parseMessages } from "../utils/utils";
+import Editor from "./Editor";
+import Header from "./Header";
+import Result from "./Result";
 
 type Props = {
-  context: any,
+  context: any;
 };
 
 type State = {
-  annotations: Ace.Annotation[],
-  config: { [key: string]: boolean | string | string[] },
-  context: any,
-  source: string,
-  result: any,
-}
+  annotations: Ace.Annotation[];
+  config: { [key: string]: boolean | string | string[] };
+  context: any;
+  source: string;
+  result: any;
+};
 
 export default class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
     const { context } = props;
-    this.state = { // eslint-disable-line react/state-in-constructor
+    this.state = {
+      // eslint-disable-line react/state-in-constructor
       annotations: [],
       config: context.defaultConfig,
       context,
       source: context.initialCode,
       result: {
-        status: 'ready',
+        status: "ready",
       },
     };
 
@@ -53,34 +54,34 @@ export default class App extends React.Component<Props, State> {
     const params = new URLSearchParams(window.location.search);
     // Load configurations
     const diff: { [key: string]: boolean | string | string[] } = {};
-    if (params.has('mypy')) {
-      diff.mypyVersion = params.get('mypy')!;
+    if (params.has("mypy")) {
+      diff.mypyVersion = params.get("mypy")!;
     }
-    if (params.has('python')) {
-      diff.pythonVersion = params.get('python')!;
+    if (params.has("python")) {
+      diff.pythonVersion = params.get("python")!;
     }
     Object.entries(context.multiSelectOptions).forEach(([option, choices]: any) => {
       if (params.has(option)) {
         const values = params.get(option)?.split(",") || [];
-        diff[option] = values.filter(v => choices.includes(v));
+        diff[option] = values.filter((v) => choices.includes(v));
       }
     });
-    if (params.has('flags')) {
+    if (params.has("flags")) {
       // eslint-disable-next-line no-restricted-syntax
-      for (const flag of params.get('flags')!.split(',')) {
+      for (const flag of params.get("flags")!.split(",")) {
         diff[flag] = true;
       }
     }
     this.updateConfig(diff);
     // Load source
-    const source = window.localStorage.getItem('source');
+    const source = window.localStorage.getItem("source");
     if (source) {
       // eslint-disable-next-line react/no-did-mount-set-state
       this.setState({ source });
     }
     // Load gist
-    if (params.has('gist')) {
-      this.fetchGist(params.get('gist')!);
+    if (params.has("gist")) {
+      this.fetchGist(params.get("gist")!);
     }
   }
 
@@ -93,13 +94,13 @@ export default class App extends React.Component<Props, State> {
     if (prevState.config !== config) {
       const flags: string[] = [];
       Object.entries(config).forEach(([k, v]) => {
-        if (k === 'mypyVersion' && typeof v == 'string') {
-          params.set('mypy', v);
-        } else if (k === 'pythonVersion' && typeof v == 'string') {
-          params.set('python', v);
+        if (k === "mypyVersion" && typeof v == "string") {
+          params.set("mypy", v);
+        } else if (k === "pythonVersion" && typeof v == "string") {
+          params.set("python", v);
         } else if (k in context.multiSelectOptions && Array.isArray(v)) {
           if (v.length > 0) {
-            params.set(k, v.join(','))
+            params.set(k, v.join(","));
           } else {
             params.delete(k);
           }
@@ -108,13 +109,13 @@ export default class App extends React.Component<Props, State> {
         }
       });
       if (flags.length > 0) {
-        params.set('flags', flags.join(','));
+        params.set("flags", flags.join(","));
       }
-      window.history.pushState({}, '', `?${params.toString()}`);
+      window.history.pushState({}, "", `?${params.toString()}`);
     }
 
     if (prevState.source !== source) {
-      window.localStorage.setItem('source', source);
+      window.localStorage.setItem("source", source);
     }
   }
 
@@ -132,12 +133,9 @@ export default class App extends React.Component<Props, State> {
   }
 
   async run() {
-    const {
-      config,
-      source,
-    } = this.state;
+    const { config, source } = this.state;
 
-    this.setState({ result: { status: 'running' } });
+    this.setState({ result: { status: "running" } });
 
     try {
       const result = await runTypecheck({
@@ -145,77 +143,64 @@ export default class App extends React.Component<Props, State> {
         source, // eslint-disable-line react/no-access-state-in-setstate
       });
       this.setState({
-        result: { status: 'succeeded', result },
+        result: { status: "succeeded", result },
         annotations: parseMessages(result.stdout),
       });
     } catch (error) {
       const message = axios.isAxiosError(error) ? error.message : `${error}`;
-      this.setState({ result: { status: 'failed', message, } });
+      this.setState({ result: { status: "failed", message } });
     }
   }
 
   async shareGist() {
     const { source } = this.state;
-    this.setState({ result: { status: 'creating_gist' } });
+    this.setState({ result: { status: "creating_gist" } });
     try {
       const playgroundUrl = new URL(window.location.href);
       const params = new URLSearchParams(playgroundUrl.search);
-      const {
-        gistId,
-        gistUrl,
-      } = await shareGist(source);
-      params.set('gist', gistId);
+      const { gistId, gistUrl } = await shareGist(source);
+      params.set("gist", gistId);
       playgroundUrl.search = `?${params.toString()}`;
       this.setState({
         result: {
-          status: 'created_gist',
+          status: "created_gist",
           gistUrl,
           playgroundUrl: playgroundUrl.toString(),
         },
       });
     } catch (error) {
-      this.setState({ result: { status: 'failed', message: `Failed to create a gist: ${error}` } });
+      this.setState({ result: { status: "failed", message: `Failed to create a gist: ${error}` } });
     }
   }
 
   async fetchGist(gistId: string) {
-    this.setState({ result: { status: 'fetching_gist' } });
+    this.setState({ result: { status: "fetching_gist" } });
     try {
       const { source } = await fetchGist(gistId);
       this.setState({
         result: {
-          status: 'fetched_gist',
+          status: "fetched_gist",
         },
         source,
       });
     } catch (error) {
-      this.setState({ result: { status: 'failed', message: `Failed to fetch the gist: ${error}` } });
+      this.setState({ result: { status: "failed", message: `Failed to fetch the gist: ${error}` } });
     }
   }
 
   render() {
-    const {
-      annotations,
-      config,
-      context,
-      result,
-      source,
-    } = this.state;
+    const { annotations, config, context, result, source } = this.state;
     return (
       <div className="App d-flex flex-flow flex-column vh-100">
         <Header
-            context={context}
-            config={config}
-            status={result.status}
-            onGistClick={this.shareGist}
-            onRunClick={this.run}
-            onConfigChange={this.updateConfig}
+          context={context}
+          config={config}
+          status={result.status}
+          onGistClick={this.shareGist}
+          onRunClick={this.run}
+          onConfigChange={this.updateConfig}
         />
-        <Editor
-          onChange={this.onChange}
-          annotations={annotations}
-          source={source}
-        />
+        <Editor onChange={this.onChange} annotations={annotations} source={source} />
         <Result result={result} />
       </div>
     );
