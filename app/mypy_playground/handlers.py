@@ -88,6 +88,7 @@ class ContextHandler(JsonRequestHandler):
             config[option] = []
         config["mypyVersion"] = mypy_versions[0][1]
         config["pythonVersion"] = options.default_python_version
+        # Make sure that the context type matches with app/frontend/types.tsx
         context = {
             "defaultConfig": config,
             "initialCode": initial_code,

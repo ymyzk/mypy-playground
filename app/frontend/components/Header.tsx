@@ -19,10 +19,11 @@ import {
 
 import styles from "./Header.module.css";
 import MultiSelectOption from "./MultiSelectOption";
+import { Config, Context } from "./types";
 
 type Props = {
-  context: any;
-  config: any;
+  context: Context;
+  config: Config;
   status: any;
   onGistClick: any;
   onRunClick: any;
@@ -94,7 +95,7 @@ class Header extends React.Component<Props, State> {
                   value={config.mypyVersion}
                   onChange={(e) => onConfigChange({ mypyVersion: e.target.value })}
                 >
-                  {context.mypyVersions.map(([name, id]: any) => (
+                  {context.mypyVersions.map(([name, id]) => (
                     <option key={id} value={id}>
                       {name}
                     </option>
@@ -107,7 +108,7 @@ class Header extends React.Component<Props, State> {
                   value={config.pythonVersion}
                   onChange={(e) => onConfigChange({ pythonVersion: e.target.value })}
                 >
-                  {context.pythonVersions.map((ver: any) => (
+                  {context.pythonVersions.map((ver) => (
                     <option key={ver} value={ver}>
                       Python {ver}
                     </option>
@@ -146,12 +147,12 @@ class Header extends React.Component<Props, State> {
               <FormGroup row>
                 {flagsColumns.map((flags) => (
                   <Col md={6} key={flags[0]}>
-                    {flags.map((flag: any) => (
+                    {flags.map((flag) => (
                       <FormGroup check key={flag}>
                         <Input
                           type="checkbox"
                           id={flag}
-                          checked={config[flag]}
+                          checked={config[flag] as boolean}
                           onChange={(e) => onConfigChange({ [flag]: e.target.checked })}
                         />
                         <Label check for={flag} className="mb-0">
@@ -166,8 +167,14 @@ class Header extends React.Component<Props, State> {
                 ))}
               </FormGroup>
               <FormGroup>
-                {Object.entries(context.multiSelectOptions).map(([k, v]: any) => (
-                  <MultiSelectOption key={k} name={k} choices={v} values={config[k]} onConfigChange={onConfigChange} />
+                {Object.entries(context.multiSelectOptions).map(([k, v]) => (
+                  <MultiSelectOption
+                    key={k}
+                    name={k}
+                    choices={v}
+                    values={config[k] as string[]}
+                    onConfigChange={onConfigChange}
+                  />
                 ))}
               </FormGroup>
             </Form>
