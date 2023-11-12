@@ -1,5 +1,12 @@
 version: "3"
 services:
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - 127.0.0.1:8000:8000
+    volumes:
+      - ./app/Caddyfile:/etc/caddy/Caddyfile:ro
+
   app:
     build: app
     ports:

@@ -5,11 +5,13 @@
 ### Local development
 ```mermaid
 graph TD
+    Caddy["Caddy reverse proxy (:8000)"]
     Next["Next.js server (:3000)"]
     Tornado["Tornado server (:8080)"]
 
-    Browser --> Next
-    Next -->|/api/| Tornado
+    Browser --> Caddy
+    Caddy -->|/api/| Tornado
+    Caddy -->|/*| Next
 ```
 
 ### Production
