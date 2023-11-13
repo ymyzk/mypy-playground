@@ -37,11 +37,6 @@ fib("10")
 """
 
 
-class IndexHandler(tornado.web.RequestHandler):
-    async def get(self) -> None:
-        self.render("index.html")
-
-
 class JsonRequestHandler(tornado.web.RequestHandler):
     def prepare(self) -> None:
         if self.request.method in {"HEAD", "GET"}:
