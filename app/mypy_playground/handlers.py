@@ -37,6 +37,34 @@ fib("10")
 """
 
 
+class StaticFileHandlerWithCustomErrorPages(tornado.web.StaticFileHandler):
+    """StaticFileHandler to return custom error page on certain status code"""
+
+    def initialize(
+        self,
+        path: str,
+        default_filename: str | None = None,
+        error_pages: dict[int, str] | None = None,
+    ) -> None:
+        super().initialize(path, default_filename)
+        self.error_pages: dict[int, str] = error_pages or {}
+
+    def write_error(self, status_code: int, **kwargs: Any) -> None:
+        if self.settings.get("serve_traceback") and "exc_info" in kwargs and False:
+            # Use default write_error to serve traceback
+            super().write_error(status_code, **kwargs)
+        elif status_code not in self.error_pages:
+            # Use default write_error in case a custom page is not defined
+            super().write_error(status_code, **kwargs)
+        else:
+            # Render a custom error page in the static directory
+            path = self.error_pages[status_code]
+            absolute_path = self.get_absolute_path(self.root, path)
+            for chunk in self.get_content(absolute_path):
+                self.write(chunk)
+            self.finish()
+
+
 class JsonRequestHandler(tornado.web.RequestHandler):
     def prepare(self) -> None:
         if self.request.method in {"HEAD", "GET"}:
