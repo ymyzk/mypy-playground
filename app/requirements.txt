@@ -6,11 +6,9 @@
 #
 aiodocker==0.21.0
     # via -r requirements.in
-aiohttp==3.8.6
+aiohttp==3.9.0
     # via aiodocker
 aiosignal==1.3.1
-    # via aiohttp
-async-timeout==4.0.2
     # via aiohttp
 attrs==23.1.0
     # via aiohttp
@@ -19,9 +17,7 @@ cachetools==5.3.1
 certifi==2023.7.22
     # via requests
 charset-normalizer==3.1.0
-    # via
-    #   aiohttp
-    #   requests
+    # via requests
 dataclasses==0.6
     # via -r requirements.in
 frozenlist==1.3.3
