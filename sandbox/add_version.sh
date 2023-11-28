@@ -36,7 +36,7 @@ mkdir "$docker_dir"
 cd "$docker_dir"
 cp "${cloud_functions_dir}/requirements.in" ./
 cp "${cloud_functions_dir}/requirements.txt" ./
-echo 'FROM python:3.11-slim
+echo 'FROM python:3.12-slim
 
 WORKDIR /tmp
 COPY ./requirements.txt /tmp/
