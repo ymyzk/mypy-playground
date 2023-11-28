@@ -15,7 +15,7 @@ on:
         description: Runtime version
         required: true
         type: string
-        default: python311
+        default: python312
 
 permissions:
   contents: read
@@ -23,7 +23,7 @@ permissions:
 
 env:
   MYPY_VERSION: ${{ github.event.inputs.mypy_version || 'master' }}
-  RUNTIME: ${{ github.event.inputs.runtime || 'python311' }}
+  RUNTIME: ${{ github.event.inputs.runtime || 'python312' }}
 
 jobs:
   gcp-deploy:

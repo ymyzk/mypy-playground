@@ -1,2 +1,2 @@
-mypy[python2] @ git+https://github.com/python/mypy.git
+mypy @ git+https://github.com/python/mypy.git
 typing-extensions
