@@ -1,6 +1,6 @@
 :8000
 
-reverse_proxy /api/ app:8080
+reverse_proxy /api/* app:8080
 reverse_proxy /* frontend:3000
 
 log {
