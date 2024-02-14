@@ -18,6 +18,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+        <link rel="canonical" href="/" />
       </Head>
       <AppWithContext />
     </div>
