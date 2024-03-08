@@ -8,6 +8,22 @@ updates:
     directory: "/app/frontend"
     schedule:
       interval: "weekly"
+    groups:
+      jest:
+        patterns:
+          - "jest"
+          - "jest-environment-jsdom"
+      next:
+        patterns:
+          - "eslint-config-next"
+          - "next"
+          - "@next/*"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
   - package-ecosystem: "pip"
     directory: "/app/frontend"
     schedule:
