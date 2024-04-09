@@ -95,7 +95,8 @@ jobs:
   dependabot:
     runs-on: ubuntu-latest
     needs:
-      - build_docker_images
+      - test_app
+      - test_frontend
     permissions:
       contents: write
       pull-requests: write
