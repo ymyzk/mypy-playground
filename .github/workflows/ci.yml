@@ -91,3 +91,31 @@ jobs:
           docker push $APP_IMAGE_NAME:latest
       - name: Push Docker sandbox images
         run: ./sandbox/docker/push.sh $SANDBOX_IMAGE_NAME
+
+  dependabot:
+    runs-on: ubuntu-latest
+    needs:
+      - build_docker_images
+    permissions:
+      contents: write
+      pull-requests: write
+    if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
+    name: Automatically merge Dependabot PRs
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Enable auto-merge for Dependabot PRs (patch)
+        if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Enable auto-merge for Dependabot PRs (minor)
+        if: steps.metadata.outputs.update-type == 'version-update:semver-minor' && (contains(steps.metadata.outputs.dependency-names, '@types/'))
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
