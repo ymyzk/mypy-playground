@@ -50,7 +50,7 @@ ARGUMENT_FLAGS = ARGUMENT_FLAGS_NORMAL + ARGUMENT_FLAGS_STRICT
 
 # Reference: https://github.com/python/mypy/blob/feb0fa75ca7f3abb1217d94f6ffb55994b9a31c8/mypy/options.py#L73-L75
 ARGUMENT_MULTI_SELECT_OPTIONS = {
-    "enable-incomplete-feature": ("TypeVarTuple", "Unpack")
+    "enable-incomplete-feature": ("TypeVarTuple", "Unpack", "PreciseTupleTypes")
 }
 
 
