@@ -29,7 +29,8 @@ deploy() {
     "--memory=${MEMORY}" \
     "--source=${VERSION}" \
     "--service-account=${SERVICE_ACCOUNT}" \
-    "--max-instances=${MAX_INSTANCES}"
+    "--max-instances=${MAX_INSTANCES}" \
+    "--verbosity=debug"
   echo "Updating IAM policy for ${FUNCTION_NAME}..."
   gcloud functions add-iam-policy-binding "${FUNCTION_NAME}" \
     "--region=${REGION}" \
