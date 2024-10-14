@@ -24,6 +24,7 @@ deploy() {
     --entry-point=run_typecheck \
     --security-level=secure-always \
     --quiet \
+    --no-gen2 \
     "--region=${REGION}" \
     "--runtime=${RUNTIME}"\
     "--memory=${MEMORY}" \
