@@ -1,0 +1,2 @@
+mypy==1.12.1
+typing-extensions
