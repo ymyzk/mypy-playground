@@ -11,7 +11,7 @@ on:
         description: Python version
         required: true
         type: string
-        default: "3.12"
+        default: "3.13"
 
 permissions:
   contents: write
