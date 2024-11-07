@@ -8,7 +8,7 @@ aiodocker==0.21.0
     # via -r requirements.in
 aiohappyeyeballs==2.3.5
     # via aiohttp
-aiohttp==3.10.2
+aiohttp==3.10.10
     # via aiodocker
 aiosignal==1.3.1
     # via aiohttp
@@ -32,7 +32,7 @@ idna==3.7
     # via
     #   requests
     #   yarl
-multidict==6.0.4
+multidict==6.1.0
     # via
     #   aiohttp
     #   yarl
@@ -60,5 +60,5 @@ urllib3==1.26.19
     # via
     #   google-auth
     #   requests
-yarl==1.9.2
+yarl==1.17.1
     # via aiohttp
