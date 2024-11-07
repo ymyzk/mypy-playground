@@ -7,7 +7,7 @@ cd "$(dirname "$0")"
 : "${MAX_INSTANCES:=3}"
 : "${MEMORY:=1024MB}"
 : "${REGION:=asia-northeast1}"
-: "${RUNTIME:=python311}"
+: "${RUNTIME:=python312}"
 
 deploy() {
   VERSION="$1"

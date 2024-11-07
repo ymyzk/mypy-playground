@@ -2,7 +2,7 @@ from os import environ
 from pathlib import Path
 from typing import Any, cast
 
-import tomli
+import tomllib
 from tornado.options import options
 
 
@@ -73,7 +73,7 @@ def parse_toml_file(path: Path) -> None:
     if not path.is_file():
         return
     with open(path, "rb") as f:
-        config = tomli.load(f)
+        config = tomllib.load(f)
     for option_name in options._options:
         value = config.get(option_name)
         if value is None:
