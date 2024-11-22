@@ -54,7 +54,7 @@ six==1.16.0
     # via google-auth
 tomli==2.0.1
     # via -r requirements.in
-tornado==6.4.1
+tornado==6.4.2
     # via -r requirements.in
 typing-extensions==4.7.0
     # via aiodocker
