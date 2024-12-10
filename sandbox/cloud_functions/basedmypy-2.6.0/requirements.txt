@@ -10,7 +10,7 @@ basedtyping==0.1.5
     # via basedmypy
 mypy-extensions==1.0.0
     # via basedmypy
-typing-extensions==4.11.0
+typing-extensions==4.12.2
     # via
     #   basedmypy
     #   basedtyping
