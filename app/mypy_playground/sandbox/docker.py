@@ -32,7 +32,6 @@ class DockerSandbox(AbstractSandbox):
     source_file_path: Path
 
     def __init__(self) -> None:
-        super().__init__()
         self.client = aiodocker.Docker()
         self.source_file_path = Path("/tmp/main.py")
 
@@ -79,7 +78,7 @@ class DockerSandbox(AbstractSandbox):
         try:
             logger.info("creating container")
             c = await self.client.containers.create(config=config)  # type: ignore
-            await c.put_archive(
+            await c.put_archive(  # type: ignore[no-untyped-call]
                 str(self.source_file_path.parent), self._create_archive(source)
             )
             await c.start()

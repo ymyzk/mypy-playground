@@ -1,4 +1,4 @@
-from typing import Awaitable, Generator
+from collections.abc import Awaitable, Generator
 
 from prometheus_client import CollectorRegistry
 import pytest

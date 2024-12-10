@@ -1,4 +1,5 @@
-from typing import Any, Generator
+from typing import Any
+from collections.abc import Generator
 
 import pytest
 from pytest_mock import MockerFixture
