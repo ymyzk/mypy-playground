@@ -49,7 +49,7 @@ define(
 
 class CloudFunctionsSandbox(AbstractSandbox):
     def __init__(self) -> None:
-        super().__init__()
+        pass
 
     async def run_typecheck(
         self,
@@ -138,10 +138,10 @@ class CloudFunctionsSandbox(AbstractSandbox):
         # 2. google-auth library
         # Experimental async support
         # https://googleapis.dev/python/google-auth/latest/reference/google.auth.transport._aiohttp_requests.html
-        auth_req = google.auth.transport.requests.Request()
+        auth_req = google.auth.transport.requests.Request()  # type: ignore[no-untyped-call]
         # Get a token or raise an exception
         if isinstance(
-            token := google.oauth2.id_token.fetch_id_token(auth_req, url), str
+            token := google.oauth2.id_token.fetch_id_token(auth_req, url), str  # type: ignore[no-untyped-call]
         ):
             return token
 
