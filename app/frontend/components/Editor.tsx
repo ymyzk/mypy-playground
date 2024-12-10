@@ -21,7 +21,7 @@ type Props = {
   source: string;
 };
 
-function Editor({ annotations, onChange, source }: Props): JSX.Element {
+function Editor({ annotations, onChange, source }: Props): React.JSX.Element {
   return (
     <div className={styles.editor}>
       <AceEditor
