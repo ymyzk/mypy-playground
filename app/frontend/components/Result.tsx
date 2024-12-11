@@ -12,7 +12,7 @@ type Props = {
   };
 };
 
-function Result({ result }: Props): JSX.Element {
+function Result({ result }: Props): React.JSX.Element {
   switch (result.status) {
     case "ready":
       return <span>Welcome to mypy Playground!</span>;
@@ -63,7 +63,7 @@ function Result({ result }: Props): JSX.Element {
   }
 }
 
-export default function ResultWrapper({ result }: Props): JSX.Element {
+export default function ResultWrapper({ result }: Props): React.JSX.Element {
   return (
     <div className={styles.result}>
       <Result result={result} />
