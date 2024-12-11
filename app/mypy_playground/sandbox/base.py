@@ -48,13 +48,14 @@ ARGUMENT_FLAGS_STRICT = (
 
 ARGUMENT_FLAGS = ARGUMENT_FLAGS_NORMAL + ARGUMENT_FLAGS_STRICT
 
-# Reference: https://github.com/python/mypy/blob/25087fdbb72d1495e6903d171dee999c47ba09fd/mypy/options.py#L73-L78
+# Reference: https://github.com/python/mypy/blob/6427ef17f0180422e0113bc67440d2b911d68f39/mypy/options.py#L74-L81
 ARGUMENT_MULTI_SELECT_OPTIONS = {
     "enable-incomplete-feature": (
+        "InlineTypedDict",
+        "NewGenericSyntax",
+        "PreciseTupleTypes",
         "TypeVarTuple",
         "Unpack",
-        "PreciseTupleTypes",
-        "NewGenericSyntax",
     )
 }
 
