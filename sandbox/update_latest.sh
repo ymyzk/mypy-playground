@@ -10,11 +10,19 @@ fi
 
 set -u
 readonly version="$1"
+case $version in
+  basedmypy-*)
+    readonly latest=./basedmypy-latest
+    ;;
+  *)
+    readonly latest=./latest
+    ;;
+esac
 
 cd "${sandbox_dir}/cloud_functions"
-rm latest
-ln -s "$version" ./latest
+rm $latest
+ln -s "$version" $latest
 
 cd "${sandbox_dir}/docker"
-rm latest
-ln -s "$version" ./latest
+rm $latest
+ln -s "$version" $latest

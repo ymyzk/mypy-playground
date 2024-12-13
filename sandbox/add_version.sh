@@ -26,8 +26,15 @@ set -x
 
 mkdir "$cloud_functions_dir"
 cd "$cloud_functions_dir"
-echo "mypy==${version}
+case $version in
+  "basedmypy-"*)
+    echo "basedmypy==${version#basedmypy-}" > "requirements.in"
+    ;;
+  *)
+    echo "mypy==${version}
 typing-extensions" > "requirements.in"
+    ;;
+esac
 pip-compile
 ln -s ../main.py ./
 cd "$sandbox_dir"
