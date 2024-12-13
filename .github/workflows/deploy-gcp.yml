@@ -23,7 +23,7 @@ permissions:
 
 env:
   MYPY_VERSION: ${{ github.event.inputs.mypy_version || 'master' }}
-  RUNTIME: ${{ github.event.inputs.runtime || 'python312' }}
+  RUNTIME: ${{ github.event.inputs.runtime || 'python313' }}
 
 jobs:
   gcp-deploy:
