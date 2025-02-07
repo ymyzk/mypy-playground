@@ -22,6 +22,7 @@ ARGUMENT_FLAGS_STRICT = (
     "allow-redefinition",
     "allow-untyped-globals",
     "strict",
+    "strict-bytes",
     "check-untyped-defs",
     "disallow-any-decorated",
     "disallow-any-expr",
