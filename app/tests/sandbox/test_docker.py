@@ -5,7 +5,6 @@ from pytest_mock import MockerFixture
 
 from mypy_playground.sandbox.docker import DockerSandbox
 
-
 SAMPLE_CODE = """
 import this
 print(this.__name__)

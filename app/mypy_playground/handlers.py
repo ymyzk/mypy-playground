@@ -50,7 +50,7 @@ class StaticFileHandlerWithCustomErrorPages(tornado.web.StaticFileHandler):
         self.error_pages: dict[int, str] = error_pages or {}
 
     def write_error(self, status_code: int, **kwargs: Any) -> None:
-        if self.settings.get("serve_traceback") and "exc_info" in kwargs and False:
+        if self.settings.get("serve_traceback") and "exc_info" in kwargs:
             # Use default write_error to serve traceback
             super().write_error(status_code, **kwargs)
         elif status_code not in self.error_pages:
@@ -95,10 +95,10 @@ class JsonRequestHandler(tornado.web.RequestHandler):
     def parse_json_request_body(self) -> Any:
         try:
             return tornado.escape.json_decode(self.request.body)
-        except json.JSONDecodeError:
+        except json.JSONDecodeError as e:
             raise tornado.web.HTTPError(
                 HTTPStatus.BAD_REQUEST, log_message="failed to parse JSON body"
-            )
+            ) from e
 
 
 class ContextHandler(JsonRequestHandler):

@@ -2,7 +2,7 @@ import json
 import time
 import urllib.parse
 from logging import getLogger
-from typing import Any, Optional
+from typing import Any
 
 import google.auth.transport.requests
 import google.oauth2.id_token
@@ -56,15 +56,15 @@ class CloudFunctionsSandbox(AbstractSandbox):
         source: str,
         /,
         mypy_version: str,
-        python_version: Optional[str] = None,
+        python_version: str | None = None,
         **kwargs: Any,
-    ) -> Optional[Result]:
+    ) -> Result | None:
         start_time = time.time()
 
         function_url = self._get_cloud_function_url(mypy_version)
         if function_url is None:
             logger.error(
-                f"cannot find a Cloud function for mypy version: {mypy_version}"
+                "cannot find a Cloud function for mypy version: %s", mypy_version
             )
             return None
 
@@ -111,7 +111,7 @@ class CloudFunctionsSandbox(AbstractSandbox):
             duration=duration,
         )
 
-    def _get_cloud_function_url(self, mypy_version_id: str) -> Optional[str]:
+    def _get_cloud_function_url(self, mypy_version_id: str) -> str | None:
         base_url = options["cloud_functions_base_url"]
         if not isinstance(base_url, str):
             return None
@@ -141,7 +141,8 @@ class CloudFunctionsSandbox(AbstractSandbox):
         auth_req = google.auth.transport.requests.Request()  # type: ignore[no-untyped-call]
         # Get a token or raise an exception
         if isinstance(
-            token := google.oauth2.id_token.fetch_id_token(auth_req, url), str  # type: ignore[no-untyped-call]
+            token := google.oauth2.id_token.fetch_id_token(auth_req, url),  # type: ignore[no-untyped-call]
+            str,
         ):
             return token
 

@@ -1,15 +1,41 @@
 [tool.mypy]
-python_version = '3.13'
+python_version = "3.13"
 strict = true
 
 [[tool.mypy.overrides]]
 module = [
-    'google.*',
+    "google.*",
 ]
 ignore_missing_imports = true
 
+[tool.ruff]
+target-version = "py313"
+
 [tool.ruff.lint]
-select = ["E", "F", "I", "W", "UP"]
+select = [
+    # pycodestyle
+    "E",
+    "W",
+    # Pyflakes
+    "F",
+    # isort
+    "I",
+    # pyupgrade
+    "UP",
+    # flake8-bandit
+    "S",
+    # flake8-bugbear
+    "B",
+    # flake8-logging
+    "LOG",
+    # flake8-logging-format
+    "G",
+    # flake8-simplify
+    "SIM",
+]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S101", "I001"]
+"tests/*" = [
+    # flake8-bandit: assert
+    "S101",
+]

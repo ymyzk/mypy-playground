@@ -1,8 +1,8 @@
+import tomllib
 from os import environ
 from pathlib import Path
 from typing import Any, cast
 
-import tomllib
 from tornado.options import options
 
 

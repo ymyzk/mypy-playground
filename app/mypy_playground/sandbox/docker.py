@@ -3,7 +3,7 @@ import tarfile
 import time
 from io import BytesIO
 from pathlib import Path
-from typing import Any, Optional, cast
+from typing import Any, cast
 
 import aiodocker
 from tornado.options import define, options
@@ -33,21 +33,25 @@ class DockerSandbox(AbstractSandbox):
 
     def __init__(self) -> None:
         self.client = aiodocker.Docker()
-        self.source_file_path = Path("/tmp/main.py")
+        # It should be fine to hardcode the temp path for now,
+        # as we recreate a Docker container every time we run mypy.
+        self.source_file_path = Path("/tmp/main.py")  # noqa: S108
 
     async def run_typecheck(
         self,
         source: str,
         /,
         mypy_version: str,
-        python_version: Optional[str] = None,
+        python_version: str | None = None,
         **kwargs: Any,
-    ) -> Optional[Result]:
+    ) -> Result | None:
         start_time = time.time()
 
         docker_image = self._get_docker_image(mypy_version)
         if docker_image is None:
-            logger.error(f"cannot find a docker image for mypy version: {mypy_version}")
+            logger.error(
+                "cannot find a docker image for mypy version: %s", mypy_version
+            )
             return None
 
         cmd = ["mypy", "--cache-dir", "/dev/null", "--no-site-packages"]
@@ -74,7 +78,7 @@ class DockerSandbox(AbstractSandbox):
         }
 
         # Using Any to suppress type errors around aiodocker
-        c: Optional[Any] = None
+        c: Any | None = None
         try:
             logger.info("creating container")
             c = await self.client.containers.create(config=config)  # type: ignore
@@ -116,5 +120,5 @@ class DockerSandbox(AbstractSandbox):
         stream.seek(0)
         return stream
 
-    def _get_docker_image(self, mypy_version_id: str) -> Optional[str]:
+    def _get_docker_image(self, mypy_version_id: str) -> str | None:
         return cast(DictOption, options.docker_images).get(mypy_version_id)
