@@ -7,11 +7,13 @@ main.py:13: error: Argument 1 to "fib" has incompatible type "Callable[[int], It
     const annotations = [
       {
         row: 11,
+        column: 0,
         type: "error",
         text: 'Argument 1 to "fib" has incompatible type "str"; expected "int"',
       },
       {
         row: 12,
+        column: 0,
         type: "error",
         text: 'Argument 1 to "fib" has incompatible type "Callable[[int], Iterator[int]]"; expected "int"',
       },
@@ -31,6 +33,7 @@ main.py:13: error: Argument 1 to "fib" has incompatible type "Callable[[int], It
       },
       {
         row: 12,
+        column: 0,
         type: "error",
         text: 'Argument 1 to "fib" has incompatible type "Callable[[int], Iterator[int]]"; expected "int"',
       },

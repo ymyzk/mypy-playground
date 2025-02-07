@@ -23,7 +23,7 @@ export function parseMessages(stdout: string): Ace.Annotation[] {
       return match
         ? {
             row: parseInt(match[1], 10) - 1,
-            ...(match[2] && { column: parseInt(match[2].slice(0, -1)) - 1 }),
+            column: match[2] ? parseInt(match[2].slice(0, -1)) - 1 : 0,
             type: getTypeFromLevel(match[3]),
             text: match[4],
           }
