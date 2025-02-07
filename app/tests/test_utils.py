@@ -1,5 +1,5 @@
-from typing import Any
 from collections.abc import Generator
+from typing import Any
 
 import pytest
 from pytest_mock import MockerFixture
@@ -74,7 +74,7 @@ def test_list_pair_option_raises_type_error() -> None:
 
 
 @pytest.fixture(autouse=True)
-def test_options() -> Generator[None, None, None]:
+def test_options() -> Generator[None]:
     define("opt_int", type=int)
     define("opt_str", type=str)
     define("opt_dict", type=DictOption)

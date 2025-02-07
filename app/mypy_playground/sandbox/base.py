@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
 
 ARGUMENT_FLAGS_NORMAL = (
     "verbose",
@@ -95,7 +95,7 @@ class AbstractSandbox(ABC):
         source: str,
         /,
         mypy_version: str,
-        python_version: Optional[str] = None,
+        python_version: str | None = None,
         **kwargs: Any,
-    ) -> Optional[Result]:
+    ) -> Result | None:
         pass

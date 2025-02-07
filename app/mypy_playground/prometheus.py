@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 import tornado
 from prometheus_client import REGISTRY, Counter, Histogram
@@ -57,7 +57,7 @@ class PrometheusMixin(_Base):
         content_length_str = handler._headers.get("Content-Length")
         try:
             if isinstance(content_length_str, str):
-                content_length: Optional[int] = int(content_length_str)
+                content_length: int | None = int(content_length_str)
             else:
                 content_length = None
         except ValueError:
