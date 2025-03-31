@@ -21,9 +21,9 @@
     "bootstrap": "^5.3.3",
     "next": "^15.2.4",
     "prop-types": "^15.7.2",
-    "react": "^19.0.0",
+    "react": "^19.1.0",
     "react-ace": "^14.0.1",
-    "react-dom": "^19.0.0",
+    "react-dom": "^19.1.0",
     "reactstrap": "^9.2.3"
   },
   "devDependencies": {
