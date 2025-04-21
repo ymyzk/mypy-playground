@@ -16,7 +16,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "ace-builds": "^1.39.1",
+    "ace-builds": "^1.40.0",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.5",
     "next": "^15.2.4",
