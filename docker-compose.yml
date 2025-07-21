@@ -1,7 +1,6 @@
-version: "3"
 services:
   caddy:
-    image: caddy:2-alpine
+    image: caddy:2.10-alpine
     ports:
       - 127.0.0.1:8000:8000
     volumes:
@@ -32,7 +31,7 @@ services:
       - ./app/frontend/utils:/app/utils
 
   docker:
-    image: docker:24-dind-rootless
+    image: docker:28.3-dind-rootless
     privileged: true
     environment:
       DOCKER_HOST: unix:///run/user/1000/docker.sock
