@@ -58,7 +58,7 @@ ARGUMENT_MULTI_SELECT_OPTIONS = {
         "TypeVarTuple",
         "Unpack",
     ),
-    # Reference: https://github.com/python/mypy/blob/c08719d8d93f48fd9428f36bc690910930fdd65b/mypy/errorcodes.py
+    # Reference: https://github.com/python/mypy/blob/657154b6748793f44be7b8238b7265c4e84c2e16/mypy/errorcodes.py
     "enable-error-code": (
         "possibly-undefined",
         "redundant-expr",
@@ -71,6 +71,7 @@ ARGUMENT_MULTI_SELECT_OPTIONS = {
         "explicit-override",
         "unimported-reveal",
         "mutable-override",
+        "exhaustive-match",
         "deprecated",
     ),
 }
