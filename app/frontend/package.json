@@ -21,9 +21,9 @@
     "bootstrap": "^5.3.7",
     "next": "^15.4.5",
     "prop-types": "^15.7.2",
-    "react": "^19.1.0",
+    "react": "^19.1.1",
     "react-ace": "^14.0.1",
-    "react-dom": "^19.1.0",
+    "react-dom": "^19.1.1",
     "reactstrap": "^9.2.3"
   },
   "devDependencies": {
@@ -32,8 +32,8 @@
     "@testing-library/react": "^16.3.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.13",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
     "eslint": "^9.31.0",
     "eslint-config-next": "^15.4.5",
     "jest": "^30.0.5",
