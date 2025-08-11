@@ -29,6 +29,6 @@ updates:
           - "@types/react"
           - "@types/react-dom"
   - package-ecosystem: "pip"
-    directory: "/app/frontend"
+    directory: "/app"
     schedule:
       interval: "weekly"
