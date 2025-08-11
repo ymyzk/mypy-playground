@@ -71,7 +71,7 @@ jobs:
       - name: Add version and update latest tag
         run: |
           ./add_version.sh ${{ github.event.inputs.package }} ${{ steps.find_new_versions.outputs.new_version }}
-          ./update_latest.sh ${{ github.event.inputs.package}} ${{ steps.find_new_versions.outputs.new_version }}
+          ./update_latest.sh ${{ github.event.inputs.package }} ${{ steps.find_new_versions.outputs.new_version }}
         working-directory: ./sandbox
 
       - name: Create pull request
