@@ -27,16 +27,24 @@ fi
 
 echo "Package: $package" >&2
 echo "Local version: $local_version" >&2
-echo "New versions from PyPI:" >&2
 
-# TODO: EXIT CODE
 # Get all versions from PyPI
 pypi_versions=$(curl -s "https://pypi.org/pypi/$package/json" | jq -r '.releases | keys[]' | sort -V)
 
 # Print new versions (those greater than the latest version)
+found_new_version=0
 for ver in $pypi_versions; do
   # Use version-aware comparison
   if [[ "$(printf '%s\n' "$ver" "$local_version" | sort -V | tail -n1)" == "$ver" && "$ver" != "$local_version" ]]; then
+    if [[ $found_new_version -eq 0 ]]; then
+      echo "New versions from PyPI:" >&2
+    fi
     echo "$ver"
+    found_new_version=1
   fi
 done
+
+if [[ $found_new_version -eq 0 ]]; then
+  echo "No new versions found on PyPI" >&2
+  exit 1
+fi

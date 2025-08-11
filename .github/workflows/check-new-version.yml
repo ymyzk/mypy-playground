@@ -35,6 +35,7 @@ jobs:
             echo "Found new mypy version: $NEW_VERSION"
           else
             echo "No new mypy version found"
+            echo "::error::No new mypy version found"
             exit 1
           fi
         working-directory: ./sandbox
