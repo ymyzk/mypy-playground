@@ -49,7 +49,7 @@ tornado==6.5.1
     #   pytest-tornado
 types-chardet==5.0.4.6
     # via -r requirements.dev.in
-types-mock==5.1.0.20240425
+types-mock==5.2.0.20250809
     # via -r requirements.dev.in
 types-setuptools==75.6.0.20241126
     # via -r requirements.dev.in
