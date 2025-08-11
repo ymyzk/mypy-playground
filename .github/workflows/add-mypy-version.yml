@@ -3,10 +3,16 @@ name: Add mypy version
 on:
   workflow_dispatch:
     inputs:
-      mypy_version:
-        description: mypy version
+      package:
+        description: Either mypy or basedmypy
         required: true
         type: string
+        default: mypy
+      version:
+        description: Package version
+        required: false
+        type: string
+        default: ""
       python_version:
         description: Python version
         required: true
@@ -24,13 +30,33 @@ jobs:
       - name: Show inputs
         run: |
           echo "Inputs:"
-          echo "  mypy version: $MYPY_VERSION"
+          echo "  Package: $PACKAGE"
+          echo "  Version: $VERSION"
           echo "  Python version: $PYTHON_VERSION"
         env:
-          MYPY_VERSION: ${{ github.event.inputs.mypy_version }}
+          PACKAGE: ${{ github.event.inputs.package }}
+          VERSION: ${{ github.event.inputs.version }}
           PYTHON_VERSION: ${{ github.event.inputs.python_version }}
 
       - uses: actions/checkout@v4
+
+      - name: Find new versions
+        id: find_new_versions
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            echo "Using manually specified version"
+            echo "new_version=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            NEW_VERSION=$(./find_new_versions.sh ${{ github.event.inputs.package }} | head -n 1)
+            echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+            if [ -n "$NEW_VERSION" ]; then
+              echo "Found new version: $NEW_VERSION"
+            else
+              echo "::error::No new ${{ github.event.inputs.package }} version found"
+              exit 1
+            fi
+          fi
+        working-directory: ./sandbox
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -42,24 +68,25 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install pip-tools
 
-      - name: Add mypy version and update latest tag
+      - name: Add version and update latest tag
         run: |
-          ./add_version.sh ${{ github.event.inputs.mypy_version }}
-          ./update_latest.sh ${{ github.event.inputs.mypy_version }}
+          ./add_version.sh ${{ github.event.inputs.package }} ${{ steps.find_new_versions.outputs.new_version }}
+          ./update_latest.sh ${{ github.event.inputs.package}} ${{ steps.find_new_versions.outputs.new_version }}
         working-directory: ./sandbox
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Add mypy ${{ github.event.inputs.mypy_version }}
-          committer: GitHub <noreply@github.com>
-          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-          signoff: false
-          branch: mypy-${{ github.event.inputs.mypy_version }}
-          delete-branch: true
-          title: Add mypy ${{ github.event.inputs.mypy_version }}
-          body: |
-            - Add mypy ${{ github.event.inputs.mypy_version }}
-            - Update latest tag
-          draft: false
+            token: ${{ secrets.GITHUB_TOKEN }}
+            commit-message: Add ${{ github.event.inputs.package }} ${{ steps.find_new_versions.outputs.new_version }}
+            committer: GitHub <noreply@github.com>
+            author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+            signoff: false
+            base: master
+            branch: ${{ github.event.inputs.package }}-new-version
+            delete-branch: true
+            title: Add ${{ github.event.inputs.package }} ${{ steps.find_new_versions.outputs.new_version }}
+            body: |
+              - Add ${{ github.event.inputs.package }} ${{ steps.find_new_versions.outputs.new_version }}
+              - Update the latest tag
+            draft: false

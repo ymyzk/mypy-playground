@@ -3,15 +3,26 @@ set -e
 cd "$(dirname "$0")"
 readonly sandbox_dir="$(pwd)"
 
-if [ -z "$1" ]; then
-  echo "usage: $0 <version>" 1>&2
+if [ $# -ne 2 ]; then
+  echo "usage: $0 [mypy|basedmypy] <version>" 1>&2
   exit 1
 fi
 
 set -u
-readonly version="$1"
-readonly cloud_functions_dir="${sandbox_dir}/cloud_functions/${version}"
-readonly docker_dir="${sandbox_dir}/docker/${version}"
+readonly package="$1"
+readonly version="$2"
+
+if [[ "$package" == "mypy" ]]; then
+  sandbox_name="$version"
+elif [[ "$package" == "basedmypy" ]]; then
+  sandbox_name="${package}-${version}"
+else
+  echo "Unknown package: $package" >&2
+  echo "usage: $0 [mypy|basedmypy] <version>" 1>&2
+  exit 1
+fi
+readonly cloud_functions_dir="${sandbox_dir}/cloud_functions/${sandbox_name}"
+readonly docker_dir="${sandbox_dir}/docker/${sandbox_name}"
 
 if [ -d "$cloud_functions_dir" ]; then
   echo "${cloud_functions_dir} already exists" 1>&2
@@ -26,15 +37,10 @@ set -x
 
 mkdir "$cloud_functions_dir"
 cd "$cloud_functions_dir"
-case $version in
-  "basedmypy-"*)
-    echo "basedmypy==${version#basedmypy-}" > "requirements.in"
-    ;;
-  *)
-    echo "mypy==${version}
-typing-extensions" > "requirements.in"
-    ;;
-esac
+echo "${package}==${version}" > "requirements.in"
+if [[ "$package" == "mypy" ]]; then
+  echo "typing-extensions" >> "requirements.in"
+fi
 pip-compile
 ln -s ../main.py ./
 cd "$sandbox_dir"
