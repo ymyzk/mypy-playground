@@ -1,13 +1,16 @@
 name: Add mypy version
 
 on:
+  schedule:
+    - cron: "00 20 * * *" # 20:00 (UTC) for mypy
+    - cron: "30 20 * * *" # 20:30 (UTC) for basedmypy
   workflow_dispatch:
     inputs:
       package:
         description: Either mypy or basedmypy
-        required: true
+        required: false
         type: string
-        default: mypy
+        default: ""
       version:
         description: Package version
         required: false
@@ -28,15 +31,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Show inputs
+        id: inputs
         run: |
-          echo "Inputs:"
+          echo "Original inputs:"
           echo "  Package: $PACKAGE"
           echo "  Version: $VERSION"
           echo "  Python version: $PYTHON_VERSION"
+          if [ -n "$PACKAGE" ]; then
+            PACKAGE_OVERRIDE="PACKAGE"
+          elif [[ "$SCHEDULE" == "00 20 * * *" ]]; then
+            PACKAGE_OVERRIDE="mypy"
+          elif [[ "$SCHEDULE" == "30 20 * * *" ]]; then
+            PACKAGE_OVERRIDE="basedmypy"
+          else
+            PACKAGE_OVERRIDE="mypy"
+          fi
+          echo "Using package: $PACKAGE_OVERRIDE"
+          echo "package=$PACKAGE_OVERRIDE" >> "$GITHUB_OUTPUT"
         env:
           PACKAGE: ${{ github.event.inputs.package }}
           VERSION: ${{ github.event.inputs.version }}
           PYTHON_VERSION: ${{ github.event.inputs.python_version }}
+          SCHEDULE: ${{ github.event.schedule }}
 
       - uses: actions/checkout@v4
 
@@ -47,12 +63,12 @@ jobs:
             echo "Using manually specified version"
             echo "new_version=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
           else
-            NEW_VERSION=$(./find_new_versions.sh ${{ github.event.inputs.package }} | head -n 1)
+            NEW_VERSION=$(./find_new_versions.sh ${{ steps.inputs.outputs.package }} | head -n 1)
             echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
             if [ -n "$NEW_VERSION" ]; then
               echo "Found new version: $NEW_VERSION"
             else
-              echo "::error::No new ${{ github.event.inputs.package }} version found"
+              echo "::error::No new ${{ steps.inputs.outputs.package }} version found"
               exit 1
             fi
           fi
@@ -70,23 +86,23 @@ jobs:
 
       - name: Add version and update latest tag
         run: |
-          ./add_version.sh ${{ github.event.inputs.package }} ${{ steps.find_new_versions.outputs.new_version }}
-          ./update_latest.sh ${{ github.event.inputs.package }} ${{ steps.find_new_versions.outputs.new_version }}
+          ./add_version.sh ${{ steps.inputs.outputs.package }} ${{ steps.find_new_versions.outputs.new_version }}
+          ./update_latest.sh ${{ steps.inputs.outputs.package }} ${{ steps.find_new_versions.outputs.new_version }}
         working-directory: ./sandbox
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7
         with:
             token: ${{ secrets.GITHUB_TOKEN }}
-            commit-message: Add ${{ github.event.inputs.package }} ${{ steps.find_new_versions.outputs.new_version }}
+            commit-message: Add ${{ steps.inputs.outputs.package }} ${{ steps.find_new_versions.outputs.new_version }}
             committer: GitHub <noreply@github.com>
             author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
             signoff: false
             base: master
-            branch: ${{ github.event.inputs.package }}-new-version
+            branch: ${{ steps.inputs.outputs.package }}-new-version
             delete-branch: true
-            title: Add ${{ github.event.inputs.package }} ${{ steps.find_new_versions.outputs.new_version }}
+            title: Add ${{ steps.inputs.outputs.package }} ${{ steps.find_new_versions.outputs.new_version }}
             body: |
-              - Add ${{ github.event.inputs.package }} ${{ steps.find_new_versions.outputs.new_version }}
+              - Add ${{ steps.inputs.outputs.package }} ${{ steps.find_new_versions.outputs.new_version }}
               - Update the latest tag
             draft: false
