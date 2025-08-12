@@ -38,7 +38,7 @@ jobs:
           echo "  Version: $VERSION"
           echo "  Python version: $PYTHON_VERSION"
           if [ -n "$PACKAGE" ]; then
-            PACKAGE_OVERRIDE="PACKAGE"
+            PACKAGE_OVERRIDE="$PACKAGE"
           elif [[ "$SCHEDULE" == "00 20 * * *" ]]; then
             PACKAGE_OVERRIDE="mypy"
           elif [[ "$SCHEDULE" == "30 20 * * *" ]]; then
