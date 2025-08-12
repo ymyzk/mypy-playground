@@ -12,7 +12,7 @@ coverage[toml]==7.6.9
     # via pytest-cov
 iniconfig==2.0.0
     # via pytest
-mypy==1.13.0
+mypy==1.17.1
     # via -r requirements.dev.in
 mypy-extensions==1.0.0
     # via mypy
@@ -20,6 +20,8 @@ packaging==24.2
     # via
     #   build
     #   pytest
+pathspec==0.12.1
+    # via mypy
 pip-tools==7.4.1
     # via -r requirements.dev.in
 pluggy==1.5.0
