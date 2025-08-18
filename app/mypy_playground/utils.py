@@ -1,7 +1,7 @@
 import tomllib
 from os import environ
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 from tornado.options import options
 
@@ -10,8 +10,8 @@ def _parse_pair_str(config: str) -> tuple[str, str]:
     pair = tuple(config.split(":", 1))
     if len(pair) != 2:
         raise SyntaxError(f"The given string is not a pair: {config}")
-    # It's safe to cast as we already verified the length
-    return cast(tuple[str, str], pair)
+    # Already verified the length, so just return the tuple
+    return pair
 
 
 def _parse_pair_list(config: Any) -> tuple[str, str]:
