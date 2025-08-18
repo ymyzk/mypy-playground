@@ -54,7 +54,7 @@ jobs:
           PYTHON_VERSION: ${{ github.event.inputs.python_version }}
           SCHEDULE: ${{ github.event.schedule }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Find new versions
         id: find_new_versions
