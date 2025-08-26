@@ -50,7 +50,7 @@ requests==2.32.4
     # via -r requirements.in
 rsa==4.9
     # via google-auth
-tornado==6.5.1
+tornado==6.5.2
     # via -r requirements.in
 urllib3==2.5.0
     # via requests
