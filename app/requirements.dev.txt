@@ -41,7 +41,7 @@ pytest==8.4.2
     #   pytest-mock
     #   pytest-randomly
     #   pytest-tornado
-pytest-cov==6.2.1
+pytest-cov==6.3.0
     # via -r requirements.dev.in
 pytest-mock==3.14.1
     # via -r requirements.dev.in
