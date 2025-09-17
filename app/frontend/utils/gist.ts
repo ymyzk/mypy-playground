@@ -17,15 +17,12 @@ export async function shareGist(source: string): Promise<{ gistId: string; gistU
 }
 
 export async function fetchGist(gistId: string): Promise<{ source: string }> {
-  const response = await axios.get(`https://api.github.com/gists/${gistId}`, {
+  const response = await axios.get(`https://gist.githubusercontent.com/mypy-play/${gistId}/raw/main.py`, {
     validateStatus(status) {
       return status === 200;
     },
   });
-  if (!("main.py" in response.data.files)) {
-    throw new Error('"main.py" not found');
-  }
   return {
-    source: response.data.files["main.py"].content,
+    source: response.data,
   };
 }
