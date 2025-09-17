@@ -77,7 +77,7 @@ jobs:
 
       - name: Set up Python
         if: steps.find_new_versions.outcome == 'success'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ github.event.inputs.python_version }}
 
