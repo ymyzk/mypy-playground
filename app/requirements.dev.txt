@@ -12,7 +12,7 @@ coverage[toml]==7.10.6
     # via pytest-cov
 iniconfig==2.0.0
     # via pytest
-mypy==1.18.1
+mypy==1.18.2
     # via -r requirements.dev.in
 mypy-extensions==1.0.0
     # via mypy
@@ -62,7 +62,9 @@ types-setuptools==80.9.0.20250822
 types-toml==0.10.8.20240310
     # via -r requirements.dev.in
 typing-extensions==4.14.1
-    # via mypy
+    # via
+    #   -c requirements.txt
+    #   mypy
 wheel==0.45.1
     # via pip-tools
 
