@@ -24,7 +24,7 @@ frozenlist==1.5.0
     # via
     #   aiohttp
     #   aiosignal
-google-auth==2.40.3
+google-auth==2.41.1
     # via -r requirements.in
 idna==3.10
     # via
