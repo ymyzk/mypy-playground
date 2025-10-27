@@ -57,7 +57,7 @@ jobs:
         npm run lint
         npm run test:ci
       working-directory: ./app/frontend
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v5
       if: matrix.node-version == '24.x'
       with:
         name: frontend
