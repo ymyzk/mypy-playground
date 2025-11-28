@@ -31,7 +31,7 @@ services:
       - ./app/frontend/utils:/app/utils
 
   docker:
-    image: docker:28.5-dind-rootless
+    image: docker:29.0-dind-rootless
     privileged: true
     environment:
       DOCKER_HOST: unix:///run/user/1000/docker.sock
