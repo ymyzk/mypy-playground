@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any
 
+# The flags we display to the user as options in the "Options" menu.
+
 ARGUMENT_FLAGS_NORMAL = (
     "verbose",
     "ignore-missing-imports",
@@ -39,12 +41,14 @@ ARGUMENT_FLAGS_STRICT = (
     "no-strict-optional",
     "no-warn-no-return",
     "strict-equality",
+    "strict-equality-for-none",
     "warn-incomplete-stub",
     "warn-redundant-casts",
     "warn-return-any",
     "warn-unreachable",
     "warn-unused-configs",
     "warn-unused-ignores",
+    "extra-checks",
 )
 
 ARGUMENT_FLAGS = ARGUMENT_FLAGS_NORMAL + ARGUMENT_FLAGS_STRICT
