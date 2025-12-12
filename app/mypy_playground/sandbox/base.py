@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any
 
-# The flags we display to the user as options in the "Options" menu.
+# The flags we display to the user as options in the "Options" menu are defined in the categories below.
 
 ARGUMENT_FLAGS_NORMAL = (
     "verbose",
