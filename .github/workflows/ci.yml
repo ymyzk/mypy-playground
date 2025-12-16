@@ -19,7 +19,7 @@ jobs:
         python-version: ['3.13']
     steps:
     - uses: actions/checkout@v6
-    - uses: actions/download-artifact@v6
+    - uses: actions/download-artifact@v7
       with:
         name: frontend
         path: app/static
