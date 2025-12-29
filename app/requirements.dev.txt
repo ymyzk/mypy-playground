@@ -59,7 +59,7 @@ types-chardet==5.0.4.6
     # via -r requirements.dev.in
 types-mock==5.2.0.20250924
     # via -r requirements.dev.in
-types-setuptools==80.9.0.20251221
+types-setuptools==80.9.0.20251223
     # via -r requirements.dev.in
 types-toml==0.10.8.20240310
     # via -r requirements.dev.in
