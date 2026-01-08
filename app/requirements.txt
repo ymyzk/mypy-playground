@@ -54,7 +54,7 @@ tornado==6.5.4
     # via -r requirements.in
 typing-extensions==4.14.1
     # via aiosignal
-urllib3==2.6.0
+urllib3==2.6.3
     # via requests
 yarl==1.18.3
     # via aiohttp
