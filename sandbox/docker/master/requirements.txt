@@ -4,11 +4,13 @@
 #
 #    pip-compile
 #
+librt==0.7.7
+    # via mypy
 mypy @ git+https://github.com/python/mypy.git
     # via -r requirements.in
 mypy-extensions==1.1.0
     # via mypy
-pathspec==0.12.1
+pathspec==1.0.3
     # via mypy
 typing-extensions==4.15.0
     # via
