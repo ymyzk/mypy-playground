@@ -34,7 +34,7 @@ multidict==6.1.0
     # via
     #   aiohttp
     #   yarl
-prometheus-client==0.24.0
+prometheus-client==0.24.1
     # via -r requirements.in
 propcache==0.2.1
     # via
