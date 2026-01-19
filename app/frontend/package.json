@@ -19,7 +19,7 @@
     "ace-builds": "^1.43.5",
     "axios": "^1.13.2",
     "bootstrap": "^5.3.8",
-    "next": "^15.5.9",
+    "next": "^16.1.3",
     "prop-types": "^15.7.2",
     "react": "^19.2.3",
     "react-ace": "^14.0.1",
