@@ -22,6 +22,7 @@ packaging==24.2
     # via
     #   build
     #   pytest
+    #   wheel
 pathspec==0.12.1
     # via mypy
 pip-tools==7.5.2
@@ -67,7 +68,7 @@ typing-extensions==4.14.1
     # via
     #   -c requirements.txt
     #   mypy
-wheel==0.45.1
+wheel==0.46.2
     # via pip-tools
 
 # The following packages are considered to be unsafe in a requirements file:
