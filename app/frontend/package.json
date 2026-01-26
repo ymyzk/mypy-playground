@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "ace-builds": "^1.43.5",
-    "axios": "^1.13.2",
+    "axios": "^1.13.3",
     "bootstrap": "^5.3.8",
     "next": "^15.5.9",
     "prop-types": "^15.7.2",
