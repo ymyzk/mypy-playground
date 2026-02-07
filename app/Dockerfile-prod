@@ -16,7 +16,7 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY --from=0 /app/out/ /app/static/
+COPY --from=0 /app/dist/ /app/static/
 COPY requirements.txt /app/
 RUN apk add --no-cache --virtual build-deps build-base \
         && pip install --no-cache-dir -r requirements.txt \

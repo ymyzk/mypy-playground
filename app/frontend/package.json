@@ -1,23 +1,28 @@
 {
-  "name": "frontend2",
+  "name": "frontend-vite",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "format": "prettier --write .",
+    "format:ci": "prettier --check .",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "vitest",
+    "test:ci": "vitest run"
+  },
+  "engines": {
+    "node": ">=24"
   },
   "dependencies": {
     "ace-builds": "^1.43.6",
     "axios": "^1.13.4",
     "bootstrap": "^5.3.8",
-    "react": "^19.2.0",
+    "react": "^19.2.4",
     "react-ace": "^14.0.1",
-    "react-dom": "^19.2.0",
+    "react-dom": "^19.2.4",
     "reactstrap": "^9.2.3"
   },
   "devDependencies": {
@@ -34,7 +39,8 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "jsdom": "^28.0.0",
-    "typescript": "~5.9.3",
+    "prettier": "^3.8.0",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4",
     "vitest": "^4.0.18"

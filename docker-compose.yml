@@ -19,11 +19,9 @@ services:
     environment:
       VITE_API_BASE_URL: http://app:8080
     volumes:
-      - ./app/frontend/components:/app/components
-      - ./app/frontend/pages:/app/pages
+      - ./app/frontend/index.html:/app/index.html
       - ./app/frontend/public:/app/public
-      - ./app/frontend/styles:/app/styles
-      - ./app/frontend/utils:/app/utils
+      - ./app/frontend/src:/app/src
 
   docker:
     image: docker:29.2-dind-rootless

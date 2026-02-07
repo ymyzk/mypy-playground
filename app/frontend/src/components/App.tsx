@@ -161,7 +161,12 @@ export default class App extends React.Component<Props, State> {
         },
       });
     } catch (error) {
-      this.setState({ result: { status: "failed", message: `Failed to create a gist: ${error}` } });
+      this.setState({
+        result: {
+          status: "failed",
+          message: `Failed to create a gist: ${error}`,
+        },
+      });
     }
   }
 
@@ -176,7 +181,12 @@ export default class App extends React.Component<Props, State> {
         source,
       });
     } catch (error) {
-      this.setState({ result: { status: "failed", message: `Failed to fetch the gist: ${error}` } });
+      this.setState({
+        result: {
+          status: "failed",
+          message: `Failed to fetch the gist: ${error}`,
+        },
+      });
     }
   }
 

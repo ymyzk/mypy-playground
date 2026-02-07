@@ -61,7 +61,7 @@ jobs:
       if: matrix.node-version == '24.x'
       with:
         name: frontend
-        path: app/frontend/out
+        path: app/frontend/dist
 
   build_docker_images:
     name: Build and push Docker images
