@@ -10,8 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "ace-builds": "^1.43.6",
+    "axios": "^1.13.4",
+    "bootstrap": "^5.3.8",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-ace": "^14.0.1",
+    "react-dom": "^19.2.0",
+    "reactstrap": "^9.2.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
