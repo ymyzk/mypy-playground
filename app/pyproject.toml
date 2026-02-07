@@ -1,3 +1,37 @@
+[project]
+name = "mypy-playground"
+version = "0.0.0"
+requires-python = ">=3.13"
+dependencies = [
+    "aiodocker>=0.13.0,<1.0",
+    "google-auth",
+    "prometheus-client<1",
+    "requests",
+    "tornado>=6,<7",
+]
+
+[dependency-groups]
+dev = [
+    "mypy",
+    "pre-commit",
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "pytest-randomly",
+    "pytest-tornado",
+    "types-chardet",
+    "types-mock",
+    "types-setuptools",
+    "types-toml",
+]
+
+[tool.pytest]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = [
+    "--cov=mypy_playground",
+]
+
 [tool.mypy]
 python_version = "3.13"
 strict = true

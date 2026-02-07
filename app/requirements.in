@@ -1,5 +1,0 @@
-aiodocker>=0.13.0,<1.0
-google-auth
-prometheus_client<1
-requests  # Until google-auth supports asyncio
-tornado>=6,<7
