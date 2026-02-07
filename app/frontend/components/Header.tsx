@@ -19,15 +19,15 @@ import {
 
 import styles from "./Header.module.css";
 import MultiSelectOption from "./MultiSelectOption";
-import { Config, Context } from "./types";
+import { Config, ConfigDiff, Context } from "./types";
 
 type Props = {
   context: Context;
   config: Config;
-  status: any;
-  onGistClick: any;
-  onRunClick: any;
-  onConfigChange: any;
+  status: string;
+  onGistClick: () => void;
+  onRunClick: () => void;
+  onConfigChange: (configDiff: ConfigDiff) => void;
 };
 
 type State = {
@@ -45,9 +45,9 @@ class Header extends React.Component<Props, State> {
 
   toggle(name: string) {
     const stateName = `${name}IsOpen`;
-    // @ts-ignore
+    // @ts-expect-error - Dynamic key access
     this.setState((prevState) => ({
-      // @ts-ignore
+      // @ts-expect-error - Dynamic key access
       [stateName]: !prevState[stateName],
     }));
   }

@@ -10,7 +10,7 @@
     "test:ci": "jest --ci",
     "format": "prettier --write .",
     "format:ci": "prettier --check .",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "engines": {
     "node": ">=20"
@@ -34,6 +34,7 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.10",
     "@types/react-dom": "^19.2.3",
+    "baseline-browser-mapping": "^2.9.19",
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.6",
     "jest": "^30.2.0",

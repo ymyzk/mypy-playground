@@ -1,6 +1,6 @@
 import axios from "axios";
 
-type Request = { [key: string]: any };
+type Request = { [key: string]: boolean | string | string[] };
 type Response = {
   exit_code: number;
   stdout: string;

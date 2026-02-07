@@ -19,3 +19,20 @@ export type Context = {
   };
   gaTrackingId: string | null;
 };
+
+export type TypecheckResult = {
+  exit_code: number;
+  stdout: string;
+  stderr: string;
+  duration: number;
+};
+
+export type AppResult =
+  | { status: "ready" }
+  | { status: "running" }
+  | { status: "succeeded"; result: TypecheckResult }
+  | { status: "failed"; message: string }
+  | { status: "creating_gist" }
+  | { status: "fetching_gist" }
+  | { status: "created_gist"; gistUrl: string; playgroundUrl: string }
+  | { status: "fetched_gist" };
