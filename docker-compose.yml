@@ -1,11 +1,4 @@
 services:
-  caddy:
-    image: caddy:2.10-alpine
-    ports:
-      - 127.0.0.1:8000:8000
-    volumes:
-      - ./app/Caddyfile:/etc/caddy/Caddyfile:ro
-
   app:
     build: app
     ports:
@@ -22,7 +15,9 @@ services:
   frontend:
     build: app/frontend
     ports:
-      - 127.0.0.1:3000:3000
+      - 127.0.0.1:8000:5173
+    environment:
+      VITE_API_BASE_URL: http://app:8080
     volumes:
       - ./app/frontend/components:/app/components
       - ./app/frontend/pages:/app/pages
