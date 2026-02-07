@@ -138,7 +138,7 @@ class CloudFunctionsSandbox(AbstractSandbox):
         # 2. google-auth library
         # Experimental async support
         # https://googleapis.dev/python/google-auth/latest/reference/google.auth.transport._aiohttp_requests.html
-        auth_req = google.auth.transport.requests.Request()  # type: ignore[no-untyped-call]
+        auth_req = google.auth.transport.requests.Request()
         # Get a token or raise an exception
         if isinstance(
             token := google.oauth2.id_token.fetch_id_token(auth_req, url),  # type: ignore[no-untyped-call]
