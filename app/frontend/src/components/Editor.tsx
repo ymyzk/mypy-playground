@@ -1,19 +1,10 @@
-import { Ace } from "ace-builds";
-import dynamic from "next/dynamic";
+import type { Ace } from "ace-builds";
 import React from "react";
+import AceEditor from "react-ace";
+import "ace-builds/src-noconflict/mode-python";
+import "ace-builds/src-noconflict/theme-textmate";
 
 import styles from "./Editor.module.css";
-
-// Disable SSR as AceEditor needs "window"
-const AceEditor = dynamic(
-  async () => {
-    const ace = await import("react-ace");
-    await import("ace-builds/src-noconflict/mode-python");
-    await import("ace-builds/src-noconflict/theme-textmate");
-    return ace;
-  },
-  { ssr: false },
-);
 
 type Props = {
   annotations: Ace.Annotation[];

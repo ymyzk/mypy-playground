@@ -1,11 +1,11 @@
-import React from "react";
 import { render, screen } from "@testing-library/react";
 
 import Result from "./Result";
+import type { AppResult } from "./types";
 
 describe("Result", () => {
   test("renders when result is ready", () => {
-    const result = {
+    const result: AppResult = {
       status: "ready",
     };
 
@@ -15,7 +15,7 @@ describe("Result", () => {
   });
 
   test("renders when result is running", () => {
-    const result = {
+    const result: AppResult = {
       status: "running",
     };
 
@@ -25,7 +25,7 @@ describe("Result", () => {
   });
 
   test("renders when result is succeeded with zero exit code", () => {
-    const result = {
+    const result: AppResult = {
       status: "succeeded",
       result: {
         exit_code: 0,
@@ -44,7 +44,7 @@ describe("Result", () => {
   });
 
   test("renders when result is succeeded with non-zero exit code", () => {
-    const result = {
+    const result: AppResult = {
       status: "succeeded",
       result: {
         exit_code: 1,
@@ -64,7 +64,7 @@ describe("Result", () => {
   });
 
   test("renders when creating a gist", () => {
-    const result = {
+    const result: AppResult = {
       status: "creating_gist",
     };
 
@@ -74,7 +74,7 @@ describe("Result", () => {
   });
 
   test("renders when fetching a gist", () => {
-    const result = {
+    const result: AppResult = {
       status: "fetching_gist",
     };
 
@@ -84,7 +84,7 @@ describe("Result", () => {
   });
 
   test("renders when created a gist", () => {
-    const result = {
+    const result: AppResult = {
       status: "created_gist",
       gistUrl: "https://example.com/gist",
       playgroundUrl: "https://example.com/mypy-play?gist=abc",

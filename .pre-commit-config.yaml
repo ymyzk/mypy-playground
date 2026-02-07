@@ -4,6 +4,7 @@ repos:
     hooks:
       - id: check-added-large-files
       - id: check-json
+        exclude: ^app/frontend/tsconfig.*\.json$
       - id: check-shebang-scripts-are-executable
       - id: check-symlinks
       - id: check-toml

@@ -1,7 +1,7 @@
 import React from "react";
 
 import styles from "./Result.module.css";
-import { AppResult } from "./types";
+import type { AppResult } from "./types";
 
 type Props = {
   result: AppResult;

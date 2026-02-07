@@ -5,21 +5,20 @@
 ### Local development
 ```mermaid
 graph TD
-    Caddy["Caddy reverse proxy (:8000)"]
-    Next["Next.js server (:3000)"]
+    Vite["Vite server (:8000)"]
     Tornado["Tornado server (:8080)"]
 
-    Browser --> Caddy
-    Caddy -->|/api/| Tornado
-    Caddy -->|/*| Next
+    Browser --> Vite
+    Vite -->|/api/| Tornado
+    Vite -->|/*| Vite
 ```
 
 ### Production
 ```mermaid
 graph TD
-    Next["Next.js exported static files"]
+    Vite["Vite exported static files"]
     Tornado["Tornado server"]
 
     Browser --> Tornado
-    Tornado -->|index.html and /_next/| Next
+    Tornado -->|index.html and /assets/| Vite
 ```

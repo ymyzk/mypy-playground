@@ -7,4 +7,4 @@ RUN npm i && rm -rf /root/.node-gyp /root/.npm
 
 COPY . /app/
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev", "--", "--host"]

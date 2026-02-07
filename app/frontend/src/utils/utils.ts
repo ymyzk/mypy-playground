@@ -1,4 +1,4 @@
-import { Ace } from "ace-builds";
+import type { Ace } from "ace-builds";
 
 function getTypeFromLevel(level: string): string {
   const levelToType: { [key: string]: string } = {

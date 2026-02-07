@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Spinner } from "reactstrap";
-import { Context } from "./types";
+import type { Context } from "./types";
 
 function ContextLoader(WrappedComponent: React.ComponentType<{ context: Context }>) {
   return function ContextLoaderWrapper(props: Record<string, unknown>) {

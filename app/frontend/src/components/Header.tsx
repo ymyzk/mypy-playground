@@ -19,7 +19,7 @@ import {
 
 import styles from "./Header.module.css";
 import MultiSelectOption from "./MultiSelectOption";
-import { Config, ConfigDiff, Context } from "./types";
+import type { Config, ConfigDiff, Context } from "./types";
 
 type Props = {
   context: Context;

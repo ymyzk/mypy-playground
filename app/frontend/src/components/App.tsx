@@ -1,4 +1,4 @@
-import { Ace } from "ace-builds";
+import type { Ace } from "ace-builds";
 import React from "react";
 import axios from "axios";
 
@@ -8,7 +8,7 @@ import { parseMessages } from "../utils/utils";
 import Editor from "./Editor";
 import Header from "./Header";
 import Result from "./Result";
-import { AppResult, Config, ConfigDiff, Context } from "./types";
+import type { AppResult, Config, ConfigDiff, Context } from "./types";
 
 type Props = {
   context: Context;
@@ -46,11 +46,6 @@ export default class App extends React.Component<Props, State> {
   componentDidMount() {
     const { context } = this.state;
 
-    // if (context.ga_tracking_id) {
-    //   ReactGA.initialize(context.ga_tracking_id);
-    //   ReactGA.pageview(window.location.pathname + window.location.search);
-    // }
-
     const params = new URLSearchParams(window.location.search);
     // Load configurations
     const diff: ConfigDiff = {};
@@ -83,7 +78,7 @@ export default class App extends React.Component<Props, State> {
     }
   }
 
-  componentDidUpdate(prevProps: Props, prevState: State) {
+  componentDidUpdate(_prevProps: Props, prevState: State) {
     const { config, context, source } = this.state;
 
     // Push history when configuration has changed
@@ -166,7 +161,12 @@ export default class App extends React.Component<Props, State> {
         },
       });
     } catch (error) {
-      this.setState({ result: { status: "failed", message: `Failed to create a gist: ${error}` } });
+      this.setState({
+        result: {
+          status: "failed",
+          message: `Failed to create a gist: ${error}`,
+        },
+      });
     }
   }
 
@@ -181,7 +181,12 @@ export default class App extends React.Component<Props, State> {
         source,
       });
     } catch (error) {
-      this.setState({ result: { status: "failed", message: `Failed to fetch the gist: ${error}` } });
+      this.setState({
+        result: {
+          status: "failed",
+          message: `Failed to fetch the gist: ${error}`,
+        },
+      });
     }
   }
 
