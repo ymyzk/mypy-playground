@@ -10,7 +10,7 @@
     "test:ci": "jest --ci",
     "format": "prettier --write .",
     "format:ci": "prettier --check .",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "engines": {
     "node": ">=20"
@@ -19,7 +19,7 @@
     "ace-builds": "^1.43.6",
     "axios": "^1.13.4",
     "bootstrap": "^5.3.8",
-    "next": "^15.5.10",
+    "next": "^16.1.6",
     "prop-types": "^15.7.2",
     "react": "^19.2.4",
     "react-ace": "^14.0.1",
@@ -34,8 +34,9 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.10",
     "@types/react-dom": "^19.2.3",
+    "baseline-browser-mapping": "^2.9.19",
     "eslint": "^9.39.2",
-    "eslint-config-next": "^15.5.6",
+    "eslint-config-next": "^16.1.6",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "prettier": "^3.8.0",

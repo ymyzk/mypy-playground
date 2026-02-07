@@ -1,15 +1,10 @@
 import React from "react";
 
 import styles from "./Result.module.css";
+import { AppResult } from "./types";
 
 type Props = {
-  result: {
-    status: string;
-    message?: string;
-    result?: any;
-    gistUrl?: string;
-    playgroundUrl?: string;
-  };
+  result: AppResult;
 };
 
 function Result({ result }: Props): React.JSX.Element {

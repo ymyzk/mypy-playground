@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Spinner } from "reactstrap";
+import { Context } from "./types";
 
-function ContextLoader(WrappedComponent: any) {
-  return function ContextLoaderWrapper(props: any) {
-    const [context, setContext] = useState({});
+function ContextLoader(WrappedComponent: React.ComponentType<{ context: Context }>) {
+  return function ContextLoaderWrapper(props: Record<string, unknown>) {
+    const [context, setContext] = useState<Context | null>(null);
     // State transition: init -> loading -> done
     const [status, setStatus] = useState("init");
 
@@ -21,7 +22,7 @@ function ContextLoader(WrappedComponent: any) {
       })();
     }, [status]);
 
-    if (status !== "done") {
+    if (status !== "done" || !context) {
       return (
         <div className="vh-100 d-flex align-items-center justify-content-center">
           <Spinner color="primary" type="grow">
@@ -30,7 +31,6 @@ function ContextLoader(WrappedComponent: any) {
         </div>
       );
     }
-    // eslint-disable-next-line react/jsx-props-no-spreading
     return <WrappedComponent context={context} {...props} />;
   };
 }

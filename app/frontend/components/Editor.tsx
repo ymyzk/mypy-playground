@@ -17,7 +17,7 @@ const AceEditor = dynamic(
 
 type Props = {
   annotations: Ace.Annotation[];
-  onChange: any;
+  onChange: (value: string) => void;
   source: string;
 };
 

@@ -8,7 +8,7 @@ import { parseMessages } from "../utils/utils";
 import Editor from "./Editor";
 import Header from "./Header";
 import Result from "./Result";
-import { Config, ConfigDiff, Context } from "./types";
+import { AppResult, Config, ConfigDiff, Context } from "./types";
 
 type Props = {
   context: Context;
@@ -19,7 +19,7 @@ type State = {
   config: Config;
   context: Context;
   source: string;
-  result: any;
+  result: AppResult;
 };
 
 export default class App extends React.Component<Props, State> {
@@ -28,7 +28,6 @@ export default class App extends React.Component<Props, State> {
 
     const { context } = props;
     this.state = {
-      // eslint-disable-line react/state-in-constructor
       annotations: [],
       config: context.defaultConfig,
       context,
@@ -68,7 +67,6 @@ export default class App extends React.Component<Props, State> {
       }
     });
     if (params.has("flags")) {
-      // eslint-disable-next-line no-restricted-syntax
       for (const flag of params.get("flags")!.split(",")) {
         diff[flag] = true;
       }
@@ -77,7 +75,6 @@ export default class App extends React.Component<Props, State> {
     // Load source
     const source = window.localStorage.getItem("source");
     if (source) {
-      // eslint-disable-next-line react/no-did-mount-set-state
       this.setState({ source });
     }
     // Load gist
@@ -86,7 +83,6 @@ export default class App extends React.Component<Props, State> {
     }
   }
 
-  // eslint-disable-next-line no-unused-vars
   componentDidUpdate(prevProps: Props, prevState: State) {
     const { config, context, source } = this.state;
 
@@ -140,8 +136,8 @@ export default class App extends React.Component<Props, State> {
 
     try {
       const result = await runTypecheck({
-        ...config, // eslint-disable-line react/no-access-state-in-setstate
-        source, // eslint-disable-line react/no-access-state-in-setstate
+        ...config,
+        source,
       });
       this.setState({
         result: { status: "succeeded", result },

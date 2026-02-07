@@ -19,7 +19,6 @@ export default function MultiSelectOption({ name, choices, values, onConfigChang
       {choices.map((choice: string) => {
         const key = `${name}-${choice}`;
         const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-          const updatedValues = [...values]; // shallow copy
           if (e.target.checked && !values.includes(choice)) {
             onConfigChange({
               [name]: [...values, choice],
