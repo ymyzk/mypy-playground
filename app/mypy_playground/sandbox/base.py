@@ -23,6 +23,7 @@ ARGUMENT_FLAGS_NORMAL = (
 
 ARGUMENT_FLAGS_STRICT = (
     "allow-redefinition",
+    "allow-redefinition-new",
     "allow-untyped-globals",
     "strict",
     "strict-bytes",
