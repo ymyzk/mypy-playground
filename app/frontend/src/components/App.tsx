@@ -1,9 +1,9 @@
 import type { Ace } from "ace-builds";
-import React from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 
 import { runTypecheck } from "../utils/api";
-import { fetchGist, shareGist } from "../utils/gist";
+import { fetchGist as fetchGistAPI, shareGist as shareGistAPI } from "../utils/gist";
 import { parseMessages } from "../utils/utils";
 import Editor from "./Editor";
 import Header from "./Header";
@@ -14,197 +14,175 @@ type Props = {
   context: Context;
 };
 
-type State = {
-  annotations: Ace.Annotation[];
-  config: Config;
-  context: Context;
-  source: string;
-  result: AppResult;
-};
+// Helper function to parse URL params and compute initial config
+function getInitialConfig(context: Context): Config {
+  const params = new URLSearchParams(window.location.search);
+  const diff: ConfigDiff = {};
 
-export default class App extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    const { context } = props;
-    this.state = {
-      annotations: [],
-      config: context.defaultConfig,
-      context,
-      source: context.initialCode,
-      result: {
-        status: "ready",
-      },
-    };
-
-    this.run = this.run.bind(this);
-    this.shareGist = this.shareGist.bind(this);
-    this.onChange = this.onChange.bind(this);
-    this.updateConfig = this.updateConfig.bind(this);
+  if (params.has("mypy")) {
+    diff.mypyVersion = params.get("mypy")!;
+  }
+  if (params.has("python")) {
+    diff.pythonVersion = params.get("python")!;
+  }
+  Object.entries(context.multiSelectOptions).forEach(([option, choices]) => {
+    if (params.has(option)) {
+      const values = params.get(option)?.split(",") || [];
+      diff[option] = values.filter((v) => choices.includes(v));
+    }
+  });
+  if (params.has("flags")) {
+    for (const flag of params.get("flags")!.split(",")) {
+      diff[flag] = true;
+    }
   }
 
-  componentDidMount() {
-    const { context } = this.state;
+  return {
+    ...context.defaultConfig,
+    ...diff,
+  };
+}
+
+// Helper function to get initial source from localStorage
+function getInitialSource(context: Context): string {
+  const storedSource = window.localStorage.getItem("source");
+  return storedSource || context.initialCode;
+}
+
+export default function App({ context }: Props) {
+  const [annotations, setAnnotations] = useState<Ace.Annotation[]>([]);
+  const [config, setConfig] = useState<Config>(() => getInitialConfig(context));
+  const [contextState] = useState<Context>(context);
+  const [source, setSource] = useState<string>(() => getInitialSource(context));
+  const [result, setResult] = useState<AppResult>({ status: "ready" });
+
+  const isFirstRender = useRef(true);
+
+  // Helper function to fetch gist
+  const fetchGist = async (gistId: string) => {
+    setResult({ status: "fetching_gist" });
+    try {
+      const { source: gistSource } = await fetchGistAPI(gistId);
+      setResult({
+        status: "fetched_gist",
+      });
+      setSource(gistSource);
+    } catch (error) {
+      setResult({
+        status: "failed",
+        message: `Failed to fetch the gist: ${error}`,
+      });
+    }
+  };
+
+  // ComponentDidMount effect - runs once on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    // Load gist if specified in URL
+    if (params.has("gist")) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      void fetchGist(params.get("gist")!);
+    }
+  }, []); // Empty array means run once on mount
+
+  // Sync config changes to URL history
+  useEffect(() => {
+    // Skip on first render to avoid pushing history on mount
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
 
     const params = new URLSearchParams(window.location.search);
-    // Load configurations
-    const diff: ConfigDiff = {};
-    if (params.has("mypy")) {
-      diff.mypyVersion = params.get("mypy")!;
-    }
-    if (params.has("python")) {
-      diff.pythonVersion = params.get("python")!;
-    }
-    Object.entries(context.multiSelectOptions).forEach(([option, choices]) => {
-      if (params.has(option)) {
-        const values = params.get(option)?.split(",") || [];
-        diff[option] = values.filter((v) => choices.includes(v));
+    const flags: string[] = [];
+    Object.entries(config).forEach(([k, v]) => {
+      if (k === "mypyVersion" && typeof v == "string") {
+        params.set("mypy", v);
+      } else if (k === "pythonVersion" && typeof v == "string") {
+        params.set("python", v);
+      } else if (k in contextState.multiSelectOptions && Array.isArray(v)) {
+        if (v.length > 0) {
+          params.set(k, v.join(","));
+        } else {
+          params.delete(k);
+        }
+      } else if (v) {
+        flags.push(k);
       }
     });
-    if (params.has("flags")) {
-      for (const flag of params.get("flags")!.split(",")) {
-        diff[flag] = true;
-      }
+    if (flags.length > 0) {
+      params.set("flags", flags.join(","));
+    } else {
+      params.delete("flags");
     }
-    this.updateConfig(diff);
-    // Load source
-    const source = window.localStorage.getItem("source");
-    if (source) {
-      this.setState({ source });
-    }
-    // Load gist
-    if (params.has("gist")) {
-      this.fetchGist(params.get("gist")!);
-    }
-  }
+    window.history.pushState({}, "", `?${params.toString()}`);
+  }, [config, contextState.multiSelectOptions]);
 
-  componentDidUpdate(_prevProps: Props, prevState: State) {
-    const { config, context, source } = this.state;
+  // Sync source to localStorage
+  useEffect(() => {
+    window.localStorage.setItem("source", source);
+  }, [source]);
 
-    // Push history when configuration has changed
-    const params = new URLSearchParams(window.location.search);
-    if (prevState.config !== config) {
-      const flags: string[] = [];
-      Object.entries(config).forEach(([k, v]) => {
-        if (k === "mypyVersion" && typeof v == "string") {
-          params.set("mypy", v);
-        } else if (k === "pythonVersion" && typeof v == "string") {
-          params.set("python", v);
-        } else if (k in context.multiSelectOptions && Array.isArray(v)) {
-          if (v.length > 0) {
-            params.set(k, v.join(","));
-          } else {
-            params.delete(k);
-          }
-        } else if (v) {
-          flags.push(k);
-        }
-      });
-      if (flags.length > 0) {
-        params.set("flags", flags.join(","));
-      }
-      window.history.pushState({}, "", `?${params.toString()}`);
-    }
+  const onChange = (newSource: string) => {
+    setSource(newSource);
+  };
 
-    if (prevState.source !== source) {
-      window.localStorage.setItem("source", source);
-    }
-  }
-
-  onChange(source: string) {
-    this.setState({ source });
-  }
-
-  updateConfig(configDiff: ConfigDiff) {
-    this.setState((prevState) => ({
-      config: {
-        ...prevState.config,
-        ...configDiff,
-      },
+  const updateConfig = useCallback((configDiff: ConfigDiff) => {
+    setConfig((prevConfig) => ({
+      ...prevConfig,
+      ...configDiff,
     }));
-  }
+  }, []);
 
-  async run() {
-    const { config, source } = this.state;
-
-    this.setState({ result: { status: "running" } });
+  const run = useCallback(async () => {
+    setResult({ status: "running" });
 
     try {
-      const result = await runTypecheck({
+      const typecheckResult = await runTypecheck({
         ...config,
         source,
       });
-      this.setState({
-        result: { status: "succeeded", result },
-        annotations: parseMessages(result.stdout),
-      });
+      setResult({ status: "succeeded", result: typecheckResult });
+      setAnnotations(parseMessages(typecheckResult.stdout));
     } catch (error) {
       const message = axios.isAxiosError(error) ? error.message : `${error}`;
-      this.setState({ result: { status: "failed", message } });
+      setResult({ status: "failed", message });
     }
-  }
+  }, [config, source]);
 
-  async shareGist() {
-    const { source } = this.state;
-    this.setState({ result: { status: "creating_gist" } });
+  const shareGist = useCallback(async () => {
+    setResult({ status: "creating_gist" });
     try {
       const playgroundUrl = new URL(window.location.href);
       const params = new URLSearchParams(playgroundUrl.search);
-      const { gistId, gistUrl } = await shareGist(source);
+      const { gistId, gistUrl } = await shareGistAPI(source);
       params.set("gist", gistId);
       playgroundUrl.search = `?${params.toString()}`;
-      this.setState({
-        result: {
-          status: "created_gist",
-          gistUrl,
-          playgroundUrl: playgroundUrl.toString(),
-        },
+      setResult({
+        status: "created_gist",
+        gistUrl,
+        playgroundUrl: playgroundUrl.toString(),
       });
     } catch (error) {
-      this.setState({
-        result: {
-          status: "failed",
-          message: `Failed to create a gist: ${error}`,
-        },
+      setResult({
+        status: "failed",
+        message: `Failed to create a gist: ${error}`,
       });
     }
-  }
+  }, [source]);
 
-  async fetchGist(gistId: string) {
-    this.setState({ result: { status: "fetching_gist" } });
-    try {
-      const { source } = await fetchGist(gistId);
-      this.setState({
-        result: {
-          status: "fetched_gist",
-        },
-        source,
-      });
-    } catch (error) {
-      this.setState({
-        result: {
-          status: "failed",
-          message: `Failed to fetch the gist: ${error}`,
-        },
-      });
-    }
-  }
-
-  render() {
-    const { annotations, config, context, result, source } = this.state;
-    return (
-      <div className="App d-flex flex-flow flex-column vh-100">
-        <Header
-          context={context}
-          config={config}
-          status={result.status}
-          onGistClick={this.shareGist}
-          onRunClick={this.run}
-          onConfigChange={this.updateConfig}
-        />
-        <Editor onChange={this.onChange} annotations={annotations} source={source} />
-        <Result result={result} />
-      </div>
-    );
-  }
+  return (
+    <div className="App d-flex flex-flow flex-column vh-100">
+      <Header
+        context={contextState}
+        config={config}
+        status={result.status}
+        onGistClick={shareGist}
+        onRunClick={run}
+        onConfigChange={updateConfig}
+      />
+      <Editor onChange={onChange} annotations={annotations} source={source} />
+      <Result result={result} />
+    </div>
+  );
 }
