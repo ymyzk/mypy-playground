@@ -10,7 +10,11 @@ services:
       # See app/config.toml as well
     volumes:
       - docker_certs:/certs
-      - ./app:/app
+      - ./app/config.toml:/app/config.toml
+      - ./app/mypy_playground:/app/mypy_playground
+      - ./app/pyproject.toml:/app/pyproject.toml
+      - ./app/tests:/app/tests
+      - ./app/uv.lock:/app/uv.lock
 
   frontend:
     build: app/frontend
