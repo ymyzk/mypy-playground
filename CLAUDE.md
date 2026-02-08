@@ -15,7 +15,7 @@ mypy-playground is a web-based interactive playground for the mypy type checker.
 
 ## Tech Stack
 
-- **Backend**: Python 3.13, Tornado, aiodocker, uv (package manager)
+- **Backend**: Python 3.14, Tornado, aiodocker, uv (package manager)
 - **Frontend**: TypeScript, React 19, Vite, reactstrap, ace editor
 - **Sandbox**: Docker (dind) or Google Cloud Functions
 - **CI**: GitHub Actions
