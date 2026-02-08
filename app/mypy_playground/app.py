@@ -34,13 +34,14 @@ define(
 define(
     "default_python_version",
     type=str,
-    default="3.13",
+    default="3.14",
     help="Default Python version",
 )
 define(
     "python_versions",
     type=str,
     default=[
+        "3.14",
         "3.13",
         "3.12",
         "3.11",
