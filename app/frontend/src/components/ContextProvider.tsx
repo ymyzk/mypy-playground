@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { Spinner } from "reactstrap";
@@ -17,7 +16,11 @@ export default function ContextProvider({ children }: Props) {
     if (fetchStarted.current) return;
     fetchStarted.current = true;
     void (async () => {
-      const { data } = await axios.get<Context>("/api/context");
+      const response = await fetch("/api/context");
+      if (!response.ok) {
+        throw new Error(`Failed to fetch context: HTTP ${String(response.status)}`);
+      }
+      const data = (await response.json()) as Context;
       setContext(data);
     })();
   }, []);
