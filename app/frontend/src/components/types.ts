@@ -1,31 +1,26 @@
-export type ConfigDiff = {
-  [key: string]: boolean | string | string[];
-};
+export type ConfigDiff = Record<string, boolean | string | string[]>;
 
-export type Config = {
+export interface Config extends Record<string, boolean | string | string[]> {
   mypyVersion: string;
   pythonVersion: string;
-  [key: string]: boolean | string | string[];
-};
+}
 
-export type Context = {
+export interface Context {
   defaultConfig: Config;
   initialCode: string;
   pythonVersions: string[];
   mypyVersions: [string, string][];
   flags: string[];
-  multiSelectOptions: {
-    [key: string]: string[];
-  };
+  multiSelectOptions: Record<string, string[]>;
   gaTrackingId: string | null;
-};
+}
 
-export type TypecheckResult = {
+export interface TypecheckResult {
   exit_code: number;
   stdout: string;
   stderr: string;
   duration: number;
-};
+}
 
 export type AppResult =
   | { status: "ready" }

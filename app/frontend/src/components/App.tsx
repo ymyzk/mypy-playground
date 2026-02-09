@@ -10,9 +10,9 @@ import Header from "./Header";
 import Result from "./Result";
 import type { AppResult, Config, ConfigDiff, Context } from "./types";
 
-type Props = {
+interface Props {
   context: Context;
-};
+}
 
 // Helper function to parse URL params and compute initial config
 function getInitialConfig(context: Context): Config {
@@ -20,20 +20,25 @@ function getInitialConfig(context: Context): Config {
   const diff: ConfigDiff = {};
 
   if (params.has("mypy")) {
-    diff.mypyVersion = params.get("mypy")!;
+    const mypyValue = params.get("mypy");
+    if (mypyValue) diff.mypyVersion = mypyValue;
   }
   if (params.has("python")) {
-    diff.pythonVersion = params.get("python")!;
+    const pythonValue = params.get("python");
+    if (pythonValue) diff.pythonVersion = pythonValue;
   }
   Object.entries(context.multiSelectOptions).forEach(([option, choices]) => {
     if (params.has(option)) {
-      const values = params.get(option)?.split(",") || [];
+      const values = params.get(option)?.split(",") ?? [];
       diff[option] = values.filter((v) => choices.includes(v));
     }
   });
   if (params.has("flags")) {
-    for (const flag of params.get("flags")!.split(",")) {
-      diff[flag] = true;
+    const flagsValue = params.get("flags");
+    if (flagsValue) {
+      for (const flag of flagsValue.split(",")) {
+        diff[flag] = true;
+      }
     }
   }
 
@@ -46,7 +51,7 @@ function getInitialConfig(context: Context): Config {
 // Helper function to get initial source from localStorage
 function getInitialSource(context: Context): string {
   const storedSource = window.localStorage.getItem("source");
-  return storedSource || context.initialCode;
+  return storedSource ?? context.initialCode;
 }
 
 export default function App({ context }: Props) {
@@ -70,7 +75,7 @@ export default function App({ context }: Props) {
     } catch (error) {
       setResult({
         status: "failed",
-        message: `Failed to fetch the gist: ${error}`,
+        message: `Failed to fetch the gist: ${error instanceof Error ? error.message : String(error)}`,
       });
     }
   };
@@ -80,8 +85,11 @@ export default function App({ context }: Props) {
     const params = new URLSearchParams(window.location.search);
     // Load gist if specified in URL
     if (params.has("gist")) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      void fetchGist(params.get("gist")!);
+      const gistId = params.get("gist");
+      if (gistId) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        void fetchGist(gistId);
+      }
     }
   }, []); // Empty array means run once on mount
 
@@ -145,10 +153,13 @@ export default function App({ context }: Props) {
       setResult({ status: "succeeded", result: typecheckResult });
       setAnnotations(parseMessages(typecheckResult.stdout));
     } catch (error) {
-      const message = axios.isAxiosError(error) ? error.message : `${error}`;
+      const message = axios.isAxiosError(error) ? error.message : String(error);
       setResult({ status: "failed", message });
     }
   }, [config, source]);
+  const onRunClick = useCallback(() => {
+    void run();
+  }, [run]);
 
   const shareGist = useCallback(async () => {
     setResult({ status: "creating_gist" });
@@ -166,10 +177,13 @@ export default function App({ context }: Props) {
     } catch (error) {
       setResult({
         status: "failed",
-        message: `Failed to create a gist: ${error}`,
+        message: `Failed to create a gist: ${error instanceof Error ? error.message : String(error)}`,
       });
     }
   }, [source]);
+  const onGistClick = useCallback(() => {
+    void shareGist();
+  }, [shareGist]);
 
   return (
     <div className="App d-flex flex-flow flex-column vh-100">
@@ -177,8 +191,8 @@ export default function App({ context }: Props) {
         context={contextState}
         config={config}
         status={result.status}
-        onGistClick={shareGist}
-        onRunClick={run}
+        onGistClick={onGistClick}
+        onRunClick={onRunClick}
         onConfigChange={updateConfig}
       />
       <Editor onChange={onChange} annotations={annotations} source={source} />

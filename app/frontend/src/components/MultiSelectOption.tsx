@@ -1,14 +1,14 @@
 import { FormGroup, Input, Label } from "reactstrap";
 import React from "react";
 
-type Props = {
+interface Props {
   name: string;
   // Available items
   choices: string[];
   // Selected items
   values: string[];
-  onConfigChange: (configDiff: { [key: string]: string[] }) => void;
-};
+  onConfigChange: (configDiff: Record<string, string[]>) => void;
+}
 
 export default function MultiSelectOption({ name, choices, values, onConfigChange }: Props) {
   return (

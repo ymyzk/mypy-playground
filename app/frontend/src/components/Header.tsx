@@ -21,23 +21,29 @@ import styles from "./Header.module.css";
 import MultiSelectOption from "./MultiSelectOption";
 import type { Config, ConfigDiff, Context } from "./types";
 
-type Props = {
+interface Props {
   context: Context;
   config: Config;
   status: string;
   onGistClick: () => void;
   onRunClick: () => void;
   onConfigChange: (configDiff: ConfigDiff) => void;
-};
+}
 
 function Header({ context, config, status, onGistClick, onRunClick, onConfigChange }: Props) {
   const [aboutIsOpen, setAboutIsOpen] = useState(false);
   const [navbarIsOpen, setNavbarIsOpen] = useState(false);
   const [optionsIsOpen, setOptionsIsOpen] = useState(false);
 
-  const toggleAbout = () => setAboutIsOpen((prev) => !prev);
-  const toggleNavbar = () => setNavbarIsOpen((prev) => !prev);
-  const toggleOptions = () => setOptionsIsOpen((prev) => !prev);
+  const toggleAbout = () => {
+    setAboutIsOpen((prev) => !prev);
+  };
+  const toggleNavbar = () => {
+    setNavbarIsOpen((prev) => !prev);
+  };
+  const toggleOptions = () => {
+    setOptionsIsOpen((prev) => !prev);
+  };
 
   const half = Math.ceil(context.flags.length / 2);
   const flagsColumns = [context.flags.slice(0, half), context.flags.slice(half, context.flags.length)];
@@ -76,7 +82,9 @@ function Header({ context, config, status, onGistClick, onRunClick, onConfigChan
                 className="me-2 mb-2 mb-lg-0 w-auto"
                 title="mypy Version"
                 value={config.mypyVersion}
-                onChange={(e) => onConfigChange({ mypyVersion: e.target.value })}
+                onChange={(e) => {
+                  onConfigChange({ mypyVersion: e.target.value });
+                }}
               >
                 {context.mypyVersions.map(([name, id]) => (
                   <option key={id} value={id}>
@@ -89,7 +97,9 @@ function Header({ context, config, status, onGistClick, onRunClick, onConfigChan
                 className="me-2 mb-2 mb-lg-0 w-auto"
                 title="Python Version (--python--version)"
                 value={config.pythonVersion}
-                onChange={(e) => onConfigChange({ pythonVersion: e.target.value })}
+                onChange={(e) => {
+                  onConfigChange({ pythonVersion: e.target.value });
+                }}
               >
                 {context.pythonVersions.map((ver) => (
                   <option key={ver} value={ver}>
@@ -136,7 +146,9 @@ function Header({ context, config, status, onGistClick, onRunClick, onConfigChan
                         type="checkbox"
                         id={flag}
                         checked={config[flag] as boolean}
-                        onChange={(e) => onConfigChange({ [flag]: e.target.checked })}
+                        onChange={(e) => {
+                          onConfigChange({ [flag]: e.target.checked });
+                        }}
                       />
                       <Label check for={flag} className="mb-0">
                         <code>

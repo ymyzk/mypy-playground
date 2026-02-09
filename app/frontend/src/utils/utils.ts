@@ -1,12 +1,11 @@
 import type { Ace } from "ace-builds";
 
 function getTypeFromLevel(level: string): string {
-  const levelToType: { [key: string]: string } = {
+  const levelToType: Record<string, string> = {
     error: "error",
     note: "info",
   };
-  const type = levelToType[level];
-  return type || "error";
+  return levelToType[level] ?? "error";
 }
 
 function notNull<T>(value: T | null): value is T {
@@ -15,11 +14,11 @@ function notNull<T>(value: T | null): value is T {
 
 // TODO: Should we parse messages on the server-side instead?
 export function parseMessages(stdout: string): Ace.Annotation[] {
-  const matcher: RegExp = /^main\.py:(\d+):(\d+:)? (\w+): (.+)/;
+  const matcher = /^main\.py:(\d+):(\d+:)? (\w+): (.+)/;
   return stdout
     .split("\n")
     .map((m) => {
-      const match = m.match(matcher);
+      const match = matcher.exec(m);
       return match
         ? {
             row: parseInt(match[1], 10) - 1,
