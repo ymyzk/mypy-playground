@@ -3,9 +3,9 @@ import React from "react";
 import styles from "./Result.module.css";
 import type { AppResult } from "./types";
 
-type Props = {
+interface Props {
   result: AppResult;
-};
+}
 
 function Result({ result }: Props): React.JSX.Element {
   switch (result.status) {

@@ -6,11 +6,11 @@ import "ace-builds/src-noconflict/theme-textmate";
 
 import styles from "./Editor.module.css";
 
-type Props = {
+interface Props {
   annotations: Ace.Annotation[];
   onChange: (value: string) => void;
   source: string;
-};
+}
 
 function Editor({ annotations, onChange, source }: Props): React.JSX.Element {
   return (
