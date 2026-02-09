@@ -17,12 +17,12 @@ import {
   NavbarToggler,
 } from "reactstrap";
 
+import { useAppContext } from "./context";
 import styles from "./Header.module.css";
 import MultiSelectOption from "./MultiSelectOption";
-import type { Config, ConfigDiff, Context } from "./types";
+import type { Config, ConfigDiff } from "./types";
 
 interface Props {
-  context: Context;
   config: Config;
   status: string;
   onGistClick: () => void;
@@ -30,7 +30,8 @@ interface Props {
   onConfigChange: (configDiff: ConfigDiff) => void;
 }
 
-function Header({ context, config, status, onGistClick, onRunClick, onConfigChange }: Props) {
+function Header({ config, status, onGistClick, onRunClick, onConfigChange }: Props) {
+  const context = useAppContext();
   const [aboutIsOpen, setAboutIsOpen] = useState(false);
   const [navbarIsOpen, setNavbarIsOpen] = useState(false);
   const [optionsIsOpen, setOptionsIsOpen] = useState(false);

@@ -5,14 +5,11 @@ import axios from "axios";
 import { runTypecheck } from "../utils/api";
 import { fetchGist as fetchGistAPI, shareGist as shareGistAPI } from "../utils/gist";
 import { parseMessages } from "../utils/utils";
+import { useAppContext } from "./context";
 import Editor from "./Editor";
 import Header from "./Header";
 import Result from "./Result";
 import type { AppResult, Config, ConfigDiff, Context } from "./types";
-
-interface Props {
-  context: Context;
-}
 
 // Helper function to parse URL params and compute initial config
 function getInitialConfig(context: Context): Config {
@@ -51,10 +48,10 @@ function getInitialSource(context: Context): string {
   return storedSource && storedSource !== "" ? storedSource : context.initialCode;
 }
 
-export default function App({ context }: Props) {
+export default function App() {
+  const context = useAppContext();
   const [annotations, setAnnotations] = useState<Ace.Annotation[]>([]);
   const [config, setConfig] = useState<Config>(() => getInitialConfig(context));
-  const [contextState] = useState<Context>(context);
   const [source, setSource] = useState<string>(() => getInitialSource(context));
   const [result, setResult] = useState<AppResult>({ status: "ready" });
 
@@ -103,7 +100,7 @@ export default function App({ context }: Props) {
         params.set("mypy", v);
       } else if (k === "pythonVersion" && typeof v == "string") {
         params.set("python", v);
-      } else if (k in contextState.multiSelectOptions && Array.isArray(v)) {
+      } else if (k in context.multiSelectOptions && Array.isArray(v)) {
         if (v.length > 0) {
           params.set(k, v.join(","));
         } else {
@@ -119,7 +116,7 @@ export default function App({ context }: Props) {
       params.delete("flags");
     }
     window.history.pushState({}, "", `?${params.toString()}`);
-  }, [config, contextState.multiSelectOptions]);
+  }, [config, context.multiSelectOptions]);
 
   // Sync source to localStorage
   useEffect(() => {
@@ -183,7 +180,6 @@ export default function App({ context }: Props) {
   return (
     <div className="App d-flex flex-flow flex-column vh-100">
       <Header
-        context={contextState}
         config={config}
         status={result.status}
         onGistClick={onGistClick}
