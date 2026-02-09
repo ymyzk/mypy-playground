@@ -1,7 +1,5 @@
 import type { Ace } from "ace-builds";
 import { useState, useEffect, useCallback, useRef } from "react";
-import axios from "axios";
-
 import { runTypecheck } from "../utils/api";
 import { fetchGist as fetchGistAPI, shareGist as shareGistAPI } from "../utils/gist";
 import { parseMessages } from "../utils/utils";
@@ -145,7 +143,7 @@ export default function App() {
       setResult({ status: "succeeded", result: typecheckResult });
       setAnnotations(parseMessages(typecheckResult.stdout));
     } catch (error) {
-      const message = axios.isAxiosError(error) ? error.message : String(error);
+      const message = error instanceof Error ? error.message : String(error);
       setResult({ status: "failed", message });
     }
   }, [config, source]);

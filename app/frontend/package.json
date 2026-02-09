@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "ace-builds": "^1.43.6",
-    "axios": "^1.13.4",
     "bootstrap": "^5.3.8",
     "react": "^19.2.4",
     "react-ace": "^14.0.1",
