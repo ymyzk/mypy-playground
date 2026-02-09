@@ -15,4 +15,4 @@ RUN apk add --no-cache tini
 COPY . /app
 
 EXPOSE 8080
-CMD ["/sbin/tini", "/app/.venv/bin/python", "-m", "mypy_playground"]
+CMD ["/sbin/tini", "/app/.venv/bin/fastapi", "dev", "mypy_playground/app.py", "--host", "0.0.0.0", "--port", "8080"]

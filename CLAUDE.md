@@ -7,7 +7,7 @@ mypy-playground is a web-based interactive playground for the mypy type checker.
 ## Project Structure
 
 - `app/` — Main application (backend + frontend)
-  - `app/mypy_playground/` — Python backend (Tornado)
+  - `app/mypy_playground/` — Python backend (FastAPI)
   - `app/frontend/` — React + TypeScript frontend (Vite)
   - `app/tests/` — Python tests (pytest)
 - `sandbox/` — Docker images and Cloud Functions for sandboxed mypy execution
@@ -15,7 +15,7 @@ mypy-playground is a web-based interactive playground for the mypy type checker.
 
 ## Tech Stack
 
-- **Backend**: Python 3.14, Tornado, aiodocker, uv (package manager)
+- **Backend**: Python 3.14, FastAPI, uvicorn, aiodocker, httpx, Pydantic, uv (package manager)
 - **Frontend**: TypeScript, React 19, Vite, reactstrap, ace editor
 - **Sandbox**: Docker (dind) or Google Cloud Functions
 - **CI**: GitHub Actions
@@ -50,7 +50,7 @@ npm run dev               # Dev server (port 5173)
 docker compose up -d
 docker compose exec docker docker build --pull \
   -t ymyzk/mypy-playground-sandbox:latest /sandbox/latest
-# Frontend: http://localhost:8000 (Vite proxies /api/ to Tornado on :8080)
+# Frontend: http://localhost:8000 (Vite proxies /api/ to FastAPI on :8080)
 ```
 
 ## Code Style
@@ -61,6 +61,10 @@ docker compose exec docker docker build --pull \
 
 ## Architecture Notes
 
-- **Dev request flow**: Browser → Vite (:8000) → proxy `/api/` → Tornado (:8080)
-- **Prod request flow**: Browser → Tornado (serves static Vite build)
+- **Dev request flow**: Browser → Vite (:8000) → proxy `/api/` → FastAPI/uvicorn (:8080)
+- **Prod request flow**: Browser → FastAPI/uvicorn (serves static Vite build)
 - **Config precedence**: CLI args > env vars > config.toml > defaults
+- **Configuration**: Pydantic Settings with TOML support
+- **Async operations**: All async using FastAPI's native async/await with httpx for HTTP requests
+- **API validation**: Automatic request/response validation with Pydantic models
+- **API docs**: Available at `/docs` (Swagger UI) and `/redoc` when running
