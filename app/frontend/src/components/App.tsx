@@ -51,7 +51,7 @@ function getInitialConfig(context: Context): Config {
 // Helper function to get initial source from localStorage
 function getInitialSource(context: Context): string {
   const storedSource = window.localStorage.getItem("source");
-  return storedSource ?? context.initialCode;
+  return storedSource && storedSource !== "" ? storedSource : context.initialCode;
 }
 
 export default function App({ context }: Props) {
