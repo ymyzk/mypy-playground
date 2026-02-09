@@ -25,7 +25,7 @@ export default function MultiSelectOption({ name, choices, values, onConfigChang
             });
           } else if (!e.target.checked && values.includes(choice)) {
             onConfigChange({
-              [name]: values.filter((c) => c != choice),
+              [name]: values.filter((c) => c !== choice),
             });
           }
         };

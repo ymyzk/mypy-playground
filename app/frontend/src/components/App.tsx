@@ -19,26 +19,23 @@ function getInitialConfig(context: Context): Config {
   const params = new URLSearchParams(window.location.search);
   const diff: ConfigDiff = {};
 
-  if (params.has("mypy")) {
-    const mypyValue = params.get("mypy");
-    if (mypyValue) diff.mypyVersion = mypyValue;
-  }
-  if (params.has("python")) {
-    const pythonValue = params.get("python");
-    if (pythonValue) diff.pythonVersion = pythonValue;
-  }
-  Object.entries(context.multiSelectOptions).forEach(([option, choices]) => {
-    if (params.has(option)) {
-      const values = params.get(option)?.split(",") ?? [];
-      diff[option] = values.filter((v) => choices.includes(v));
+  const mypyValue = params.get("mypy");
+  if (mypyValue) diff.mypyVersion = mypyValue;
+
+  const pythonValue = params.get("python");
+  if (pythonValue) diff.pythonVersion = pythonValue;
+
+  for (const [option, choices] of Object.entries(context.multiSelectOptions)) {
+    const optionValue = params.get(option);
+    if (optionValue) {
+      diff[option] = optionValue.split(",").filter((v) => choices.includes(v));
     }
-  });
-  if (params.has("flags")) {
-    const flagsValue = params.get("flags");
-    if (flagsValue) {
-      for (const flag of flagsValue.split(",")) {
-        diff[flag] = true;
-      }
+  }
+
+  const flagsValue = params.get("flags");
+  if (flagsValue) {
+    for (const flag of flagsValue.split(",")) {
+      diff[flag] = true;
     }
   }
 
@@ -84,12 +81,10 @@ export default function App({ context }: Props) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     // Load gist if specified in URL
-    if (params.has("gist")) {
-      const gistId = params.get("gist");
-      if (gistId) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        void fetchGist(gistId);
-      }
+    const gistId = params.get("gist");
+    if (gistId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      void fetchGist(gistId);
     }
   }, []); // Empty array means run once on mount
 
