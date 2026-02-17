@@ -23,11 +23,10 @@
 - [sandbox](sandbox): Sandbox environments for running mypy
 
 ## Configuration
-Please run `python -m mypy_playground --help` to see all configurations.
 Configurations are considered in the following order:
 
-1. Command line arguments
-2. Environment variables
+1. Environment variables
+2. Dotenv file (`.env` )
 3. Configuration file (`config.toml`)
 4. Default configurations
 

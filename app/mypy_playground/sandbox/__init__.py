@@ -2,8 +2,7 @@ import asyncio
 import logging
 from typing import Any
 
-from tornado.options import options
-
+from mypy_playground.config import get_settings
 from mypy_playground.sandbox.base import AbstractSandbox, Result
 
 logger = logging.getLogger(__name__)
@@ -13,10 +12,11 @@ semaphore: asyncio.Semaphore | None = None
 
 
 def _get_semaphore() -> asyncio.Semaphore:
-    # Lazy initialization of the semaphore to use options correctly
+    # Lazy initialization of the semaphore to use settings correctly
     global semaphore
     if not semaphore:
-        value = options.sandbox_concurrency
+        settings = get_settings()
+        value = settings.sandbox_concurrency
         logger.info("created semaphore for sandbox: concurrency=%d", value)
         semaphore = asyncio.Semaphore(value)
     return semaphore

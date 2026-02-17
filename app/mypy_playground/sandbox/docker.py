@@ -3,28 +3,19 @@ import tarfile
 import time
 from io import BytesIO
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 import aiodocker
-from tornado.options import define, options
 
+from mypy_playground.config import get_settings
 from mypy_playground.sandbox.base import (
     ARGUMENT_FLAGS,
     ARGUMENT_MULTI_SELECT_OPTIONS,
     AbstractSandbox,
     Result,
 )
-from mypy_playground.utils import DictOption
 
 logger = logging.getLogger(__name__)
-
-
-define(
-    "docker_images",
-    type=DictOption,
-    default={"latest": "ymyzk/mypy-playground-sandbox:latest"},
-    help="Docker image used by DockerSandbox",
-)
 
 
 class DockerSandbox(AbstractSandbox):
@@ -121,4 +112,5 @@ class DockerSandbox(AbstractSandbox):
         return stream
 
     def _get_docker_image(self, mypy_version_id: str) -> str | None:
-        return cast(DictOption, options.docker_images).get(mypy_version_id)
+        settings = get_settings()
+        return settings.docker_images.get(mypy_version_id)

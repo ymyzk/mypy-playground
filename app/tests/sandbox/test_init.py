@@ -6,7 +6,7 @@ from pytest_mock import MockerFixture
 from mypy_playground.sandbox import run_typecheck_in_sandbox
 
 
-@pytest.mark.gen_test
+@pytest.mark.asyncio
 async def test_run_typecheck_in_sandbox(mocker: MockerFixture) -> None:
     semaphore = asyncio.Semaphore(1)
     mock_sandbox = mocker.AsyncMock()

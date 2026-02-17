@@ -11,7 +11,7 @@ print(this.__name__)
 """
 
 
-@pytest.mark.gen_test
+@pytest.mark.asyncio
 async def test_create_archive(mocker: MockerFixture) -> None:
     # DockerSandbox checks existence of DOCKER_HOST or local sockets in __init__().
     mocker.patch("mypy_playground.sandbox.docker.aiodocker.Docker")

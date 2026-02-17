@@ -4,10 +4,14 @@ version = "0.0.0"
 requires-python = ">=3.14"
 dependencies = [
     "aiodocker>=0.13.0,<1.0",
+    "fastapi>=0.115.0,<0.116.0",
+    "fastapi-cli[standard-no-fastapi-cloud-cli]",
     "google-auth",
+    "httpx>=0.28.0,<0.29.0",
     "prometheus-client<1",
+    "pydantic>=2.9.0,<3.0.0",
+    "pydantic-settings>=2.6.0,<3.0.0",
     "requests",
-    "tornado>=6,<7",
 ]
 
 [dependency-groups]
@@ -15,22 +19,24 @@ dev = [
     "mypy",
     "pre-commit",
     "pytest",
+    "pytest-asyncio>=0.24.0",
     "pytest-cov",
     "pytest-mock",
     "pytest-randomly",
-    "pytest-tornado",
     "types-chardet",
     "types-mock",
     "types-setuptools",
     "types-toml",
 ]
 
-[tool.pytest]
+[tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
 addopts = [
     "--cov=mypy_playground",
 ]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.mypy]
 python_version = "3.14"

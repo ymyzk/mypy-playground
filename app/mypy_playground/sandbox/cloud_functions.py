@@ -1,4 +1,3 @@
-import json
 import time
 import urllib.parse
 from logging import getLogger
@@ -6,45 +5,17 @@ from typing import Any
 
 import google.auth.transport.requests
 import google.oauth2.id_token
-from tornado.httpclient import AsyncHTTPClient
-from tornado.options import define, options
+import httpx
 
+from mypy_playground.config import get_settings
 from mypy_playground.sandbox.base import (
     ARGUMENT_FLAGS,
     ARGUMENT_MULTI_SELECT_OPTIONS,
     AbstractSandbox,
     Result,
 )
-from mypy_playground.utils import DictOption
 
 logger = getLogger(__name__)
-
-
-# https://cloud.google.com/functions/docs/securing/authenticating#authenticating_developer_testing
-define(
-    "cloud_functions_base_url",
-    type=str,
-    default=None,
-    help=(
-        "URL of Cloud Functions without function name. "
-        "Example: https://<region>-<project>.cloudfunctions.net/"
-    ),
-)
-define(
-    "cloud_functions_identity_token",
-    type=str,
-    default=None,
-    help=(
-        "Identity token used by CloudFunctionsSandbox. "
-        "This is mainly for local development."
-    ),
-)
-define(
-    "cloud_functions_names",
-    type=DictOption,
-    default={"latest": "mypy-latest"},
-    help="Map from mypy version ID to name of Cloud Functions",
-)
 
 
 class CloudFunctionsSandbox(AbstractSandbox):
@@ -90,33 +61,41 @@ class CloudFunctionsSandbox(AbstractSandbox):
             "User-Agent": "mypy-playground",  # TODO: Better UA w/ version?
         }
 
-        client = AsyncHTTPClient()
-        res = await client.fetch(
-            function_url,
-            method="POST",
-            headers=headers,
-            body=json.dumps(data),
-            raise_error=False,
-        )
-        if res.code != 200:
-            # TODO: better error handling
-            logger.error("unexpected status code from Cloud Functions: %d", res.code)
-            return None
-        res_data = json.loads(res.body)
-        duration = int(1000 * (time.time() - start_time))
-        return Result(
-            exit_code=res_data["exit_code"],
-            stdout=res_data["stdout"],
-            stderr=res_data["stderr"],
-            duration=duration,
-        )
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.post(
+                    function_url,
+                    json=data,
+                    headers=headers,
+                )
+
+                if response.status_code != 200:
+                    # TODO: better error handling
+                    logger.error(
+                        "unexpected status code from Cloud Functions: %d",
+                        response.status_code,
+                    )
+                    return None
+
+                res_data = response.json()
+                duration = int(1000 * (time.time() - start_time))
+                return Result(
+                    exit_code=res_data["exit_code"],
+                    stdout=res_data["stdout"],
+                    stderr=res_data["stderr"],
+                    duration=duration,
+                )
+            except httpx.HTTPError:
+                logger.exception("HTTP error during Cloud Functions request")
+                return None
 
     def _get_cloud_function_url(self, mypy_version_id: str) -> str | None:
-        base_url = options["cloud_functions_base_url"]
+        settings = get_settings()
+        base_url = settings.cloud_functions_url
         if not isinstance(base_url, str):
             return None
 
-        name = options.cloud_functions_names.get(mypy_version_id)
+        name = settings.cloud_function_names.get(mypy_version_id)
         if not isinstance(name, str):
             return None
 
@@ -132,7 +111,8 @@ class CloudFunctionsSandbox(AbstractSandbox):
         https://cloud.google.com/functions/docs/securing/authenticating
         """
         # 1. Options
-        if isinstance(token := options["cloud_functions_identity_token"], str):
+        settings = get_settings()
+        if isinstance(token := settings.cloud_functions_identity_token, str):
             return token
 
         # 2. google-auth library
