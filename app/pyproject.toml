@@ -4,14 +4,13 @@ version = "0.0.0"
 requires-python = ">=3.14"
 dependencies = [
     "aiodocker>=0.13.0,<1.0",
-    "fastapi>=0.115.0,<0.130.0",
+    "fastapi>=0.129",
     "fastapi-cli[standard-no-fastapi-cloud-cli]",
-    "google-auth",
+    "google-auth[requests]",
     "httpx>=0.28.0,<0.29.0",
     "prometheus-client<1",
     "pydantic>=2.9.0,<3.0.0",
     "pydantic-settings>=2.6.0,<3.0.0",
-    "requests",
 ]
 
 [dependency-groups]
