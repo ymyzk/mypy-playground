@@ -28,7 +28,7 @@ updates:
           - "react-dom"
           - "@types/react"
           - "@types/react-dom"
-  - package-ecosystem: "pip"
+  - package-ecosystem: "uv"
     directory: "/app"
     schedule:
       interval: "weekly"
