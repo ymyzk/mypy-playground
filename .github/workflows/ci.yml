@@ -79,9 +79,9 @@ jobs:
       - uses: actions/checkout@v6
       - run: docker version
       - name: Build app image for development
-        run: docker build --pull -t app:dev ./app
+        run: docker build --pull -t app:dev -f ./app/dockerfile/dev/Dockerfile ./app
       - name: Build app image for production
-        run: docker build --pull -t app:latest -f ./app/Dockerfile-prod ./app
+        run: docker build --pull -t app:latest -f ./app/dockerfile/prod/Dockerfile ./app
       - name: Build latest Docker sandbox image
         run: docker build -t sandbox:latest ./sandbox/docker/latest
       - name: Build Docker sandbox images
