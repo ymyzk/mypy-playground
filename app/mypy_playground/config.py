@@ -143,7 +143,7 @@ class Settings(BaseSettings):
     )
 
     # Cloud Functions settings
-    cloud_functions_url: str | None = Field(
+    cloud_functions_base_url: str | None = Field(
         default=None,
         description="Cloud Functions URL for sandbox",
     )

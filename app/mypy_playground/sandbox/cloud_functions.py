@@ -91,7 +91,7 @@ class CloudFunctionsSandbox(AbstractSandbox):
 
     def _get_cloud_function_url(self, mypy_version_id: str) -> str | None:
         settings = get_settings()
-        base_url = settings.cloud_functions_url
+        base_url = settings.cloud_functions_base_url
         if not isinstance(base_url, str):
             return None
 
