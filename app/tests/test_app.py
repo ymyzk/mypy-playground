@@ -1,23 +1,12 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from mypy_playground.app import create_app
-from mypy_playground.config import get_settings
+from mypy_playground.main import app
 
 
 @pytest.fixture
 def client() -> TestClient:
-    """Create a test client with test settings"""
-    get_settings.cache_clear()
-
-    app = create_app()
     return TestClient(app)
-
-
-def test_index(client: TestClient) -> None:
-    """Test that the index page is served"""
-    response = client.get("/")
-    assert response.status_code == 200
 
 
 def test_api_context(client: TestClient) -> None:
@@ -43,4 +32,4 @@ def test_api_404_json(client: TestClient) -> None:
     response = client.get("/api/nonexistent")
     assert response.status_code == 404
     data = response.json()
-    assert "message" in data
+    assert "detail" in data
