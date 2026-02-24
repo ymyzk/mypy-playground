@@ -1,4 +1,5 @@
 import logging
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -30,7 +31,7 @@ def _create_sandbox(sandbox_name: str) -> AbstractSandbox:
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):  # type: ignore[no-untyped-def]
+async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     """Lifespan context manager for startup and shutdown"""
     settings = get_settings()
     # Startup
