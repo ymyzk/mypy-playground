@@ -99,3 +99,6 @@ docker compose exec docker docker build --pull \
 ### Testing
 - **Backend**: pytest with pytest-asyncio (`asyncio_mode = "auto"`), pytest-cov, pytest-mock. Coverage via `--cov=mypy_playground`
 - **Frontend**: Vitest with React Testing Library
+
+## GitHub Workflow
+- **Pull requests**: Always follow the template in `.github/PULL_REQUEST_TEMPLATE.md` when creating PRs.
