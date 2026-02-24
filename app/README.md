@@ -6,10 +6,10 @@
 ```mermaid
 graph TD
     Vite["Vite server (:8000)"]
-    Tornado["Tornado server (:8080)"]
+    FastAPI["FastAPI/uvicorn (:8080)"]
 
     Browser --> Vite
-    Vite -->|/api/| Tornado
+    Vite -->|/api/| FastAPI
     Vite -->|/*| Vite
 ```
 
@@ -17,8 +17,8 @@ graph TD
 ```mermaid
 graph TD
     Vite["Vite exported static files"]
-    Tornado["Tornado server"]
+    FastAPI["FastAPI/uvicorn"]
 
-    Browser --> Tornado
-    Tornado -->|index.html and /assets/| Vite
+    Browser --> FastAPI
+    FastAPI -->|index.html and /assets/| Vite
 ```
