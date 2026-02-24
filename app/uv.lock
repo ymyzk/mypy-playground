@@ -4,14 +4,14 @@ requires-python = ">=3.14"
 
 [[package]]
 name = "aiodocker"
-version = "0.25.0"
+version = "0.26.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/66/29/38e414dd1672465e481877f6e314acb9527dd2427e60ae511646e5ed4462/aiodocker-0.25.0.tar.gz", hash = "sha256:e5145ba622a8eceee9263c277c6d4e7ff6be4632d11765c554c80756b2d58be8", size = 159414, upload-time = "2025-12-20T04:51:28.867Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/96/64/3b724f650cedc6d5c1cad7fdae3dd3b53c976d075547ff5268e2f1e56db5/aiodocker-0.26.0.tar.gz", hash = "sha256:7e4ee40c6f98e6d1cf95d712f15aef3853087c0475bc7ea5ec499c2d485ba7ec", size = 162018, upload-time = "2026-02-17T18:53:23.234Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e4/7c/0cf5e5008d1675183f346beffa030209ee0f640db086e39b484b53608c43/aiodocker-0.25.0-py3-none-any.whl", hash = "sha256:0e11f39360cc69dd0a27621f15ffbf42010fb146628920e9aa8de449a9fcb0c5", size = 46401, upload-time = "2025-12-20T04:51:27.177Z" },
+    { url = "https://files.pythonhosted.org/packages/3c/0d/e8f4164cbd950195900dd77aad23136f9ddc7feb0fb478d71839d1fda573/aiodocker-0.26.0-py3-none-any.whl", hash = "sha256:f450acf0b402a03c6a6f1517d06bdff739c404e62578b332182ca272fde6e986", size = 47825, upload-time = "2026-02-17T18:53:22.088Z" },
 ]
 
 [[package]]
