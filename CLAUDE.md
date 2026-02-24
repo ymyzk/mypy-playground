@@ -69,11 +69,10 @@ docker compose exec docker docker build --pull \
 - **Prod**: Browser → FastAPI/uvicorn (serves static Vite build + API)
 
 ### Backend (`app/mypy_playground/`)
-- **app.py**: Application factory (`create_app()`) with lifespan, exception handlers, SPA routing fallback, static file serving
+- **main.py**: Application with lifespan and static file serving
 - **routes.py**: Two routers — `api_router` (`/api/context`, `/api/typecheck`, `/api/gist`) and `private_router` (`/private/metrics`)
 - **config.py**: Pydantic Settings with TOML + env var support. Precedence: env vars > `.env` > `config.toml` > defaults
 - **schemas.py**: Pydantic request/response models for all API endpoints
-- **dependencies.py**: FastAPI dependency injection for sandbox instances
 - **middleware.py**: Prometheus metrics middleware (request count, duration, response size)
 - **gist.py**: Async GitHub Gist creation via httpx
 

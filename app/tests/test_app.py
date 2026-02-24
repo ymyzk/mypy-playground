@@ -1,7 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from mypy_playground.app import app
+from mypy_playground.main import app
 
 
 @pytest.fixture
