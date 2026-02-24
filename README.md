@@ -47,7 +47,7 @@ Configurations are considered in the following order:
 
 ## Endpoints
 - `/`: Entrypoint
-- `/api/`: APIs provided by Tornado
+- `/api/`: APIs provided by FastAPI
 - `/private/metrics`: Prometheus metrics (when enabled)
 - `/static/`: Static files
 
