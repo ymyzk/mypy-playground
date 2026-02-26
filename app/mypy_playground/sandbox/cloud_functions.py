@@ -95,7 +95,7 @@ class CloudFunctionsSandbox(AbstractSandbox):
         if not isinstance(base_url, str):
             return None
 
-        name = settings.cloud_function_names.get(mypy_version_id)
+        name = settings.cloud_functions_names.get(mypy_version_id)
         if not isinstance(name, str):
             return None
 
