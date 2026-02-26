@@ -163,7 +163,7 @@ class Settings(BaseSettings):
         description="Identity token for Cloud Functions (development use)",
     )
 
-    cloud_function_names: dict[str, str] = Field(
+    cloud_functions_names: dict[str, str] = Field(
         default={"latest": "mypy-latest"},
         description="Mapping of mypy version IDs to Cloud Function names",
     )
@@ -180,6 +180,17 @@ class Settings(BaseSettings):
             if all(isinstance(item, tuple) for item in v):
                 return [(str(k), str(v_inner)) for k, v_inner in v]
         # Already validated list of tuples
+        return v  # type: ignore[no-any-return]
+
+    @field_validator("cloud_functions_names", mode="before")
+    @classmethod
+    def parse_cloud_functions_names(cls, v: Any) -> dict[str, str]:
+        """Parse cloud_functions_names from various input formats"""
+        if isinstance(v, str):
+            return dict(DictOption(v))
+        if isinstance(v, dict):
+            return {str(k): str(val) for k, val in v.items()}
+        # Already validated dict
         return v  # type: ignore[no-any-return]
 
     @field_validator("docker_images", mode="before")
