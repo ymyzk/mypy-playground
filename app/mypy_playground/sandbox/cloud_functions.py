@@ -61,7 +61,7 @@ class CloudFunctionsSandbox(AbstractSandbox):
             "User-Agent": "mypy-playground",  # TODO: Better UA w/ version?
         }
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=30.0) as client:
             try:
                 response = await client.post(
                     function_url,
