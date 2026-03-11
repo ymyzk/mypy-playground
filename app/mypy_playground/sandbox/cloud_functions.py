@@ -1,3 +1,4 @@
+import gc
 import time
 import urllib.parse
 from logging import getLogger
@@ -30,6 +31,7 @@ class CloudFunctionsSandbox(AbstractSandbox):
         python_version: str | None = None,
         **kwargs: Any,
     ) -> Result | None:
+        gc.collect()
         start_time = time.time()
 
         function_url = self._get_cloud_function_url(mypy_version)
@@ -88,6 +90,11 @@ class CloudFunctionsSandbox(AbstractSandbox):
             except httpx.HTTPError:
                 logger.exception("HTTP error during Cloud Functions request")
                 return None
+            finally:
+                # Temporary workaround for GC issue in CPython 3.14
+                # that can cause memory usage increase over time.
+                # https://github.com/python/cpython/issues/142516
+                gc.collect()
 
     def _get_cloud_function_url(self, mypy_version_id: str) -> str | None:
         settings = get_settings()
