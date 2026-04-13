@@ -18,12 +18,18 @@
   max-width: 560px;
 }
 
-.mobileActions {
+.actions {
   align-items: center;
 }
 
+.controlGroup {
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
 .mobileSep {
-  margin: 0 0.5rem 0.5rem 0;
+  margin: 0 0 0.5rem 0.5rem;
   color: rgba(255, 255, 255, 0.85);
   font-weight: 600;
 }

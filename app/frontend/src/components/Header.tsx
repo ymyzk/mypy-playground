@@ -48,6 +48,11 @@ function Header({ config, status, onGistClick, onRunClick, onConfigChange }: Pro
 
   const half = Math.ceil(context.flags.length / 2);
   const flagsColumns = [context.flags.slice(0, half), context.flags.slice(half, context.flags.length)];
+  const separator = (
+    <span className={`d-lg-none ${styles.mobileSep}`} aria-hidden="true">
+      |
+    </span>
+  );
 
   return (
     <header className={styles.header}>
@@ -59,76 +64,78 @@ function Header({ config, status, onGistClick, onRunClick, onConfigChange }: Pro
         <NavbarToggler onClick={toggleNavbar} />
         <Collapse navbar isOpen={navbarIsOpen}>
           <Nav navbar className="me-auto my-2 my-lg-0">
-            <Form className={`d-flex flex-wrap flex-md-nowrap ${styles.mobileActions}`}>
-              <Button
-                color="light"
-                className={`me-2 mb-2 mb-lg-0 ${styles.run}`}
-                disabled={status === "running"}
-                onClick={onRunClick}
-              >
-                Run
-              </Button>
-              <span className={`d-lg-none ${styles.mobileSep}`} aria-hidden="true">
-                |
-              </span>
-              <Button
-                color="light"
-                className="me-2 mb-2 mb-lg-0"
-                disabled={status === "creating_gist"}
-                onClick={onGistClick}
-              >
-                Gist
-              </Button>
-              <span className={`d-lg-none ${styles.mobileSep}`} aria-hidden="true">
-                |
-              </span>
-              {/* Using w-auto for <Input type="select"> to override "width: 100%" set by
-                    the form-select class. */}
-              <Input
-                type="select"
-                className="me-2 mb-2 mb-lg-0 w-auto"
-                title="mypy Version"
-                value={config.mypyVersion}
-                onChange={(e) => {
-                  onConfigChange({ mypyVersion: e.target.value });
-                }}
-              >
-                {context.mypyVersions.map(([name, id]) => (
-                  <option key={id} value={id}>
-                    {name}
-                  </option>
-                ))}
-              </Input>
-              <span className={`d-lg-none ${styles.mobileSep}`} aria-hidden="true">
-                |
-              </span>
-              <Input
-                type="select"
-                className="me-2 mb-2 mb-lg-0 w-auto"
-                title="Python Version (--python--version)"
-                value={config.pythonVersion}
-                onChange={(e) => {
-                  onConfigChange({ pythonVersion: e.target.value });
-                }}
-              >
-                {context.pythonVersions.map((ver) => (
-                  <option key={ver} value={ver}>
-                    Python {ver}
-                  </option>
-                ))}
-              </Input>
-              <span className={`d-lg-none ${styles.mobileSep}`} aria-hidden="true">
-                |
-              </span>
-              <Button
-                color="light"
-                className="me-2 mb-2 mb-lg-0"
-                data-toggle="modal"
-                data-target="#options-modal"
-                onClick={toggleOptions}
-              >
-                Options
-              </Button>
+            <Form className={`d-flex flex-wrap flex-md-nowrap ${styles.actions}`}>
+              <div className={styles.controlGroup}>
+                <Button
+                  color="light"
+                  className={`mb-2 mb-lg-0 ${styles.run}`}
+                  disabled={status === "running"}
+                  onClick={onRunClick}
+                >
+                  Run
+                </Button>
+                {separator}
+              </div>
+              <div className={styles.controlGroup}>
+                <Button
+                  color="light"
+                  className="mb-2 mb-lg-0"
+                  disabled={status === "creating_gist"}
+                  onClick={onGistClick}
+                >
+                  Gist
+                </Button>
+                {separator}
+              </div>
+              <div className={styles.controlGroup}>
+                {/* Using w-auto for <Input type="select"> to override "width: 100%" set by
+                      the form-select class. */}
+                <Input
+                  type="select"
+                  className="mb-2 mb-lg-0 w-auto"
+                  title="mypy Version"
+                  value={config.mypyVersion}
+                  onChange={(e) => {
+                    onConfigChange({ mypyVersion: e.target.value });
+                  }}
+                >
+                  {context.mypyVersions.map(([name, id]) => (
+                    <option key={id} value={id}>
+                      {name}
+                    </option>
+                  ))}
+                </Input>
+                {separator}
+              </div>
+              <div className={styles.controlGroup}>
+                <Input
+                  type="select"
+                  className="mb-2 mb-lg-0 w-auto"
+                  title="Python Version (--python--version)"
+                  value={config.pythonVersion}
+                  onChange={(e) => {
+                    onConfigChange({ pythonVersion: e.target.value });
+                  }}
+                >
+                  {context.pythonVersions.map((ver) => (
+                    <option key={ver} value={ver}>
+                      Python {ver}
+                    </option>
+                  ))}
+                </Input>
+                {separator}
+              </div>
+              <div className={styles.controlGroup}>
+                <Button
+                  color="light"
+                  className="mb-2 mb-lg-0"
+                  data-toggle="modal"
+                  data-target="#options-modal"
+                  onClick={toggleOptions}
+                >
+                  Options
+                </Button>
+              </div>
             </Form>
           </Nav>
           <Button
