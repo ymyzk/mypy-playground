@@ -45,6 +45,9 @@ function Header({ config, status, onGistClick, onRunClick, onConfigChange }: Pro
   const toggleOptions = () => {
     setOptionsIsOpen((prev) => !prev);
   };
+  const resetOptions = () => {
+    onConfigChange({ ...context.defaultConfig });
+  };
 
   const half = Math.ceil(context.flags.length / 2);
   const flagsColumns = [context.flags.slice(0, half), context.flags.slice(half, context.flags.length)];
@@ -176,6 +179,9 @@ function Header({ config, status, onGistClick, onRunClick, onConfigChange }: Pro
           </Form>
         </ModalBody>
         <ModalFooter>
+          <Button color="secondary" onClick={resetOptions}>
+            Reset defaults
+          </Button>
           <Button color="primary" onClick={toggleOptions}>
             Close
           </Button>
