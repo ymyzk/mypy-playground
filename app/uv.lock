@@ -1119,11 +1119,11 @@ wheels = [
 
 [[package]]
 name = "types-mock"
-version = "5.2.0.20260402"
+version = "5.2.0.20260408"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/a9/3a/a1e4f1651b3aa8b64833b1640482014f532cd0a3cb3e561c61cd521b5e83/types_mock-5.2.0.20260402.tar.gz", hash = "sha256:3aeb2c902ec6e65a6b6706447b2622976285278e485c4df1483b8bf101a6291b", size = 11440, upload-time = "2026-04-02T04:17:32.94Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/51/4f/a17fd8f0bdeb8d97842e4a825907e7ef7d0360e29728b7a0442d245e28e9/types_mock-5.2.0.20260408.tar.gz", hash = "sha256:0bca3ca21943ba25bca6888b2383b91938f5978a189c840656e255073d53868d", size = 11494, upload-time = "2026-04-08T04:31:46.301Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b8/58/811312201b6a3b0a6650acf33ed7105c869a2a02823d2d2e45c813f384a6/types_mock-5.2.0.20260402-py3-none-any.whl", hash = "sha256:b6bc987c72fe92f4bebb81b75c382cc8b1144aa0d8f6ebea3e9c4a08f3e952a0", size = 10499, upload-time = "2026-04-02T04:17:32.164Z" },
+    { url = "https://files.pythonhosted.org/packages/5f/f8/dc90b73af9c04a9ff89eb785d4b63482ac74c365668a22a0b609a8e90ce9/types_mock-5.2.0.20260408-py3-none-any.whl", hash = "sha256:7754cdaadb81127124804acf2abea413705c1ac22f7bd2bd8417710d2e507216", size = 10500, upload-time = "2026-04-08T04:31:45.404Z" },
 ]
 
 [[package]]
