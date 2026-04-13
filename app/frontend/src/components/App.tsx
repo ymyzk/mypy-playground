@@ -34,12 +34,18 @@ function getPersistedConfigDiff(config: Config, defaultConfig: Config): ConfigDi
 function getInitialConfig(context: Context): Config {
   const params = new URLSearchParams(window.location.search);
   const diff: ConfigDiff = {};
+  const allowedMypyVersions = new Set(context.mypyVersions.map(([, id]) => id));
+  const allowedPythonVersions = new Set(context.pythonVersions);
 
   const mypyValue = params.get("mypy");
-  if (mypyValue) diff.mypyVersion = mypyValue;
+  if (mypyValue && allowedMypyVersions.has(mypyValue)) {
+    diff.mypyVersion = mypyValue;
+  }
 
   const pythonValue = params.get("python");
-  if (pythonValue) diff.pythonVersion = pythonValue;
+  if (pythonValue && allowedPythonVersions.has(pythonValue)) {
+    diff.pythonVersion = pythonValue;
+  }
 
   for (const [option, choices] of Object.entries(context.multiSelectOptions)) {
     const optionValue = params.get(option);
@@ -63,8 +69,15 @@ function getInitialConfig(context: Context): Config {
     if (raw) {
       const parsed = JSON.parse(raw) as Record<string, unknown>;
       for (const [key, value] of Object.entries(parsed)) {
-        if (key === "mypyVersion" || key === "pythonVersion") {
-          if (typeof value === "string") {
+        if (key === "mypyVersion") {
+          if (typeof value === "string" && allowedMypyVersions.has(value)) {
+            storedConfig[key] = value;
+          }
+          continue;
+        }
+
+        if (key === "pythonVersion") {
+          if (typeof value === "string" && allowedPythonVersions.has(value)) {
             storedConfig[key] = value;
           }
           continue;
