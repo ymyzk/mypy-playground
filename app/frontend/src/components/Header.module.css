@@ -17,3 +17,13 @@
 .optionsModal {
   max-width: 560px;
 }
+
+.mobileActions {
+  align-items: center;
+}
+
+.mobileSep {
+  margin: 0 0.5rem 0.5rem 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+}

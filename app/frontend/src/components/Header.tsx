@@ -59,7 +59,7 @@ function Header({ config, status, onGistClick, onRunClick, onConfigChange }: Pro
         <NavbarToggler onClick={toggleNavbar} />
         <Collapse navbar isOpen={navbarIsOpen}>
           <Nav navbar className="me-auto my-2 my-lg-0">
-            <Form className="d-flex flex-wrap flex-md-nowrap">
+            <Form className={`d-flex flex-wrap flex-md-nowrap ${styles.mobileActions}`}>
               <Button
                 color="light"
                 className={`me-2 mb-2 mb-lg-0 ${styles.run}`}
@@ -68,6 +68,9 @@ function Header({ config, status, onGistClick, onRunClick, onConfigChange }: Pro
               >
                 Run
               </Button>
+              <span className={`d-lg-none ${styles.mobileSep}`} aria-hidden="true">
+                |
+              </span>
               <Button
                 color="light"
                 className="me-2 mb-2 mb-lg-0"
@@ -76,6 +79,9 @@ function Header({ config, status, onGistClick, onRunClick, onConfigChange }: Pro
               >
                 Gist
               </Button>
+              <span className={`d-lg-none ${styles.mobileSep}`} aria-hidden="true">
+                |
+              </span>
               {/* Using w-auto for <Input type="select"> to override "width: 100%" set by
                     the form-select class. */}
               <Input
@@ -93,6 +99,9 @@ function Header({ config, status, onGistClick, onRunClick, onConfigChange }: Pro
                   </option>
                 ))}
               </Input>
+              <span className={`d-lg-none ${styles.mobileSep}`} aria-hidden="true">
+                |
+              </span>
               <Input
                 type="select"
                 className="me-2 mb-2 mb-lg-0 w-auto"
@@ -108,6 +117,9 @@ function Header({ config, status, onGistClick, onRunClick, onConfigChange }: Pro
                   </option>
                 ))}
               </Input>
+              <span className={`d-lg-none ${styles.mobileSep}`} aria-hidden="true">
+                |
+              </span>
               <Button
                 color="light"
                 className="me-2 mb-2 mb-lg-0"
