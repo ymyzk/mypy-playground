@@ -12,6 +12,24 @@ import type { AppResult, Config, ConfigDiff, Context } from "./types";
 
 const CONFIG_STORAGE_KEY = "config";
 
+function configValueEquals(a: boolean | string | string[], b: boolean | string | string[]) {
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a.length !== b.length) return false;
+    return a.every((value, index) => value === b[index]);
+  }
+  return a === b;
+}
+
+function getPersistedConfigDiff(config: Config, defaultConfig: Config): ConfigDiff {
+  const diff: ConfigDiff = {};
+  for (const [key, value] of Object.entries(config)) {
+    if (!configValueEquals(value, defaultConfig[key])) {
+      diff[key] = value;
+    }
+  }
+  return diff;
+}
+
 // Helper function to parse URL params and compute initial config
 function getInitialConfig(context: Context): Config {
   const params = new URLSearchParams(window.location.search);
@@ -33,7 +51,9 @@ function getInitialConfig(context: Context): Config {
   const flagsValue = params.get("flags");
   if (flagsValue) {
     for (const flag of flagsValue.split(",")) {
-      diff[flag] = true;
+      if (context.flags.includes(flag)) {
+        diff[flag] = true;
+      }
     }
   }
 
@@ -43,10 +63,26 @@ function getInitialConfig(context: Context): Config {
     if (raw) {
       const parsed = JSON.parse(raw) as Record<string, unknown>;
       for (const [key, value] of Object.entries(parsed)) {
-        if (typeof value === "boolean" || typeof value === "string") {
-          storedConfig[key] = value;
-        } else if (Array.isArray(value) && value.every((item) => typeof item === "string")) {
-          storedConfig[key] = value;
+        if (key === "mypyVersion" || key === "pythonVersion") {
+          if (typeof value === "string") {
+            storedConfig[key] = value;
+          }
+          continue;
+        }
+
+        if (context.flags.includes(key)) {
+          if (typeof value === "boolean") {
+            storedConfig[key] = value;
+          }
+          continue;
+        }
+
+        if (key in context.multiSelectOptions) {
+          if (Array.isArray(value) && value.every((item) => typeof item === "string")) {
+            const choices = context.multiSelectOptions[key];
+            storedConfig[key] = value.filter((item) => choices.includes(item));
+          }
+          continue;
         }
       }
     }
@@ -139,13 +175,22 @@ export default function App() {
 
   // Sync source to localStorage
   useEffect(() => {
-    window.localStorage.setItem("source", source);
+    try {
+      window.localStorage.setItem("source", source);
+    } catch {
+      // Ignore localStorage write failures.
+    }
   }, [source]);
 
   // Sync options config to localStorage
   useEffect(() => {
-    window.localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(config));
-  }, [config]);
+    try {
+      const persistedDiff = getPersistedConfigDiff(config, context.defaultConfig);
+      window.localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(persistedDiff));
+    } catch {
+      // Ignore localStorage write failures.
+    }
+  }, [config, context.defaultConfig]);
 
   const onChange = (newSource: string) => {
     setSource(newSource);
