@@ -10,6 +10,8 @@ import Header from "./Header";
 import Result from "./Result";
 import type { AppResult, Config, ConfigDiff, Context } from "./types";
 
+const CONFIG_STORAGE_KEY = "config";
+
 // Helper function to parse URL params and compute initial config
 function getInitialConfig(context: Context): Config {
   const params = new URLSearchParams(window.location.search);
@@ -35,8 +37,26 @@ function getInitialConfig(context: Context): Config {
     }
   }
 
+  const storedConfig: ConfigDiff = {};
+  try {
+    const raw = window.localStorage.getItem(CONFIG_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as Record<string, unknown>;
+      for (const [key, value] of Object.entries(parsed)) {
+        if (typeof value === "boolean" || typeof value === "string") {
+          storedConfig[key] = value;
+        } else if (Array.isArray(value) && value.every((item) => typeof item === "string")) {
+          storedConfig[key] = value;
+        }
+      }
+    }
+  } catch {
+    // Ignore malformed localStorage config payloads.
+  }
+
   return {
     ...context.defaultConfig,
+    ...storedConfig,
     ...diff,
   };
 }
@@ -121,6 +141,11 @@ export default function App() {
   useEffect(() => {
     window.localStorage.setItem("source", source);
   }, [source]);
+
+  // Sync options config to localStorage
+  useEffect(() => {
+    window.localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(config));
+  }, [config]);
 
   const onChange = (newSource: string) => {
     setSource(newSource);
