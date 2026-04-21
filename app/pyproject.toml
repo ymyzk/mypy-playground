@@ -9,7 +9,7 @@ dependencies = [
     "google-auth[requests]",
     "httpx>=0.28.0,<0.29.0",
     "prometheus-client<1",
-    "pydantic>=2.9.0,<3.0.0",
+    "pydantic>=2.13.3,<3.0.0",
     "pydantic-settings>=2.14.0,<3.0.0",
 ]
 
