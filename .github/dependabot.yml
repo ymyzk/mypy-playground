@@ -13,6 +13,12 @@ updates:
     schedule:
       interval: "weekly"
     groups:
+      eslint:
+        patterns:
+          - "eslint"
+          - "eslint-*"
+          - "@eslint/*"
+          - "@typescript-eslint/*"
       jest:
         patterns:
           - "jest"
