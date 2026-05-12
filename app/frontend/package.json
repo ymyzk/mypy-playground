@@ -17,7 +17,7 @@
     "node": ">=24"
   },
   "dependencies": {
-    "ace-builds": "^1.43.6",
+    "ace-builds": "^1.44.0",
     "bootstrap": "^5.3.8",
     "react": "^19.2.6",
     "react-ace": "^14.0.1",
