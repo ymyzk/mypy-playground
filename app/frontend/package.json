@@ -19,9 +19,9 @@
   "dependencies": {
     "ace-builds": "^1.43.6",
     "bootstrap": "^5.3.8",
-    "react": "^19.2.5",
+    "react": "^19.2.6",
     "react-ace": "^14.0.1",
-    "react-dom": "^19.2.5",
+    "react-dom": "^19.2.6",
     "reactstrap": "^9.2.3"
   },
   "devDependencies": {
