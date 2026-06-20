@@ -10,7 +10,7 @@ dependencies = [
     "httpx>=0.28.0,<0.29.0",
     "prometheus-client<1",
     "pydantic>=2.13.4,<3.0.0",
-    "pydantic-settings>=2.14.1,<3.0.0",
+    "pydantic-settings>=2.14.2,<3.0.0",
 ]
 
 [dependency-groups]
