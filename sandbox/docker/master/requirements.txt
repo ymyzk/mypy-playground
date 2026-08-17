@@ -4,9 +4,9 @@
 #
 #    pip-compile
 #
-ast-serialize==0.6.0
+ast-serialize==0.8.0
     # via mypy
-librt==0.13.0
+librt==0.15.0
     # via mypy
 mypy @ git+https://github.com/python/mypy.git
     # via -r requirements.in
