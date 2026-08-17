@@ -4,37 +4,71 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
+    groups:
+      weekly-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      weekly-major:
+        patterns:
+          - "*"
+        update-types:
+          - "major"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
+    groups:
+      weekly-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      weekly-major:
+        patterns:
+          - "*"
+        update-types:
+          - "major"
   - package-ecosystem: "npm"
     directory: "/app/frontend"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     groups:
-      eslint:
+      weekly-minor-patch:
         patterns:
-          - "eslint"
-          - "eslint-*"
-          - "@eslint/*"
-          - "@typescript-eslint/*"
-      jest:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      weekly-major:
         patterns:
-          - "jest"
-          - "jest-environment-jsdom"
-      next:
-        patterns:
-          - "eslint-config-next"
-          - "next"
-          - "@next/*"
-      react:
-        patterns:
-          - "react"
-          - "react-dom"
-          - "@types/react"
-          - "@types/react-dom"
+          - "*"
+        update-types:
+          - "major"
   - package-ecosystem: "uv"
     directory: "/app"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
+    groups:
+      weekly-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      weekly-major:
+        patterns:
+          - "*"
+        update-types:
+          - "major"
