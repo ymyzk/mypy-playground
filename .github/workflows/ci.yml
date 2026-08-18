@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [24.x, 25.x, 26.x]
+        node-version: [26.x]
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: Use Node.js ${{ matrix.node-version }}
@@ -63,7 +63,7 @@ jobs:
         npm run test:ci
       working-directory: ./app/frontend
     - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-      if: matrix.node-version == '24.x'
+      if: matrix.node-version == '26.x'
       with:
         name: frontend
         path: app/frontend/dist
