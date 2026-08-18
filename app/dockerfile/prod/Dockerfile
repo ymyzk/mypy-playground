@@ -1,4 +1,4 @@
-FROM node:24
+FROM node:26
 
 COPY ./frontend/package.json ./frontend/package-lock.json /app/
 WORKDIR /app
