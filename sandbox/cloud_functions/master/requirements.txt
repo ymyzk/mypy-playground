@@ -4,7 +4,7 @@
 #
 #    pip-compile
 #
-ast-serialize==0.9.0
+ast-serialize==0.11.2
     # via mypy
 librt==0.15.0
     # via mypy
