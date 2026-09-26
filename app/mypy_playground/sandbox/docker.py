@@ -28,6 +28,9 @@ class DockerSandbox(AbstractSandbox):
         # as we recreate a Docker container every time we run mypy.
         self.source_file_path = Path("/tmp/main.py")  # noqa: S108
 
+    async def aclose(self) -> None:
+        await self.client.close()
+
     async def run_typecheck(
         self,
         source: str,

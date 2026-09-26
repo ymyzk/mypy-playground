@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Self
 
 # The flags we display to the user as options in the "Options" menu are
 # defined in the categories below.
@@ -92,9 +92,21 @@ class Result:
 
 
 class AbstractSandbox(ABC):
-    @abstractmethod
-    def __init__(self) -> None:
-        pass
+    """Base class of sandboxes that run mypy in an isolated environment.
+
+    A sandbox is created once and shared across requests, so implementations
+    can hold long-lived resources such as HTTP or Docker clients. Use it as an
+    async context manager (or call ``aclose()``) to release those resources.
+    """
+
+    async def __aenter__(self) -> Self:
+        return self
+
+    async def __aexit__(self, *exc_info: object) -> None:
+        await self.aclose()
+
+    async def aclose(self) -> None:  # noqa: B027
+        """Release resources held by the sandbox."""
 
     @abstractmethod
     async def run_typecheck(

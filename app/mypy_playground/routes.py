@@ -67,14 +67,19 @@ async def get_context(
     return context
 
 
+def get_sandbox(request: Request) -> AbstractSandbox:
+    """Get the sandbox shared across requests (created in the app lifespan)"""
+    sandbox: AbstractSandbox = request.app.state.sandbox
+    return sandbox
+
+
 @api_router.post("/typecheck", response_model=TypecheckResponse)
 async def typecheck(
     request: TypecheckRequest,
-    raw_request: Request,
     settings: Annotated[Settings, Depends(get_settings)],
+    sandbox: Annotated[AbstractSandbox, Depends(get_sandbox)],
 ) -> TypecheckResponse:
     """Run mypy type-checking on the provided source code"""
-    sandbox: AbstractSandbox = raw_request.app.state.sandbox
     source = request.source
 
     args: dict[str, str | bool | list[str]] = {}

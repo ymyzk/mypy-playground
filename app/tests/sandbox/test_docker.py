@@ -26,3 +26,15 @@ async def test_create_archive(mocker: MockerFixture) -> None:
         extracted = tar.extractfile(member)
         assert extracted is not None
         assert extracted.read().decode() == SAMPLE_CODE
+
+
+@pytest.mark.asyncio
+async def test_aclose_closes_client(mocker: MockerFixture) -> None:
+    client = mocker.AsyncMock()
+    docker_cls = mocker.patch(
+        "mypy_playground.sandbox.docker.aiodocker.Docker", return_value=client
+    )
+    async with DockerSandbox():
+        docker_cls.assert_called_once_with()
+        client.close.assert_not_awaited()
+    client.close.assert_awaited_once()
