@@ -34,10 +34,11 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     settings = get_settings()
     # Startup
     logger.info("Starting up mypy-playground")
-    app.state.sandbox = _create_sandbox(settings.sandbox)
-    yield
-    # Shutdown
-    logger.info("Shutting down mypy-playground")
+    async with _create_sandbox(settings.sandbox) as sandbox:
+        app.state.sandbox = sandbox
+        yield
+        # Shutdown
+        logger.info("Shutting down mypy-playground")
 
 
 settings = get_settings()
