@@ -33,6 +33,9 @@ async def create_gist(source: str) -> dict[str, str] | None:
                 return None
 
             res_data = response.json()
+            if "id" not in res_data or "html_url" not in res_data:
+                raise ValueError("Expected 'id' and 'html_url' keys in response")
+
             result = {
                 "id": res_data["id"],
                 "url": res_data["html_url"],
@@ -40,6 +43,7 @@ async def create_gist(source: str) -> dict[str, str] | None:
             }
 
             return result
-        except httpx.HTTPError:
+        except httpx.HTTPError as e:
             # TODO: better error handling
+            print(f"HTTP error: {e}")
             return None
