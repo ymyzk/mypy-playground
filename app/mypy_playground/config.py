@@ -98,12 +98,12 @@ class Settings(BaseSettings):
     )
 
     default_python_version: str = Field(
-        default="3.14",
+        default="3.15",
         description="Default Python version",
     )
 
     python_versions: list[str] = Field(
-        default=["3.14", "3.13", "3.12", "3.11", "3.10", "3.9"],
+        default=["3.15", "3.14", "3.13", "3.12", "3.11", "3.10", "3.9"],
         description="Python versions",
     )
 
