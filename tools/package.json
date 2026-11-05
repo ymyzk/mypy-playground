@@ -1,0 +1,8 @@
+{
+  "name": "crosshair-playground-tools",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "pyodide": "314.0.7"
+  }
+}
