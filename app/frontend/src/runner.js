@@ -1,10 +1,10 @@
-// Main-thread client for the CrossHair Web Worker (app/worker/crosshair-worker.js).
+// Main-thread client for the CrossHair Web Worker (public/crosshair-worker.js).
 //
 // The worker runs CrossHair in Pyodide, off the UI thread, for as long as the
 // analysis takes. It cannot be interrupted from inside, so stop() terminates it
 // and starts a fresh one (which has to load CrossHair again).
 
-export const WORKER_URL = '/worker/crosshair-worker.js';
+export const WORKER_URL = `${import.meta.env.BASE_URL}crosshair-worker.js`;
 
 export default class CrossHairRunner {
   constructor(createWorker = () => new Worker(WORKER_URL, { type: 'module' })) {

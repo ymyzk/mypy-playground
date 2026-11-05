@@ -1,4 +1,4 @@
-// Run examples through the real playground worker (app/worker/crosshair-worker.js)
+// Run examples through the real playground worker (app/frontend/public/crosshair-worker.js)
 // under Node, with a wall-clock cap per example.
 //
 // Usage: node tools/run_pyodide.mjs examples.json out.json [--timeout SECS] [-- crosshair args...]

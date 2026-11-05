@@ -1,10 +1,10 @@
-// Worker thread for run_pyodide.mjs: hosts app/worker/crosshair-worker.js with a
+// Worker thread for run_pyodide.mjs: hosts app/frontend/public/crosshair-worker.js with a
 // minimal Web Worker global scope shim.
 import fs from "node:fs";
 import { parentPort } from "node:worker_threads";
 import { loadPyodide } from "pyodide";
 
-const workerPath = new URL("../app/worker/crosshair-worker.js", import.meta.url);
+const workerPath = new URL("../app/frontend/public/crosshair-worker.js", import.meta.url);
 let pending = null;
 
 globalThis.self = globalThis;

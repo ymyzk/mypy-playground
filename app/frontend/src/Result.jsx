@@ -122,23 +122,15 @@ function Result({ result, engine }) {
       );
     case 'failed':
       return `Error: ${result.message}`;
-    case 'creating_gist':
-      return 'Creating a gist...';
     case 'fetching_gist':
       return 'Fetching a gist...';
-    case 'created_gist':
-    {
-      const { gistUrl, playgroundUrl } = result;
+    case 'shared_link':
       return (
         <div>
-          <span>Gist URL: </span>
-          <a href={gistUrl} target="_blank" rel="noopener noreferrer">{gistUrl}</a><br />
-          <span>Playground URL: </span>
-          <a href={playgroundUrl}>{playgroundUrl}</a><br />
-          <hr />
+          <span>{ result.copied ? 'Link copied to clipboard: ' : 'Link to this code: ' }</span>
+          <a href={result.url}>{result.url.length > 120 ? `${result.url.slice(0, 120)}...` : result.url}</a>
         </div>
       );
-    }
     case 'fetched_gist':
       return 'Completed to fetch a Gist!';
     default:

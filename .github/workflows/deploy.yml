@@ -1,0 +1,23 @@
+name: Deploy
+on:
+  push:
+    branches: [master]
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: github-pages
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: app/frontend/package-lock.json }
+      - run: npm ci && npm test && npm run build
+        working-directory: app/frontend
+        env:
+          VITE_GA_TRACKING_ID: ${{ vars.GA_TRACKING_ID }}
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: app/frontend/dist }
+      - uses: actions/deploy-pages@v4

@@ -52,11 +52,10 @@ class Header extends React.Component {
 
   render() {
     const {
-      context,
       config,
       status,
       engineStatus,
-      onGistClick,
+      onLinkClick,
       onRunClick,
       onStopClick,
       onConfigChange,
@@ -115,7 +114,7 @@ class Header extends React.Component {
                   <DropdownItem tag="a" href="?gist=5c8cfb1f2806d3840a269b17357c900d">Regular expressions</DropdownItem>
                 </DropdownMenu>
 	      </ButtonDropdown>
-              <Button color="light" size="sm" className="my-sm-0 mr-sm-2" disabled={status === 'creating_gist'} onClick={onGistClick}>Gist</Button>
+              <Button color="light" size="sm" className="my-2 my-sm-0 mr-sm-2" onClick={onLinkClick}>Share</Button>
               <Button color="light" size="sm" className="my-2 my-sm-0" data-toggle="modal" data-target="#options-modal" onClick={() => this.toggle('options')}>
                 Options
               </Button>
@@ -191,7 +190,7 @@ class Header extends React.Component {
             <p>
               The CrossHair Playground runs <a href="https://github.com/pschanely/CrossHair">CrossHair</a> on
               your Python code, entirely in your browser (using <a href="https://pyodide.org/">Pyodide</a>).
-              Your code is never sent to a server, unless you share it as a gist.
+              Your code is never sent to a server. Share links contain your code in the URL itself.
             </p>
             <p>
               <span>This project is </span>

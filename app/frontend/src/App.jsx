@@ -8,20 +8,18 @@ import Header from './Header';
 import Result from './Result';
 import CrossHairRunner from './runner';
 import { buildArgs, configFromParams, defaultConfig, writeConfigToParams } from './config';
-import { fetchGist, shareGist } from './gist';
+import { DEFAULT_SOURCE, fetchGist, shareLink, sourceFromHash } from './share';
 import { parseMessages } from './utils';
 
 export default class App extends Component {
   constructor(props) {
     super(props);
 
-    const context = JSON.parse(document.getElementById('context').textContent);
     this.state = {
       annotations: [],
       config: defaultConfig(),
-      context,
       engine: { status: 'loading', text: 'Starting...' },
-      source: context.initial_code,
+      source: DEFAULT_SOURCE,
       result: {
         status: 'ready',
       },
@@ -29,14 +27,15 @@ export default class App extends Component {
 
     this.run = this.run.bind(this);
     this.stop = this.stop.bind(this);
-    this.shareGist = this.shareGist.bind(this);
+    this.shareLink = this.shareLink.bind(this);
     this.onChange = this.onChange.bind(this);
     this.updateConfig = this.updateConfig.bind(this);
   }
 
   componentDidMount() {
-    if (this.state.context.ga_tracking_id) {
-      ReactGA.initialize(this.state.context.ga_tracking_id);
+    const gaId = import.meta.env.VITE_GA_TRACKING_ID;
+    if (gaId) {
+      ReactGA.initialize(gaId);
       ReactGA.pageview(window.location.pathname + window.location.search);
     }
 
@@ -49,7 +48,9 @@ export default class App extends Component {
     this.updateConfig(configFromParams(params));
 
     // Load source
-    if (params.has('source')) {
+    if (window.location.hash.includes('code=')) {
+      this.loadSharedSource(window.location.hash);
+    } else if (params.has('source')) {
       this.setState({ source: params.get('source') });
     } else if (params.has('gist')) {
       this.fetchGist(params.get('gist'));
@@ -122,26 +123,31 @@ export default class App extends Component {
     this.runner.stop();
   }
 
-  async shareGist() {
-    this.setState({ result: { status: 'creating_gist' } });
+  async loadSharedSource(hash) {
     try {
-      const playgroundUrl = new URL(window.location.href);
-      const params = new URLSearchParams(playgroundUrl.search);
-      const {
-        gistId,
-        gistUrl,
-      } = await shareGist(this.state.source);
-      params.set('gist', gistId);
-      playgroundUrl.search = `?${params.toString()}`;
-      this.setState({
-        result: {
-          status: 'created_gist',
-          gistUrl,
-          playgroundUrl: playgroundUrl.toString(),
-        },
-      });
+      const source = await sourceFromHash(hash);
+      this.setState({ source, result: { status: 'ready' } });
     } catch (error) {
-      this.setState({ result: { status: 'failed', message: `Failed to create a gist: ${error}` } });
+      this.setState({ result: { status: 'failed', message: `Failed to read the shared link: ${error}` } });
+    }
+  }
+
+  async shareLink() {
+    try {
+      const url = await shareLink(this.state.source, window.location.href);
+      const copied = await this.copy(url);
+      this.setState({ result: { status: 'shared_link', url, copied } });
+    } catch (error) {
+      this.setState({ result: { status: 'failed', message: `Failed to create a link: ${error}` } });
+    }
+  }
+
+  async copy(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (error) {
+      return false;
     }
   }
 
@@ -164,11 +170,10 @@ export default class App extends Component {
     return (
       <div className="App">
         <Header
-          context={this.state.context}
           config={this.state.config}
           status={this.state.result.status}
           engineStatus={this.state.engine.status}
-          onGistClick={this.shareGist}
+          onLinkClick={this.shareLink}
           onRunClick={this.run}
           onStopClick={this.stop}
           onConfigChange={this.updateConfig}
