@@ -2,18 +2,20 @@ import { parseMessages } from '../src/utils';
 
 describe('parseMessages', () => {
   it('should parse and return annotations', () => {
-    const stdout = `main.py:12: error: Argument 1 to "fib" has incompatible type "str"; expected "int"
-main.py:13: error: Argument 1 to "fib" has incompatible type "Callable[[int], Iterator[int]]"; expected "int"`;
+    const stdout = `/tmp/main.py:12: error: false when calling f(0) (which returns 0)
+/tmp/main.py:13: error: ValueError: bad input when calling g('')
+some unrelated line
+`;
     const annotations = [
       {
         row: 11,
         type: 'error',
-        text: 'Argument 1 to "fib" has incompatible type "str"; expected "int"',
+        text: ' false when calling f(0) (which returns 0)',
       },
       {
         row: 12,
         type: 'error',
-        text: 'Argument 1 to "fib" has incompatible type "Callable[[int], Iterator[int]]"; expected "int"',
+        text: ' ValueError: bad input when calling g(\'\')',
       },
     ];
     expect(parseMessages(stdout)).toEqual(annotations);

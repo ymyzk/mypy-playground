@@ -6,7 +6,8 @@ import './App.css';
 import Editor from './Editor';
 import Header from './Header';
 import Result from './Result';
-import { runTypecheck } from './api';
+import CrossHairRunner from './runner';
+import { buildArgs, configFromParams, defaultConfig, writeConfigToParams } from './config';
 import { fetchGist, shareGist } from './gist';
 import { parseMessages } from './utils';
 
@@ -17,8 +18,9 @@ export default class App extends Component {
     const context = JSON.parse(document.getElementById('context').textContent);
     this.state = {
       annotations: [],
-      config: context.defaultConfig,
+      config: defaultConfig(),
       context,
+      engine: { status: 'loading', text: 'Starting...' },
       source: context.initial_code,
       result: {
         status: 'ready',
@@ -26,6 +28,7 @@ export default class App extends Component {
     };
 
     this.run = this.run.bind(this);
+    this.stop = this.stop.bind(this);
     this.shareGist = this.shareGist.bind(this);
     this.onChange = this.onChange.bind(this);
     this.updateConfig = this.updateConfig.bind(this);
@@ -37,22 +40,13 @@ export default class App extends Component {
       ReactGA.pageview(window.location.pathname + window.location.search);
     }
 
+    // Starts downloading CrossHair right away, while the user reads and edits.
+    this.runner = new CrossHairRunner();
+    this.unsubscribe = this.runner.subscribe(engine => this.setState({ engine }));
+
     const params = new URLSearchParams(window.location.search);
     // Load configurations
-    const diff = {};
-    if (params.has('crosshair')) {
-      diff.crosshairVersion = params.get('crosshair');
-    }
-    if (params.has('python')) {
-      diff.pythonVersion = params.get('python');
-    }
-    if (params.has('flags')) {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const flag of params.get('flags').split(',')) {
-        diff[flag] = true;
-      }
-    }
-    this.updateConfig(diff);
+    this.updateConfig(configFromParams(params));
 
     // Load source
     if (params.has('source')) {
@@ -68,24 +62,17 @@ export default class App extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.unsubscribe();
+    this.runner.dispose();
+  }
+
   // eslint-disable-next-line no-unused-vars
   componentDidUpdate(prevProps, prevState, snapshot) {
     // Push history when configuration has changed
-    const params = new URLSearchParams(window.location.search);
     if (prevState.config !== this.state.config) {
-      const flags = [];
-      Object.entries(this.state.config).forEach(([k, v]) => {
-        if (k === 'crosshairVersion') {
-          params.set('crosshair', v);
-        } else if (k === 'pythonVersion') {
-          params.set('python', v);
-        } else if (v) {
-          flags.push(k);
-        }
-      });
-      if (flags.length > 0) {
-        params.set('flags', flags.join(','));
-      }
+      const params = new URLSearchParams(window.location.search);
+      writeConfigToParams(params, this.state.config);
       window.history.pushState({}, '', `?${params.toString()}`);
     }
 
@@ -103,20 +90,29 @@ export default class App extends Component {
   }
 
   async run() {
-    this.setState({ result: { status: 'running' } });
+    this.setState({ result: { status: 'running', stdout: '' }, annotations: [] });
 
     try {
-      const result = await runTypecheck({
-        ...this.state.config,
-        source: this.state.source,
-      });
+      const result = await this.runner.run(
+        this.state.source,
+        buildArgs(this.state.config),
+        // Show counterexamples as they are found.
+        stdout => this.setState({
+          result: { status: 'running', stdout },
+          annotations: parseMessages(stdout),
+        }),
+      );
       this.setState({
-        result: { status: 'succeeded', result },
+        result: { status: result.stopped ? 'stopped' : 'succeeded', result },
         annotations: parseMessages(result.stdout),
       });
     } catch (error) {
-      this.setState({ result: { status: 'failed', message: error } });
+      this.setState({ result: { status: 'failed', message: error.message } });
     }
+  }
+
+  stop() {
+    this.runner.stop();
   }
 
   async shareGist() {
@@ -164,8 +160,10 @@ export default class App extends Component {
           context={this.state.context}
           config={this.state.config}
           status={this.state.result.status}
+          engineStatus={this.state.engine.status}
           onGistClick={this.shareGist}
           onRunClick={this.run}
+          onStopClick={this.stop}
           onConfigChange={this.updateConfig}
         />
         <Editor
@@ -173,7 +171,7 @@ export default class App extends Component {
           annotations={this.state.annotations}
           source={this.state.source}
         />
-        <Result result={this.state.result} />
+        <Result result={this.state.result} engine={this.state.engine} />
       </div>
     );
   }

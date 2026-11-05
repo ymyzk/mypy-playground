@@ -20,11 +20,27 @@ import {
   NavbarToggler,
 } from 'reactstrap';
 
+import {
+  ADVANCED_NUMBER_OPTIONS,
+  ANALYSIS_KINDS,
+  BOOLEAN_FLAGS,
+  NUMBER_OPTIONS,
+} from './config';
+
+const OPTION_HELP = {
+  verbose: 'Output additional debugging information',
+  report_all: 'Report the results of all postconditions, not just failing ones',
+  max_uninteresting_iterations: 'Stop after this many consecutive iterations without significant progress. Larger values mean a deeper (and slower) search. CrossHair\'s default is 5.',
+  per_condition_timeout: 'Maximum CPU seconds to spend on one condition.',
+  per_path_timeout: 'Maximum CPU seconds to spend on one execution path.',
+};
+
 class Header extends React.Component {
   state = {
     aboutIsOpen: false,
     navbarIsOpen: false,
     optionsIsOpen: false,
+    advancedIsOpen: false,
   };
 
   toggle(name) {
@@ -39,16 +55,32 @@ class Header extends React.Component {
       context,
       config,
       status,
+      engineStatus,
       onGistClick,
       onRunClick,
+      onStopClick,
       onConfigChange,
     } = this.props;
 
-    const half = Math.ceil(context.flags.length / 2);
-    const flagsColumns = [
-      context.flags.slice(0, half),
-      context.flags.slice(half, context.flags.length),
-    ];
+    const toggleKind = (kind, checked) => {
+      const kinds = config.analysis_kind.filter(k => k !== kind);
+      onConfigChange({ analysis_kind: checked ? [...kinds, kind] : kinds });
+    };
+    const numberField = name => (
+      <FormGroup key={name}>
+        <Label for={name}><code>--{ name }</code></Label>
+        <Input
+          type="number"
+          min="0"
+          bsSize="sm"
+          id={name}
+          placeholder="default"
+          value={config[name]}
+          onChange={e => onConfigChange({ [name]: e.target.value })}
+        />
+        <small className="text-muted">{ OPTION_HELP[name] }</small>
+      </FormGroup>
+    );
 
     return (
       <header>
@@ -66,7 +98,11 @@ class Header extends React.Component {
           <NavbarToggler onClick={() => this.toggle('navbar')} />
           <Collapse navbar isOpen={this.state.navbarIsOpen}>
             <Form inline className="my-2 my-lg-0 mr-auto">
-              <Button color="light" size="sm" className="my-2 my-sm-0 mr-sm-2" id="run" disabled={status === 'running'} onClick={onRunClick}>Run</Button>
+              {
+                status === 'running'
+                  ? <Button color="danger" size="sm" className="my-2 my-sm-0 mr-sm-2" id="stop" onClick={onStopClick}>Stop</Button>
+                  : <Button color="light" size="sm" className="my-2 my-sm-0 mr-sm-2" id="run" disabled={engineStatus !== 'ready'} onClick={onRunClick}>Run</Button>
+              }
 	      <ButtonDropdown className="my-2 my-sm-0 mr-sm-2" isOpen={this.state.examplesIsOpen} toggle={() => this.toggle('examples')}>
 	        <DropdownToggle caret color="light" size="sm">
                   Examples
@@ -80,20 +116,6 @@ class Header extends React.Component {
                 </DropdownMenu>
 	      </ButtonDropdown>
               <Button color="light" size="sm" className="my-sm-0 mr-sm-2" disabled={status === 'creating_gist'} onClick={onGistClick}>Gist</Button>
-              <Input
-                type="select"
-		bsSize="sm"
-                className="mr-sm-2"
-                title="CrossHair Version"
-                value={config.crosshairVersion}
-                onChange={e => onConfigChange({ crosshairVersion: e.target.value })}
-              >
-                {
-                  context.mypy_versions.map(([name, id]) => (
-                    <option key={id} value={id}>{ name }</option>
-                  ))
-                }
-              </Input>
               <Button color="light" size="sm" className="my-2 my-sm-0" data-toggle="modal" data-target="#options-modal" onClick={() => this.toggle('options')}>
                 Options
               </Button>
@@ -112,28 +134,51 @@ class Header extends React.Component {
           <ModalBody>
             <Form>
               <FormGroup row>
-                {
-                  flagsColumns.map(flags => (
-                    <Col md={6} key={flags[0]}>
-                      {
-                        flags.map(flag => (
-                          <FormGroup check key={flag}>
-                            <Input
-                              type="checkbox"
-                              id={flag}
-                              checked={config[flag]}
-                              onChange={e => onConfigChange({ [flag]: e.target.checked })}
-                            />
-                            <Label check for={flag}>
-                              <code>--{ flag }</code>
-                            </Label>
-                          </FormGroup>
-                        ))
-                      }
-                    </Col>
-                  ))
-                }
+                <Col md={6}>
+                  {
+                    BOOLEAN_FLAGS.map(flag => (
+                      <FormGroup check key={flag}>
+                        <Input
+                          type="checkbox"
+                          id={flag}
+                          checked={config[flag]}
+                          onChange={e => onConfigChange({ [flag]: e.target.checked })}
+                        />
+                        <Label check for={flag}>
+                          <code>--{ flag }</code>
+                        </Label>
+                        <br />
+                        <small className="text-muted">{ OPTION_HELP[flag] }</small>
+                      </FormGroup>
+                    ))
+                  }
+                </Col>
+                <Col md={6}>
+                  <div><code>--analysis_kind</code> (default: PEP316, icontract, deal)</div>
+                  {
+                    ANALYSIS_KINDS.map(kind => (
+                      <FormGroup check key={kind}>
+                        <Input
+                          type="checkbox"
+                          id={`kind-${kind}`}
+                          checked={config.analysis_kind.includes(kind)}
+                          onChange={e => toggleKind(kind, e.target.checked)}
+                        />
+                        <Label check for={`kind-${kind}`}>{ kind }</Label>
+                      </FormGroup>
+                    ))
+                  }
+                </Col>
               </FormGroup>
+              { NUMBER_OPTIONS.map(numberField) }
+              <Button color="link" size="sm" className="p-0" id="advanced-toggle" onClick={(e) => { e.preventDefault(); this.toggle('advanced'); }}>
+                { this.state.advancedIsOpen ? '▾' : '▸' } Advanced settings
+              </Button>
+              <Collapse isOpen={this.state.advancedIsOpen}>
+                <div className="mt-2">
+                  { ADVANCED_NUMBER_OPTIONS.map(numberField) }
+                </div>
+              </Collapse>
             </Form>
           </ModalBody>
           <ModalFooter>
@@ -144,9 +189,9 @@ class Header extends React.Component {
           <ModalHeader toggle={() => this.toggle('about')}>About the CrosHair Playground</ModalHeader>
           <ModalBody>
             <p>
-              The CrossHair Playground is a web service that receives a Python program with type
-              hints, runs <a href="https://github.com/pschanely/CrossHair">CrossHair</a> inside
-              a sandbox, then returns the output.
+              The CrossHair Playground runs <a href="https://github.com/pschanely/CrossHair">CrossHair</a> on
+              your Python code, entirely in your browser (using <a href="https://pyodide.org/">Pyodide</a>).
+              Your code is never sent to a server, unless you share it as a gist.
             </p>
             <p>
               <span>This project is </span>

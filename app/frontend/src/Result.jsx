@@ -1,6 +1,32 @@
 import React from 'react';
 
-function Result({ result }) {
+function Engine({ engine }) {
+  switch (engine.status) {
+    case 'loading':
+      return <div>Loading CrossHair... ({ engine.text })</div>;
+    case 'failed':
+      return (
+        <div>
+          <span>Could not load CrossHair: { engine.message }</span>
+          <br />
+          <span>Reload the page to try again.</span>
+        </div>
+      );
+    default:
+      return null;
+  }
+}
+
+function Output({ stdout, stderr }) {
+  return (
+    <div>
+      <pre>{ stdout }</pre>
+      <pre>{ stderr }</pre>
+    </div>
+  );
+}
+
+function Result({ result, engine }) {
   let message = '';
   switch (result.status) {
     case 'ready':
@@ -9,12 +35,35 @@ function Result({ result }) {
           <span>This is a web interface for the </span>
           <a href="https://github.com/pschanely/CrossHair">CrossHair</a>
           <span> concolic analysis tool.</span>
+          { engine.status === 'ready' && (
+            <div className="text-muted">
+              CrossHair { engine.crosshairVersion }, Python { engine.pythonVersion }, running in your browser.
+            </div>
+          ) }
         </div>
       );
     case 'running':
-      return 'Running...';
+      return (
+        <div>
+          <div>Running... (press Stop to abandon the analysis; results appear when it finishes)</div>
+          <Output stdout={result.stdout} stderr="" />
+        </div>
+      );
+    case 'stopped':
+      return (
+        <div>
+          <div>
+            { result.result.stdout
+              ? 'Stopped. Counterexamples reported before stopping:'
+              : 'Stopped. CrossHair reports results when it finishes, so there is nothing to show.' }
+          </div>
+          <Output stdout={result.result.stdout} stderr="" />
+        </div>
+      );
     case 'succeeded':
-      if (result.result.exit_code === 0) {
+      if (result.result.exit_code === 2) {
+        message = <div>CrossHair could not analyze this code:</div>;
+      } else if (result.result.exit_code === 0) {
         message = (
           <div>
             <span>No counterexamples found.</span>
@@ -38,8 +87,7 @@ function Result({ result }) {
         <div>
           { message }
           <hr />
-          <pre>{ result.result.stdout }</pre>
-          <pre>{ result.result.stderr }</pre>
+          <Output stdout={result.result.stdout} stderr={result.result.stderr} />
         </div>
       );
     case 'failed':
@@ -68,10 +116,11 @@ function Result({ result }) {
   }
 }
 
-export default function ResultWrapper({ result }) {
+export default function ResultWrapper({ result, engine }) {
   return (
     <div id="result">
-      <Result result={result} />
+      <Engine engine={engine} />
+      <Result result={result} engine={engine} />
     </div>
   );
 }

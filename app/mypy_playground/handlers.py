@@ -2,14 +2,13 @@ import json
 import logging
 import traceback
 from http import HTTPStatus
-from typing import Any, Dict, Union
+from typing import Any
 
 import tornado.escape
 import tornado.web
 from tornado.options import options
 
-from . import gist, sandbox
-from .utils import get_mypy_versions
+from . import gist
 
 logger = logging.getLogger(__name__)
 initial_code = """
@@ -24,18 +23,8 @@ def make_bigger(n: int) -> int:
 
 class IndexHandler(tornado.web.RequestHandler):
     async def get(self) -> None:
-        mypy_versions = get_mypy_versions()
-        default: Dict[str, Union[bool, str]] = {
-            flag: False for flag in sandbox.ARGUMENT_FLAGS
-        }
-        default["crosshairVersion"] = mypy_versions[0][1]
-        default["pythonVersion"] = sandbox.PYTHON_VERSIONS[0]
         context = {
-            "defaultConfig": default,
             "initial_code": initial_code,
-            "python_versions": sandbox.PYTHON_VERSIONS,
-            "mypy_versions": mypy_versions,
-            "flags": sandbox.ARGUMENT_FLAGS,
             "ga_tracking_id": options.ga_tracking_id,
         }
         self.render("index.html", context=json.dumps(context))
@@ -73,43 +62,6 @@ class JsonRequestHandler(tornado.web.RequestHandler):
             raise tornado.web.HTTPError(
                 HTTPStatus.BAD_REQUEST, log_message="failed to parse JSON body"
             )
-
-
-class TypecheckHandler(JsonRequestHandler):
-    async def post(self) -> None:
-        json = self.parse_json_request_body()
-
-        source = json.get("source")
-        if source is None or not isinstance(source, str):
-            raise tornado.web.HTTPError(
-                HTTPStatus.BAD_REQUEST, log_message="'source' is required"
-            )
-
-        args = {}
-        python_version = json.get("pythonVersion")
-        if python_version is not None and python_version in sandbox.PYTHON_VERSIONS:
-            args["python_version"] = python_version
-        for flag in sandbox.ARGUMENT_FLAGS:
-            flag_value = json.get(flag)
-            if flag_value is not None and flag_value is True:
-                args[flag] = flag_value
-
-        mypy_version = json.get("crosshairVersion")
-        if mypy_version is None:
-            mypy_version = get_mypy_versions()[0][1]
-        args["mypy_version"] = mypy_version
-
-        result = await sandbox.run_typecheck_in_sandbox(
-            sandbox.DockerSandbox(), source, **args
-        )
-        if result is None:
-            logger.error("an error occurred during running type-check")
-            raise tornado.web.HTTPError(
-                HTTPStatus.INTERNAL_SERVER_ERROR,
-                log_message="an error occurred during running mypy",
-            )
-
-        self.write(result.to_dict())
 
 
 class GistHandler(JsonRequestHandler):

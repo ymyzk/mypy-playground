@@ -2,45 +2,44 @@
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/pschanely/crosshair-playground/blob/master/LICENSE)
 
-**The CrossHair playgrund** provides Web UI to run [CrossHair](https://github.com/pschanely/CrossHair) in a sandbox. Try it out here: https://crosshair-web.org
+**The CrossHair playground** provides a Web UI to run [CrossHair](https://github.com/pschanely/CrossHair) in your browser, using [Pyodide](https://pyodide.org/). Try it out here: https://crosshair-web.org
 
 ## Features
-- Web UI and sandbox for running CrossHair easily and safely
+- Runs CrossHair entirely client-side, in a Web Worker: no server-side code execution, and no time limit (there is a Stop button)
 - Simple and nice editor with syntax highlighting and error reporting
 - Share snippets with your friends using GitHub Gist
 
 ## Development
-1. Run `docker-compose up -d --build` to start an app and Docker for running CrossHair
-2. Run `docker-compose exec docker docker pull -a pschanely/crosshair-playground-sandbox` to pull the latest sandbox images into the container.
-3. Open http://localhost:8080
+1. Run `docker-compose up -d --build` to start the app
+2. Open http://localhost:8080
+
+To work on the frontend only: `cd app/frontend && npm ci && npm test` (use Node 14; the Neutrino 8 toolchain doesn't build on newer Node versions).
+
+## How it works
+The browser loads Pyodide from jsDelivr (version pinned in `app/worker/crosshair-worker.js`) and installs the latest `crosshair-tool` release from PyPI that has a Pyodide wheel. The worker is served as a plain static file at `/worker/crosshair-worker.js`.
+
+To pin CrossHair (e.g. if a release breaks the playground), set `CROSSHAIR_REQUIREMENT` in the worker, e.g. `crosshair-tool==0.0.113`.
 
 ## Packaging
-Package a sandbox:
-```sh
-export VER=0.1 && pushd sandbox/${VER}/ && (pipenv update && pipenv --rm) ; popd
-docker build --pull -t pschanely/crosshair-playground-sandbox:${VER} ~/proj/crosshair-playground/sandbox/${VER}/ && docker push pschanely/crosshair-playground-sandbox
-```
 Package the frontend & backend:
 ```sh
 docker build -f ~/proj/crosshair-playground/app/Dockerfile-prod -t pschanely/crosshair-playground:latest ~/proj/crosshair-playground/app/ && docker push pschanely/crosshair-playground
 ```
 Deploy a package:
 ```sh
-cd crosshair-playground/ && docker-compose pull && docker-compose down && docker-compose up -d && docker-compose exec docker docker pull -a pschanely/crosshair-playground-sandbox
+cd crosshair-playground/ && docker-compose pull && docker-compose down && docker-compose up -d
 ```
 
 ## Components
 - [app](app): Application server
 - [app/frontend](app/frontend): Frontend
-- [sandbox](sandbox): Docker images for running CrossHair
+- [app/worker](app/worker): Web Worker that runs CrossHair in Pyodide
+- [tools](tools): Helper scripts
 
 ## Configuration
 | Name | Type | Required | Description |
 |:-----|:-----|:---------|:------------|
 | `DEBUG` | bool | No | Enable debug mode (default: False) |
 | `PORT` | int | No | Port number (default: 8080) |
-| `DOCKER_IMAGES` | list | No | Docker images used by sandbox |
-| `SANDBOX_CONCURRENCY` | int | No | The number of running sandboxes at the same time (default: 3) |
 | `GA_TRACKING_ID` | str | No | A tracking id for Google Analytics. If not specified, Google Analytics is disabled. |
 | `GITHUB_TOKEN` | str | No | A token used to create gists |
-| `MYPY_VERSIONS` | list | No | List of CrossHair versions used by a sandbox |
