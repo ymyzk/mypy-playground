@@ -90,11 +90,12 @@ export default class App extends Component {
   }
 
   async run() {
+    const { source } = this.state;
     this.setState({ result: { status: 'running', stdout: '' }, annotations: [] });
 
     try {
       const result = await this.runner.run(
-        this.state.source,
+        source,
         buildArgs(this.state.config),
         // Show counterexamples as they are found.
         stdout => this.setState({
@@ -102,8 +103,14 @@ export default class App extends Component {
           annotations: parseMessages(stdout),
         }),
       );
+      let status = 'succeeded';
+      if (result.stopped) {
+        status = 'stopped';
+      } else if (result.crashed) {
+        status = 'crashed';
+      }
       this.setState({
-        result: { status: result.stopped ? 'stopped' : 'succeeded', result },
+        result: { status, result, source },
         annotations: parseMessages(result.stdout),
       });
     } catch (error) {

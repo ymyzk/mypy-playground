@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { buildCrashIssueUrl, summarizeTraceback } from './report';
+
 function Engine({ engine }) {
   switch (engine.status) {
     case 'loading':
@@ -58,6 +60,34 @@ function Result({ result, engine }) {
               : 'Stopped. CrossHair reports results when it finishes, so there is nothing to show.' }
           </div>
           <Output stdout={result.result.stdout} stderr="" />
+        </div>
+      );
+    case 'crashed':
+      return (
+        <div>
+          <div>
+            <strong>CrossHair crashed</strong>
+            <span>: </span>
+            <code>{ summarizeTraceback(result.result.crashed) }</code>
+          </div>
+          <div>
+            <span>This is a bug in CrossHair, not a problem with your code. </span>
+            <a
+              href={buildCrashIssueUrl({
+                source: result.source,
+                crashed: result.result.crashed,
+                crosshairVersion: engine.crosshairVersion,
+                pythonVersion: engine.pythonVersion,
+              })}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Report it
+            </a>
+            <span> (the report is pre-filled with your code and the traceback).</span>
+          </div>
+          <hr />
+          <Output stdout={result.result.stdout} stderr={result.result.crashed} />
         </div>
       );
     case 'succeeded':

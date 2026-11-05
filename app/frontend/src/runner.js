@@ -74,6 +74,7 @@ export default class CrossHairRunner {
             stdout: run.stdout,
             stderr: message.stderr,
             duration: message.duration,
+            crashed: message.crashed || null,
             stopped: false,
           });
         }
@@ -129,7 +130,12 @@ export default class CrossHairRunner {
     this.startWorker();
     if (run) {
       run.resolve({
-        exit_code: null, stdout: run.stdout, stderr: '', duration: null, stopped: true,
+        exit_code: null,
+        stdout: run.stdout,
+        stderr: '',
+        duration: null,
+        crashed: null,
+        stopped: true,
       });
     }
   }

@@ -56,9 +56,19 @@ describe('CrossHairRunner', () => {
       type: 'done', id, exit_code: 1, stderr: '', duration: 5,
     });
     await expect(promise).resolves.toEqual({
-      exit_code: 1, stdout: 'a\nb\n', stderr: '', duration: 5, stopped: false,
+      exit_code: 1, stdout: 'a\nb\n', stderr: '', duration: 5, crashed: null, stopped: false,
     });
     expect(seen).toEqual(['a\n', 'a\nb\n']);
+  });
+
+  it('passes a CrossHair crash traceback through', async () => {
+    const { runner, workers } = setup();
+    workers[0].emit(ready);
+    const promise = runner.run('src', ['check']);
+    workers[0].emit({
+      type: 'done', id: workers[0].sent[0].id, exit_code: 0, stderr: '', duration: 1, crashed: 'Traceback...\nValueError: x',
+    });
+    await expect(promise).resolves.toMatchObject({ crashed: 'Traceback...\nValueError: x' });
   });
 
   it('rejects overlapping runs', async () => {

@@ -10,7 +10,8 @@
 //                   {type: 'ready', crosshairVersion, pythonVersion}
 //                   {type: 'init_failed', message}
 //                   {type: 'stdout', id, text}              (streamed while running)
-//                   {type: 'done', id, exit_code, stderr, duration}
+//                   {type: 'done', id, exit_code, stderr, duration, crashed}
+//                       crashed: a Python traceback if CrossHair itself raised, else null
 //                   {type: 'error', id, message}
 //   main -> worker  {type: 'run', id, source, args}
 //
@@ -33,7 +34,7 @@ const CONTRACT_PACKAGES = ['deal', 'icontract'];
 const OPTIONAL_PACKAGES = ['hypothesis', 'numpy'];
 
 const PY_SETUP = `
-import contextlib, importlib, io, json, linecache, sys, time
+import contextlib, importlib, io, json, linecache, sys, time, traceback
 from crosshair.main import main
 
 SOURCE_PATH = "${SOURCE_PATH}"
@@ -76,14 +77,21 @@ def run_check(args, emit):
 
     stderr = io.StringIO()
     code = 0
+    crashed = None
     start = time.time()
     with contextlib.redirect_stdout(_Emit(emit)), contextlib.redirect_stderr(stderr):
         try:
             main(list(args) + [SOURCE_PATH])
         except SystemExit as exit_:
             code = exit_.code if isinstance(exit_.code, int) else (0 if exit_.code is None else 1)
+        except BaseException:
+            # CrossHair itself failed (natively this is an uncaught exception,
+            # exit code 1 with an empty stdout). Not a problem with the user's code.
+            # (BaseException: CrossHairInternal derives from it.)
+            crashed = traceback.format_exc()
     return json.dumps({
         "exit_code": code,
+        "crashed": crashed,
         "stderr": stderr.getvalue(),
         "duration": int(1000 * (time.time() - start)),
     })

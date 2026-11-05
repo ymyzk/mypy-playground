@@ -2,8 +2,13 @@
 
 Usage: python tools/compare_runs.py examples.json native.json pyodide.json
 
-Outcome = counterexample found (exit 1) / none (0) / error (2) / timeout.
+Outcome = counterexample found (exit 1 with output) / none (0) / error (2) /
+crash (an uncaught exception: native Python also exits 1, but prints nothing on
+stdout; Pyodide reports it as an error) / timeout.
 Output text is compared after normalizing the /tmp/main.py path.
+
+Compare against a native Python of the same minor version as Pyodide's: some
+differences (and hangs) are Python-version differences, not wasm differences.
 """
 import collections
 import json
@@ -14,7 +19,11 @@ import sys
 def outcome(r):
     if r.get("timeout"):
         return "timeout"
-    return {0: "ok", 1: "CE", 2: "error"}.get(r["code"], f"exit{r['code']}")
+    if r.get("error"):
+        return "crash"
+    if r["code"] == 1:
+        return "CE" if r["out"].strip() else "crash"
+    return {0: "ok", 2: "error"}.get(r["code"], f"exit{r['code']}")
 
 
 def norm(s):
