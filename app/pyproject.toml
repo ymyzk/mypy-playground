@@ -18,7 +18,7 @@ dev = [
     "mypy",
     "pre-commit",
     "pytest",
-    "pytest-asyncio>=1.4.1",
+    "pytest-asyncio>=1.4.1.post1",
     "pytest-cov",
     "pytest-mock",
     "pytest-randomly",
