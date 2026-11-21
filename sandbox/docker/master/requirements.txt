@@ -6,12 +6,14 @@
 #
 ast-serialize==0.13.1
     # via mypy
-librt==0.16.0
+librt==0.17.0
     # via mypy
 mypy @ git+https://github.com/python/mypy.git
     # via -r requirements.in
 mypy-extensions==1.2.0
-    # via mypy
+    # via
+    #   librt
+    #   mypy
 pathspec==1.1.1
     # via mypy
 typing-extensions==4.16.0
